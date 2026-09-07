@@ -1,0 +1,1080 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  CUSTOMER
+  DRIVER
+}
+
+enum CourierAddressKind {
+  PICKUP
+  DROPOFF
+}
+
+enum CourierBookingStatus {
+  PAYMENT_PENDING
+  CONFIRMED
+  PICKUP_ASSIGNED
+  PICKED_UP
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+}
+
+enum CourierServiceType {
+  BIKE_PRIORITY
+  SAME_DAY
+  HYBRID_DRONE
+  SURFACE_EXPRESS
+  NEXT_DAY
+}
+
+enum CourierParcelSize {
+  SMALL
+  MEDIUM
+  LARGE
+  CUSTOM
+}
+
+enum CourierPackagingType {
+  STANDARD
+  EXTRA_SECURE
+  WOODEN_CRATE
+  OWN_PACKAGING
+}
+
+enum CourierContentCategory {
+  DOCUMENTS
+  ELECTRONICS
+  CLOTHING_ACCESSORIES
+  GIFTS_TOYS
+  HEALTH_MEDICAL
+  HOUSEHOLD_ITEMS
+  COMMERCIAL
+  OTHERS
+}
+
+enum CourierInsuranceType {
+  FULL
+  BASIC
+  NONE
+}
+
+enum CourierPaymentMethod {
+  PAY_ON_DELIVERY
+  ONLINE
+}
+
+enum CourierPaymentStatus {
+  NOT_REQUIRED
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum CourierPickupScheduleType {
+  ASAP
+  SCHEDULED
+}
+
+enum ConfidentialAddressKind {
+  PICKUP
+  DROPOFF
+}
+
+enum ConfidentialBookingStatus {
+  PAYMENT_PENDING
+  CONFIRMED
+  PICKUP_ASSIGNED
+  PICKED_UP
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+}
+
+enum ConfidentialDocumentType {
+  LEGAL
+  FINANCIAL
+  BUSINESS
+  IDENTITY
+  MEDICAL
+  OTHER
+}
+
+enum ConfidentialEnvelopeSize {
+  A4
+  LEGAL
+  LARGE
+}
+
+enum ConfidentialSecurityLevel {
+  SECURE_SEAL
+  TAMPER_EVIDENT
+  CHAIN_OF_CUSTODY
+}
+
+enum ConfidentialHandoverMethod {
+  OTP
+  SIGNATURE
+  OTP_AND_SIGNATURE
+}
+
+enum ConfidentialDeliverySpeed {
+  STANDARD
+  PRIORITY
+  EXPRESS
+  EXACT_TIME
+}
+
+enum ConfidentialScheduleType {
+  ASAP
+  SCHEDULED
+}
+
+enum ConfidentialPaymentMethod {
+  PAY_ON_DELIVERY
+  ONLINE
+}
+
+enum ConfidentialPaymentStatus {
+  NOT_REQUIRED
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id               String    @id @default(uuid())
+  fullName         String    @default("") @map("full_name")
+  countryCode      String    @default("+91") @map("country_code")
+  mobileNumber     String    @default("") @map("mobile_number")
+  email            String?   @unique
+  passwordHash     String    @map("password_hash")
+  role             UserRole  @default(USER)
+  termsAcceptedAt  DateTime  @default(now()) @map("terms_accepted_at")
+  mobileVerifiedAt DateTime? @map("mobile_verified_at")
+  lastLoginAt      DateTime? @map("last_login_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  authOtps                    AuthOtp[]
+  addresses                   UserAddress[]
+  courierBookings             CourierBooking[]
+  confidentialCourierBookings ConfidentialCourierBooking[]
+  forgotSomethingBookings     ForgotSomethingBooking[]
+  returnPickupBookings        ReturnPickupBooking[]
+  giftDeliveryBookings        GiftDeliveryBooking[]
+
+  @@unique([countryCode, mobileNumber])
+  @@index([mobileNumber])
+  @@map("users")
+}
+
+model AuthOtp {
+  id         String    @id @default(uuid())
+  userId     String    @map("user_id")
+  purpose    String
+  codeHash   String    @map("code_hash")
+  rememberMe Boolean   @default(false) @map("remember_me")
+  attempts   Int       @default(0)
+  expiresAt  DateTime  @map("expires_at")
+  consumedAt DateTime? @map("consumed_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, purpose, expiresAt])
+  @@index([expiresAt])
+  @@map("auth_otps")
+}
+
+model Service {
+  id               String   @id @default(uuid())
+  name             String   @unique
+  slug             String   @unique
+  shortDescription String   @default("") @map("short_description")
+  description      String?
+  imageData        Bytes?   @map("image_data")
+  imageMimeType    String?  @map("image_mime_type")
+  imageFileName    String?  @map("image_file_name")
+  isActive         Boolean  @default(true) @map("is_active")
+  displayOrder     Int      @default(0) @map("display_order")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  courierBookings             CourierBooking[]
+  confidentialCourierBookings ConfidentialCourierBooking[]
+  forgotSomethingBookings     ForgotSomethingBooking[]
+  returnPickupBookings        ReturnPickupBooking[]
+  giftDeliveryBookings        GiftDeliveryBooking[]
+
+  @@index([isActive, displayOrder])
+  @@map("services")
+}
+
+model UserAddress {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  label        String
+  contactName  String   @map("contact_name")
+  countryCode  String   @default("+91") @map("country_code")
+  phoneNumber  String   @map("phone_number")
+  addressLine1 String   @map("address_line1")
+  addressLine2 String?  @map("address_line2")
+  landmark     String?
+  city         String
+  state        String
+  postalCode   String   @map("postal_code")
+  country      String   @default("India")
+  latitude     Decimal? @db.Decimal(10, 7)
+  longitude    Decimal? @db.Decimal(10, 7)
+  isDefault    Boolean  @default(false) @map("is_default")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isDefault])
+  @@map("user_addresses")
+}
+
+model CourierBooking {
+  id                 String                    @id @default(uuid())
+  bookingNumber      String                    @unique @map("booking_number")
+  userId             String                    @map("user_id")
+  serviceId          String?                   @map("service_id")
+  idempotencyKey     String                    @map("idempotency_key")
+  requestFingerprint String                    @map("request_fingerprint")
+  status             CourierBookingStatus      @default(CONFIRMED)
+  serviceType        CourierServiceType        @map("service_type")
+  pickupScheduleType CourierPickupScheduleType @default(ASAP) @map("pickup_schedule_type")
+  scheduledPickupAt  DateTime?                 @map("scheduled_pickup_at")
+  distanceKm         Decimal?                  @map("distance_km") @db.Decimal(8, 2)
+  pricingVersion     String                    @map("pricing_version")
+  currency           String                    @default("INR")
+  baseCharge         Decimal                   @map("base_charge") @db.Decimal(12, 2)
+  distanceCharge     Decimal                   @default(0) @map("distance_charge") @db.Decimal(12, 2)
+  weightCharge       Decimal                   @default(0) @map("weight_charge") @db.Decimal(12, 2)
+  packagingCharge    Decimal                   @default(0) @map("packaging_charge") @db.Decimal(12, 2)
+  insurancePremium   Decimal                   @default(0) @map("insurance_premium") @db.Decimal(12, 2)
+  taxAmount          Decimal                   @default(0) @map("tax_amount") @db.Decimal(12, 2)
+  totalAmount        Decimal                   @map("total_amount") @db.Decimal(12, 2)
+  paymentMethod      CourierPaymentMethod      @map("payment_method")
+  paymentStatus      CourierPaymentStatus      @map("payment_status")
+  paymentProvider    String?                   @map("payment_provider")
+  paymentReference   String?                   @map("payment_reference")
+  confirmedAt        DateTime?                 @map("confirmed_at")
+  cancelledAt        DateTime?                 @map("cancelled_at")
+  cancellationReason String?                   @map("cancellation_reason")
+  createdAt          DateTime                  @default(now()) @map("created_at")
+  updatedAt          DateTime                  @updatedAt @map("updated_at")
+  user               User                      @relation(fields: [userId], references: [id], onDelete: Restrict)
+  service            Service?                  @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  addresses          CourierBookingAddress[]
+  package            CourierBookingPackage?
+
+  @@unique([userId, idempotencyKey])
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@index([serviceId])
+  @@map("courier_bookings")
+}
+
+model CourierBookingAddress {
+  id           String             @id @default(uuid())
+  bookingId    String             @map("booking_id")
+  kind         CourierAddressKind
+  label        String
+  contactName  String             @map("contact_name")
+  countryCode  String             @default("+91") @map("country_code")
+  phoneNumber  String             @map("phone_number")
+  addressLine1 String             @map("address_line1")
+  addressLine2 String?            @map("address_line2")
+  landmark     String?
+  city         String
+  state        String
+  postalCode   String             @map("postal_code")
+  country      String             @default("India")
+  latitude     Decimal?           @db.Decimal(10, 7)
+  longitude    Decimal?           @db.Decimal(10, 7)
+  booking      CourierBooking     @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@unique([bookingId, kind])
+  @@index([postalCode])
+  @@map("courier_booking_addresses")
+}
+
+model CourierBookingPackage {
+  id                 String                 @id @default(uuid())
+  bookingId          String                 @unique @map("booking_id")
+  parcelSize         CourierParcelSize      @map("parcel_size")
+  actualWeightKg     Decimal                @map("actual_weight_kg") @db.Decimal(8, 2)
+  chargeableWeightKg Decimal                @map("chargeable_weight_kg") @db.Decimal(8, 2)
+  lengthCm           Decimal                @map("length_cm") @db.Decimal(8, 2)
+  widthCm            Decimal                @map("width_cm") @db.Decimal(8, 2)
+  heightCm           Decimal                @map("height_cm") @db.Decimal(8, 2)
+  needsBox           Boolean                @default(true) @map("needs_box")
+  packagingType      CourierPackagingType   @map("packaging_type")
+  specialHandling    Boolean                @default(false) @map("special_handling")
+  fragile            Boolean                @default(false)
+  secureHandling     Boolean                @default(false) @map("secure_handling")
+  contentCategory    CourierContentCategory @map("content_category")
+  contentDescription String?                @map("content_description")
+  declaredValue      Decimal?               @map("declared_value") @db.Decimal(12, 2)
+  insuranceType      CourierInsuranceType   @map("insurance_type")
+  booking            CourierBooking         @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@map("courier_booking_packages")
+}
+
+model ConfidentialCourierBooking {
+  id                    String                        @id @default(uuid())
+  bookingNumber         String                        @unique @map("booking_number")
+  userId                String                        @map("user_id")
+  serviceId             String?                       @map("service_id")
+  idempotencyKey        String                        @map("idempotency_key")
+  requestFingerprint    String                        @map("request_fingerprint")
+  status                ConfidentialBookingStatus     @default(CONFIRMED)
+  documentType          ConfidentialDocumentType      @map("document_type")
+  envelopeSize          ConfidentialEnvelopeSize      @map("envelope_size")
+  pageCount             Int                           @map("page_count")
+  documentDescription   String?                       @map("document_description")
+  containsOriginals     Boolean                       @default(false) @map("contains_originals")
+  requiresReturn        Boolean                       @default(false) @map("requires_return")
+  declaredValue         Decimal?                      @map("declared_value") @db.Decimal(12, 2)
+  complianceAcceptedAt  DateTime                      @map("compliance_accepted_at")
+  securityLevel         ConfidentialSecurityLevel     @map("security_level")
+  handoverMethod        ConfidentialHandoverMethod    @map("handover_method")
+  recipientIdRequired   Boolean                       @default(true) @map("recipient_id_required")
+  pickupProofRequired   Boolean                       @default(true) @map("pickup_proof_required")
+  deliverySpeed         ConfidentialDeliverySpeed     @map("delivery_speed")
+  scheduleType          ConfidentialScheduleType      @default(ASAP) @map("schedule_type")
+  scheduledPickupAt     DateTime?                     @map("scheduled_pickup_at")
+  distanceKm            Decimal?                      @map("distance_km") @db.Decimal(8, 2)
+  pricingVersion        String                        @map("pricing_version")
+  currency              String                        @default("INR")
+  baseCharge            Decimal                       @map("base_charge") @db.Decimal(12, 2)
+  distanceCharge        Decimal                       @default(0) @map("distance_charge") @db.Decimal(12, 2)
+  securityCharge        Decimal                       @default(0) @map("security_charge") @db.Decimal(12, 2)
+  handoverCharge        Decimal                       @default(0) @map("handover_charge") @db.Decimal(12, 2)
+  originalsCharge       Decimal                       @default(0) @map("originals_charge") @db.Decimal(12, 2)
+  returnCharge          Decimal                       @default(0) @map("return_charge") @db.Decimal(12, 2)
+  taxAmount             Decimal                       @default(0) @map("tax_amount") @db.Decimal(12, 2)
+  totalAmount           Decimal                       @map("total_amount") @db.Decimal(12, 2)
+  paymentMethod         ConfidentialPaymentMethod     @map("payment_method")
+  paymentStatus         ConfidentialPaymentStatus     @map("payment_status")
+  paymentProvider       String?                       @map("payment_provider")
+  paymentReference      String?                       @map("payment_reference")
+  confirmedAt           DateTime?                     @map("confirmed_at")
+  cancelledAt           DateTime?                     @map("cancelled_at")
+  cancellationReason    String?                       @map("cancellation_reason")
+  createdAt             DateTime                      @default(now()) @map("created_at")
+  updatedAt             DateTime                      @updatedAt @map("updated_at")
+  user                  User                          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  service               Service?                      @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  addresses             ConfidentialBookingAddress[]
+
+  @@unique([userId, idempotencyKey])
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@index([serviceId])
+  @@map("confidential_courier_bookings")
+}
+
+model ConfidentialBookingAddress {
+  id           String                       @id @default(uuid())
+  bookingId    String                       @map("booking_id")
+  kind         ConfidentialAddressKind
+  label        String
+  contactName  String                       @map("contact_name")
+  countryCode  String                       @default("+91") @map("country_code")
+  phoneNumber  String                       @map("phone_number")
+  addressLine1 String                       @map("address_line1")
+  addressLine2 String?                      @map("address_line2")
+  landmark     String?
+  city         String
+  state        String
+  postalCode   String                       @map("postal_code")
+  country      String                       @default("India")
+  latitude     Decimal?                     @db.Decimal(10, 7)
+  longitude    Decimal?                     @db.Decimal(10, 7)
+  booking      ConfidentialCourierBooking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@unique([bookingId, kind])
+  @@index([postalCode])
+  @@map("confidential_booking_addresses")
+}
+
+enum ForgotSomethingItemCategory {
+  KEYS
+  LAPTOP
+  PHONE
+  DOCUMENTS
+  BAG
+  CHARGER
+  WALLET
+  GLASSES
+  CLOTHING
+  HEADPHONES
+  BOOK_DIARY
+  OTHER
+}
+
+enum ForgotSomethingLocationType {
+  HOME
+  OFFICE
+  HOTEL
+  RESTAURANT
+  VEHICLE
+  SOMEONES_PLACE
+  OTHER
+}
+
+enum ForgotSomethingHandoverType {
+  RECEPTION
+  SECURITY_GUARD
+  COLLEAGUE_STAFF
+  LOST_AND_FOUND
+  SOMEONE_ELSE
+  CUSTOM_CONTACT
+}
+
+enum ForgotSomethingSpeed {
+  INSTANT
+  EXPRESS
+  SAME_DAY
+  PRECISE_TIME
+}
+
+enum ForgotSomethingStatus {
+  PAYMENT_PENDING
+  CONFIRMED
+  PARTNER_ASSIGNED
+  PICKUP_IN_PROGRESS
+  PICKED_UP
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+}
+
+enum ForgotSomethingPaymentMethod {
+  WALLET
+  UPI
+  CARD
+  NET_BANKING
+  PAY_ON_DELIVERY
+}
+
+enum ForgotSomethingPaymentStatus {
+  NOT_REQUIRED
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model ForgotSomethingBooking {
+  id                    String                        @id @default(uuid())
+  bookingNumber         String                        @unique @map("booking_number")
+  userId                String                        @map("user_id")
+  serviceId             String?                       @map("service_id")
+  idempotencyKey        String                        @map("idempotency_key")
+  requestFingerprint    String                        @map("request_fingerprint")
+  status                ForgotSomethingStatus         @default(CONFIRMED)
+  
+  // Item details
+  itemCategory          ForgotSomethingItemCategory   @map("item_category")
+  itemName              String                        @map("item_name")
+  itemDescription       String?                       @map("item_description")
+  itemBrandColor        String?                       @map("item_brand_color")
+  itemQuantity          Int                           @default(1) @map("item_quantity")
+  declaredValue         Decimal?                      @map("declared_value") @db.Decimal(12, 2)
+  itemTags              String[]                      @default([]) @map("item_tags")
+  itemPhotoUrl          String?                       @map("item_photo_url")
+  itemPhotoData         String?                       @map("item_photo_data")
+
+  // Context & Handover
+  locationType          ForgotSomethingLocationType   @map("location_type")
+  handoverType          ForgotSomethingHandoverType   @map("handover_type")
+  handoverCustomName    String?                       @map("handover_custom_name")
+  handoverCustomPhone   String?                       @map("handover_custom_phone")
+
+  // Pickup Address
+  pickupFlatBuilding    String                        @map("pickup_flat_building")
+  pickupStreet          String                        @map("pickup_street")
+  pickupArea            String?                       @map("pickup_area")
+  pickupCity            String                        @map("pickup_city")
+  pickupState           String?                       @default("Karnataka") @map("pickup_state")
+  pickupPostalCode      String                        @map("pickup_postal_code")
+  pickupContactName     String                        @map("pickup_contact_name")
+  pickupPhoneNumber     String                        @map("pickup_phone_number")
+  pickupLandmark        String?                       @map("pickup_landmark")
+  pickupLatitude        Decimal?                      @map("pickup_latitude") @db.Decimal(10, 7)
+  pickupLongitude       Decimal?                      @map("pickup_longitude") @db.Decimal(10, 7)
+
+  // Delivery (Dropoff) Address
+  dropoffAddressType    String?                       @default("Home") @map("dropoff_address_type")
+  dropoffAddressLine1   String                        @map("dropoff_address_line1")
+  dropoffAddressLine2   String?                       @map("dropoff_address_line2")
+  dropoffArea           String?                       @map("dropoff_area")
+  dropoffCity           String                        @map("dropoff_city")
+  dropoffState          String?                       @default("Karnataka") @map("dropoff_state")
+  dropoffPostalCode     String?                       @default("560001") @map("dropoff_postal_code")
+  dropoffRecipientName  String                        @map("dropoff_recipient_name")
+  dropoffPhoneNumber    String                        @map("dropoff_phone_number")
+  dropoffLandmark       String?                       @map("dropoff_landmark")
+  dropoffLatitude       Decimal?                      @map("dropoff_latitude") @db.Decimal(10, 7)
+  dropoffLongitude      Decimal?                      @map("dropoff_longitude") @db.Decimal(10, 7)
+
+  // Speed & Schedule
+  speed                 ForgotSomethingSpeed          @default(INSTANT) @map("speed")
+  scheduledDate         String?                       @map("scheduled_date")
+  scheduledTimeSlot     String?                       @map("scheduled_time_slot")
+
+  // Security & Verification
+  pickupOtpRequired     Boolean                       @default(true) @map("pickup_otp_required")
+  deliveryOtpRequired   Boolean                       @default(true) @map("delivery_otp_required")
+  photoAtPickup         Boolean                       @default(false) @map("photo_at_pickup")
+  photoAtDelivery       Boolean                       @default(true) @map("photo_at_delivery")
+  tamperProofPackaging  Boolean                       @default(true) @map("tamper_proof_packaging")
+  receiverSignature     Boolean                       @default(false) @map("receiver_signature")
+  callBeforeArrival     Boolean                       @default(false) @map("call_before_arrival")
+  pickupOtp             String?                       @map("pickup_otp")
+  deliveryOtp           String?                       @map("delivery_otp")
+  pickupOtpVerifiedAt   DateTime?                     @map("pickup_otp_verified_at")
+  deliveryOtpVerifiedAt DateTime?                     @map("delivery_otp_verified_at")
+
+  // Assigned Partner Info
+  partnerName           String?                       @default("Rajesh Kumar") @map("partner_name")
+  partnerPhone          String?                       @default("+91 98765 43210") @map("partner_phone")
+  partnerVehicle        String?                       @default("TVS Apache - KA 01 AB 1234") @map("partner_vehicle")
+  partnerRating         Decimal?                      @default(4.9) @map("partner_rating") @db.Decimal(3, 1)
+
+  // Pricing & Payment
+  currency              String                        @default("INR")
+  retrievalFee          Decimal                       @map("retrieval_fee") @db.Decimal(12, 2)
+  deliveryFee           Decimal                       @map("delivery_fee") @db.Decimal(12, 2)
+  secureHandlingFee     Decimal                       @default(0) @map("secure_handling_fee") @db.Decimal(12, 2)
+  taxAmount             Decimal                       @default(0) @map("tax_amount") @db.Decimal(12, 2)
+  totalAmount           Decimal                       @map("total_amount") @db.Decimal(12, 2)
+  paymentMethod         ForgotSomethingPaymentMethod  @map("payment_method")
+  paymentStatus         ForgotSomethingPaymentStatus  @map("payment_status")
+  paymentProvider       String?                       @map("payment_provider")
+  paymentReference      String?                       @map("payment_reference")
+
+  // Milestone Timestamps
+  confirmedAt           DateTime?                     @map("confirmed_at")
+  partnerAssignedAt     DateTime?                     @map("partner_assigned_at")
+  pickedUpAt            DateTime?                     @map("picked_up_at")
+  inTransitAt           DateTime?                     @map("in_transit_at")
+  deliveredAt           DateTime?                     @map("delivered_at")
+  cancelledAt           DateTime?                     @map("cancelled_at")
+  cancellationReason    String?                       @map("cancellation_reason")
+
+  createdAt             DateTime                      @default(now()) @map("created_at")
+  updatedAt             DateTime                      @updatedAt @map("updated_at")
+
+  user                  User                          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  service               Service?                      @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, idempotencyKey])
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@index([bookingNumber])
+  @@index([serviceId])
+  @@map("forgot_something_bookings")
+}
+
+enum ReturnPickupType {
+  RETURN_ITEM
+  EXCHANGE_ITEM
+  REPAIR_SERVICE
+  WARRANTY_RETURN
+  RENTAL_RETURN
+  SEND_BACK_TO_PERSON
+  OTHER
+}
+
+enum ReturnDestinationType {
+  ONLINE_STORE
+  LOCAL_STORE
+  BRAND_STORE
+  SERVICE_CENTRE
+  WAREHOUSE
+  ANOTHER_PERSON
+  OTHER
+}
+
+enum ReturnDeliveryService {
+  STANDARD
+  EXPRESS
+  PRECISE_TIME
+  APPOINTMENT_BASED
+}
+
+enum ReturnItemCondition {
+  NEW_UNUSED
+  USED_GOOD
+  DAMAGED
+}
+
+enum ReturnPickupStatus {
+  PAYMENT_PENDING
+  CONFIRMED
+  PICKUP_SCHEDULED
+  PARTNER_ON_THE_WAY
+  ARRIVED_AT_PICKUP
+  PICKED_UP
+  IN_TRANSIT
+  AT_DESTINATION
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum ReturnPaymentMethod {
+  WALLET
+  UPI
+  CARD
+  NET_BANKING
+  OTHER_WALLETS
+  PAY_ON_PICKUP
+}
+
+enum ReturnPaymentStatus {
+  NOT_REQUIRED
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model ReturnPickupBooking {
+  id                     String                 @id @default(uuid())
+  bookingNumber          String                 @unique @map("booking_number")
+  userId                 String                 @map("user_id")
+  serviceId              String?                @map("service_id")
+  idempotencyKey         String                 @map("idempotency_key")
+  requestFingerprint     String                 @map("request_fingerprint")
+  status                 ReturnPickupStatus     @default(CONFIRMED)
+
+  // Purpose & Destination
+  returnType             ReturnPickupType       @map("return_type")
+  destinationType        ReturnDestinationType  @map("destination_type")
+  destinationName        String?                @map("destination_name")
+  orderId                String?                @map("order_id")
+  returnId               String?                @map("return_id")
+  returnBeforeDate       String?                @map("return_before_date")
+  estimatedRefundAmount  Decimal?               @map("estimated_refund_amount") @db.Decimal(12, 2)
+
+  // Pickup Location Details
+  pickupStoreName        String                 @map("pickup_store_name")
+  pickupAddress          String                 @map("pickup_address")
+  pickupCity             String                 @map("pickup_city")
+  pickupState            String?                @default("Karnataka") @map("pickup_state")
+  pickupPostalCode       String                 @map("pickup_postal_code")
+  pickupContactName      String                 @map("pickup_contact_name")
+  pickupPhoneNumber      String                 @map("pickup_phone_number")
+  pickupReferenceNumber  String?                @map("pickup_reference_number")
+  pickupInstructions     String?                @map("pickup_instructions")
+  pickupLatitude         Decimal?               @map("pickup_latitude") @db.Decimal(10, 7)
+  pickupLongitude        Decimal?               @map("pickup_longitude") @db.Decimal(10, 7)
+
+  // Return Delivery Address Details
+  returnAddressType      String?                @default("My Home") @map("return_address_type")
+  returnAddress          String                 @map("return_address")
+  returnCity             String                 @map("return_city")
+  returnState            String?                @default("Karnataka") @map("return_state")
+  returnPostalCode       String                 @map("return_postal_code")
+  returnContactName      String                 @map("return_contact_name")
+  returnPhoneNumber      String                 @map("return_phone_number")
+  returnLandmark         String?                @map("return_landmark")
+  returnInstructions     String?                @map("return_instructions")
+  returnLatitude         Decimal?               @map("return_latitude") @db.Decimal(10, 7)
+  returnLongitude        Decimal?               @map("return_longitude") @db.Decimal(10, 7)
+
+  // Item Details
+  itemCategory           String                 @map("item_category")
+  itemDescription        String                 @map("item_description")
+  itemQuantity           Int                    @default(1) @map("item_quantity")
+  declaredValue          Decimal?               @map("declared_value") @db.Decimal(12, 2)
+  approxWeightKg         Decimal?               @map("approx_weight_kg") @db.Decimal(8, 2)
+  lengthCm               Decimal?               @map("length_cm") @db.Decimal(8, 2)
+  widthCm                Decimal?               @map("width_cm") @db.Decimal(8, 2)
+  heightCm               Decimal?               @map("height_cm") @db.Decimal(8, 2)
+  itemCondition          ReturnItemCondition    @default(NEW_UNUSED) @map("item_condition")
+  specialHandlingTags    String[]               @default([]) @map("special_handling_tags")
+  documents              Json?                  @map("documents")
+
+  // Scheduling & Delivery Service
+  scheduledDate          String?                @map("scheduled_date")
+  scheduledTimeSlot      String?                @map("scheduled_time_slot")
+  deliveryService        ReturnDeliveryService  @default(STANDARD) @map("delivery_service")
+  shipmentProtection     Boolean                @default(true) @map("shipment_protection")
+  protectionCoverAmount  Decimal?               @default(10000) @map("protection_cover_amount") @db.Decimal(12, 2)
+
+  // OTP Verification
+  pickupOtp              String?                @map("pickup_otp")
+  deliveryOtp            String?                @map("delivery_otp")
+  pickupOtpVerifiedAt    DateTime?              @map("pickup_otp_verified_at")
+  deliveryOtpVerifiedAt  DateTime?              @map("delivery_otp_verified_at")
+
+  // Assigned Partner Info
+  partnerName            String?                @default("Ravi Kumar") @map("partner_name")
+  partnerPhone           String?                @default("+91 98765 43210") @map("partner_phone")
+  partnerVehicle         String?                @default("DL1Z 9876") @map("partner_vehicle")
+  partnerRating          Decimal?               @default(4.9) @map("partner_rating") @db.Decimal(3, 1)
+  currentHubLocation     String?                @default("Tumkur Hub") @map("current_hub_location")
+
+  // Fare & Pricing
+  currency               String                 @default("INR")
+  basePickupCharge       Decimal                @map("base_pickup_charge") @db.Decimal(12, 2)
+  distanceCharge         Decimal                @default(0) @map("distance_charge") @db.Decimal(12, 2)
+  handlingCharge         Decimal                @default(0) @map("handling_charge") @db.Decimal(12, 2)
+  deliveryServiceCharge  Decimal                @default(0) @map("delivery_service_charge") @db.Decimal(12, 2)
+  protectionCharge       Decimal                @default(0) @map("protection_charge") @db.Decimal(12, 2)
+  discountAmount         Decimal                @default(0) @map("discount_amount") @db.Decimal(12, 2)
+  taxAmount              Decimal                @default(0) @map("tax_amount") @db.Decimal(12, 2)
+  totalAmount            Decimal                @map("total_amount") @db.Decimal(12, 2)
+
+  // Payment
+  paymentMethod          ReturnPaymentMethod    @map("payment_method")
+  paymentStatus          ReturnPaymentStatus    @map("payment_status")
+  paymentProvider        String?                @map("payment_provider")
+  paymentReference       String?                @map("payment_reference")
+
+  // Feedback & Review
+  rating                 Int?                   @map("rating")
+  reviewText             String?                @map("review_text")
+
+  // Timeline Milestones
+  confirmedAt            DateTime?              @map("confirmed_at")
+  pickupScheduledAt      DateTime?              @map("pickup_scheduled_at")
+  partnerOnTheWayAt      DateTime?              @map("partner_on_the_way_at")
+  arrivedAtPickupAt      DateTime?              @map("arrived_at_pickup_at")
+  pickedUpAt             DateTime?              @map("picked_up_at")
+  inTransitAt            DateTime?              @map("in_transit_at")
+  atDestinationAt        DateTime?              @map("at_destination_at")
+  outForDeliveryAt       DateTime?              @map("out_for_delivery_at")
+  deliveredAt            DateTime?              @map("delivered_at")
+  cancelledAt            DateTime?              @map("cancelled_at")
+  cancellationReason     String?                @map("cancellation_reason")
+
+  createdAt              DateTime               @default(now()) @map("created_at")
+  updatedAt              DateTime               @updatedAt @map("updated_at")
+
+  user                   User                   @relation(fields: [userId], references: [id], onDelete: Restrict)
+  service                Service?               @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, idempotencyKey])
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@index([bookingNumber])
+  @@index([serviceId])
+  @@map("return_pickup_bookings")
+}
+
+enum GiftDeliverySpeed {
+  STANDARD
+  EXPRESS
+  PRECISE_TIME
+  MIDNIGHT
+}
+
+enum GiftDeliveryStatus {
+  CONFIRMED
+  PREPARING_GIFT
+  GIFT_PACKED
+  PARTNER_ASSIGNED
+  PICKED_UP
+  ON_THE_WAY
+  ARRIVED
+  DELIVERED
+  CANCELLED
+}
+
+enum GiftPaymentMethod {
+  UPI
+  CARD
+  WALLET
+  NET_BANKING
+}
+
+enum GiftPaymentStatus {
+  NOT_REQUIRED
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model GiftDeliveryBooking {
+  id                     String             @id @default(uuid())
+  bookingNumber          String             @unique @map("booking_number")
+  userId                 String             @map("user_id")
+  serviceId              String?            @map("service_id")
+  idempotencyKey         String             @map("idempotency_key")
+  requestFingerprint     String             @map("request_fingerprint")
+  status                 GiftDeliveryStatus @default(CONFIRMED)
+
+  // Gift & Product Information
+  categoryId             String             @map("category_id")
+  categoryName           String             @map("category_name")
+  productId              String             @map("product_id")
+  productName            String             @map("product_name")
+  productDescription     String?            @map("product_description")
+  productImage           String?            @map("product_image")
+  productPrice           Decimal            @map("product_price") @db.Decimal(12, 2)
+  productQuantity        Int                @default(1) @map("product_quantity")
+  productWeight          String?            @map("product_weight")
+  productServes          String?            @map("product_serves")
+  selectedOccasion       String?            @map("selected_occasion")
+
+  // Recipient & Delivery Details
+  deliverTo              String             @default("Someone Else") @map("deliver_to")
+  recipientName          String             @map("recipient_name")
+  recipientPhone         String             @map("recipient_phone")
+  recipientCountryCode   String             @default("+91") @map("recipient_country_code")
+  deliveryAddress        String             @map("delivery_address")
+  deliveryLandmark       String?            @map("delivery_landmark")
+  deliveryPostalCode     String             @map("delivery_postal_code")
+  deliveryCity           String             @map("delivery_city")
+  deliveryState          String             @default("Karnataka") @map("delivery_state")
+  deliveryLatitude       Decimal?           @map("delivery_latitude") @db.Decimal(10, 7)
+  deliveryLongitude      Decimal?           @map("delivery_longitude") @db.Decimal(10, 7)
+  deliveryInstructions   String?            @map("delivery_instructions")
+
+  // Greeting Card & Message
+  giftMessage            String?            @map("gift_message")
+  greetingCardId         String?            @map("greeting_card_id")
+  greetingCardName       String?            @map("greeting_card_name")
+
+  // Scheduling & Speed
+  deliveryType           GiftDeliverySpeed  @default(STANDARD) @map("delivery_type")
+  scheduledDate          String             @map("scheduled_date")
+  scheduledTimeSlot      String             @map("scheduled_time_slot")
+  isMidnightDelivery     Boolean            @default(false) @map("is_midnight_delivery")
+
+  // Premium Setup & Add-ons
+  selectedAddons         Json?              @map("selected_addons")
+  hasHandwrittenCard     Boolean            @default(false) @map("has_handwritten_card")
+  isAnonymousSender      Boolean            @default(false) @map("is_anonymous_sender")
+  hasPhotoProof          Boolean            @default(false) @map("has_photo_proof")
+  hasVideoReaction       Boolean            @default(false) @map("has_video_reaction")
+  hasPremiumWrap         Boolean            @default(false) @map("has_premium_wrap")
+  hasPremiumSetup        Boolean            @default(false) @map("has_premium_setup")
+
+  // Billing & Charges
+  currency               String             @default("INR")
+  itemTotal              Decimal            @map("item_total") @db.Decimal(12, 2)
+  deliveryCharge         Decimal            @map("delivery_charge") @db.Decimal(12, 2)
+  packagingCharge        Decimal            @default(20.0) @map("packaging_charge") @db.Decimal(12, 2)
+  addonsTotal            Decimal            @default(0) @map("addons_total") @db.Decimal(12, 2)
+  discountAmount         Decimal            @default(0) @map("discount_amount") @db.Decimal(12, 2)
+  taxAmount              Decimal            @map("tax_amount") @db.Decimal(12, 2)
+  totalAmount            Decimal            @map("total_amount") @db.Decimal(12, 2)
+
+  // Payment
+  paymentMethod          GiftPaymentMethod  @map("payment_method")
+  paymentStatus          GiftPaymentStatus  @map("payment_status")
+  paymentProvider        String?            @map("payment_provider")
+  paymentReference       String?            @map("payment_reference")
+
+  // Assigned Partner Info
+  partnerName            String?            @default("Rajesh Verma") @map("partner_name")
+  partnerPhone           String?            @default("+91 98765 43210") @map("partner_phone")
+  partnerVehicle         String?            @default("Hero Electric - KA 05 EV 4321") @map("partner_vehicle")
+  partnerRating          Decimal?           @default(4.9) @map("partner_rating") @db.Decimal(3, 1)
+  currentHubLocation     String?            @default("Indiranagar Delivery Hub") @map("current_hub_location")
+
+  // OTP Verification
+  deliveryOtp            String?            @map("delivery_otp")
+  deliveryOtpVerifiedAt  DateTime?          @map("delivery_otp_verified_at")
+
+  // Feedback & Review
+  rating                 Int?               @map("rating")
+  reviewText             String?            @map("review_text")
+
+  // Timeline Milestones
+  confirmedAt            DateTime?          @map("confirmed_at")
+  preparingAt            DateTime?          @map("preparing_at")
+  packedAt               DateTime?          @map("packed_at")
+  pickedUpAt             DateTime?          @map("picked_up_at")
+  onTheWayAt             DateTime?          @map("on_the_way_at")
+  arrivedAt              DateTime?          @map("arrived_at")
+  deliveredAt            DateTime?          @map("delivered_at")
+  cancelledAt            DateTime?          @map("cancelled_at")
+  cancellationReason     String?            @map("cancellation_reason")
+
+  createdAt              DateTime           @default(now()) @map("created_at")
+  updatedAt              DateTime           @updatedAt @map("updated_at")
+
+  user                   User               @relation(fields: [userId], references: [id], onDelete: Restrict)
+  service                Service?           @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, idempotencyKey])
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@index([bookingNumber])
+  @@index([serviceId])
+  @@map("gift_delivery_bookings")
+}
+
+model GiftCategory {
+  id               String        @id @default(uuid())
+  name             String        @unique
+  slug             String        @unique
+  description      String?
+  iconName         String        @default("Gift") @map("icon_name")
+  imageData        Bytes?        @map("image_data")
+  imageMimeType    String?       @map("image_mime_type")
+  imageFileName    String?       @map("image_file_name")
+  displayOrder     Int           @default(0) @map("display_order")
+  isActive         Boolean       @default(true) @map("is_active")
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+
+  products         GiftProduct[]
+
+  @@index([isActive, displayOrder])
+  @@map("gift_categories")
+}
+
+model GiftProduct {
+  id               String             @id @default(uuid())
+  categoryId       String             @map("category_id")
+  name             String
+  slug             String             @unique
+  description      String?
+  price            Decimal            @map("price") @db.Decimal(12, 2)
+  discountPrice    Decimal?           @map("discount_price") @db.Decimal(12, 2)
+  sku              String?            @unique
+  weight           String?
+  serves           String?
+  occasionTag      String             @default("Birthday") @map("occasion_tag")
+  badge            String?
+  stockQuantity    Int                @default(100) @map("stock_quantity")
+  isAvailable      Boolean            @default(true) @map("is_available")
+  displayOrder     Int                @default(0) @map("display_order")
+  imageData        Bytes?             @map("image_data")
+  imageMimeType    String?            @map("image_mime_type")
+  imageFileName    String?            @map("image_file_name")
+  imageUrl         String?            @map("image_url")
+  rating           Decimal            @default(4.8) @db.Decimal(3, 1)
+  reviewsCount     Int                @default(120) @map("reviews_count")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+
+  category         GiftCategory       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  images           GiftProductImage[]
+
+  @@index([categoryId, isAvailable, displayOrder])
+  @@map("gift_products")
+}
+
+model GiftProductImage {
+  id               String       @id @default(uuid())
+  productId        String       @map("product_id")
+  imageData        Bytes        @map("image_data")
+  imageMimeType    String       @map("image_mime_type")
+  imageFileName    String       @map("image_file_name")
+  isPrimary        Boolean      @default(false) @map("is_primary")
+  displayOrder     Int          @default(0) @map("display_order")
+  createdAt        DateTime     @default(now()) @map("created_at")
+
+  product          GiftProduct  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, isPrimary, displayOrder])
+  @@map("gift_product_images")
+}
+
+model GiftCardTemplate {
+  id                   String   @id @default(uuid())
+  name                 String
+  theme                String   @default("Birthday")
+  title                String?
+  description          String?
+  imageData            Bytes?   @map("image_data")
+  imageMimeType        String?  @map("image_mime_type")
+  imageFileName        String?  @map("image_file_name")
+  previewUrl           String?  @map("preview_url")
+  minAmount            Decimal  @default(100.0) @map("min_amount") @db.Decimal(12, 2)
+  maxAmount            Decimal  @default(10000.0) @map("max_amount") @db.Decimal(12, 2)
+  customAmountSupported Boolean @default(true) @map("custom_amount_supported")
+  denominations        Json?
+  validityDays         Int      @default(365) @map("validity_days")
+  isActive             Boolean  @default(true) @map("is_active")
+  displayOrder         Int      @default(0) @map("display_order")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive, displayOrder])
+  @@map("gift_card_templates")
+}
+
+model GiftDeliveryLocation {
+  id                   String   @id @default(uuid())
+  name                 String
+  city                 String
+  state                String
+  postalCodes          String   @map("postal_codes") // comma-separated postal codes
+  baseDeliveryCharge   Decimal  @default(49.0) @map("base_delivery_charge") @db.Decimal(12, 2)
+  minOrderAmount       Decimal  @default(299.0) @map("min_order_amount") @db.Decimal(12, 2)
+  estimatedDeliveryTime String  @default("2-4 Hours") @map("estimated_delivery_time")
+  isSameDayAvailable   Boolean  @default(true) @map("is_same_day_available")
+  isMidnightAvailable  Boolean  @default(true) @map("is_midnight_available")
+  isActive             Boolean  @default(true) @map("is_active")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  @@index([city, isActive])
+  @@map("gift_delivery_locations")
+}
+
+model GiftDeliverySlot {
+  id               String            @id @default(uuid())
+  name             String
+  startTime        String            @map("start_time")
+  endTime          String            @map("end_time")
+  deliverySpeed    GiftDeliverySpeed @default(STANDARD) @map("delivery_speed")
+  basePrice        Decimal           @default(49.0) @map("base_price") @db.Decimal(12, 2)
+  maxOrdersPerSlot Int               @default(50) @map("max_orders_per_slot")
+  isActive         Boolean           @default(true) @map("is_active")
+  displayOrder     Int               @default(0) @map("display_order")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+
+  @@index([deliverySpeed, isActive, displayOrder])
+  @@map("gift_delivery_slots")
+}
+
+model GiftDeliveryConfig {
+  id                   String   @id @default(uuid())
+  key                  String   @unique @default("GLOBAL_GIFT_CONFIG")
+  packagingCharge      Decimal  @default(20.0) @map("packaging_charge") @db.Decimal(12, 2)
+  freeDeliveryThreshold Decimal @default(1500.0) @map("free_delivery_threshold") @db.Decimal(12, 2)
+  taxPercentage        Decimal  @default(18.0) @map("tax_percentage") @db.Decimal(5, 2)
+  sameDayCutoffTime    String   @default("06:00 PM") @map("same_day_cutoff_time")
+  advanceBookingDays   Int      @default(30) @map("advance_booking_days")
+  handwrittenCardPrice Decimal  @default(79.0) @map("handwritten_card_price") @db.Decimal(12, 2)
+  anonymousSenderPrice Decimal  @default(49.0) @map("anonymous_sender_price") @db.Decimal(12, 2)
+  photoProofPrice      Decimal  @default(39.0) @map("photo_proof_price") @db.Decimal(12, 2)
+  luxurySetupPrice     Decimal  @default(299.0) @map("luxury_setup_price") @db.Decimal(12, 2)
+  videoReactionPrice   Decimal  @default(79.0) @map("video_reaction_price") @db.Decimal(12, 2)
+  premiumWrapPrice     Decimal  @default(49.0) @map("premium_wrap_price") @db.Decimal(12, 2)
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  @@map("gift_delivery_configs")
+}
+
+
+

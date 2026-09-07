@@ -1,0 +1,441 @@
+DELEVEZ ONE APP - FLUTTER OTP AUTHENTICATION IMPLEMENTATION
+===========================================================
+
+The Delevez One App user authentication flow uses a mobile number and OTP.
+User login does not require a password.
+
+
+1. API BASE URLS
+================
+
+Android emulator:
+http://10.0.2.2:3001/api/v1
+
+iOS simulator:
+http://localhost:3001/api/v1
+
+Physical phone:
+http://YOUR_COMPUTER_LAN_IP:3001/api/v1
+
+Production:
+https://your-domain.com/api/v1
+
+
+2. AUTHENTICATION ENDPOINTS
+===========================
+
+POST /auth/register
+Register a user and generate an OTP challenge.
+
+POST /auth/login
+Generate a login OTP challenge using the registered mobile number.
+
+POST /auth/verify-otp
+Verify the OTP and receive a JWT access token.
+
+POST /auth/resend-otp
+Invalidate the previous OTP and generate a replacement OTP challenge.
+
+GET /auth/me
+Get the authenticated user's profile. Requires a Bearer token.
+
+GET /auth/check
+Check whether the stored Bearer token is valid.
+
+
+3. INSTALL FLUTTER PACKAGES
+===========================
+
+Run:
+
+flutter pub add dio flutter_secure_storage
+
+
+4. CREATE THE AUTHENTICATION SERVICE
+====================================
+
+Create this file in the Flutter application:
+
+lib/services/auth_api.dart
+
+Code:
+
+import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+class OtpChallenge {
+  final String challengeId;
+  final String destination;
+  final DateTime expiresAt;
+  final String? developmentOtp;
+
+  OtpChallenge({
+    required this.challengeId,
+    required this.destination,
+    required this.expiresAt,
+    this.developmentOtp,
+  });
+
+  factory OtpChallenge.fromJson(Map<String, dynamic> json) {
+    return OtpChallenge(
+      challengeId: json['challengeId'].toString(),
+      destination: json['destination'].toString(),
+      expiresAt: DateTime.parse(json['expiresAt'].toString()),
+      developmentOtp: json['developmentOtp']?.toString(),
+    );
+  }
+}
+
+class DelevezAuthApi {
+  static const String _tokenKey = 'delevez_access_token';
+
+  final FlutterSecureStorage _storage =
+      const FlutterSecureStorage();
+
+  late final Dio _dio;
+
+  DelevezAuthApi({required String baseUrl}) {
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: baseUrl,
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 15),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
+    );
+
+    // Automatically attach the JWT to protected requests.
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          final token = await _storage.read(key: _tokenKey);
+
+          if (token != null && token.isNotEmpty) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
+
+          handler.next(options);
+        },
+      ),
+    );
+  }
+
+  Future<Response<dynamic>> _request(
+    Future<Response<dynamic>> Function() operation,
+  ) async {
+    try {
+      return await operation();
+    } on DioException catch (error) {
+      final responseData = error.response?.data;
+      String message = 'Unable to connect to the server.';
+
+      if (responseData is Map && responseData['message'] != null) {
+        message = responseData['message'].toString();
+      }
+
+      throw Exception(message);
+    }
+  }
+
+  Map<String, dynamic> _responseData(Response<dynamic> response) {
+    final body = Map<String, dynamic>.from(response.data as Map);
+    return Map<String, dynamic>.from(body['data'] as Map);
+  }
+
+  Future<OtpChallenge> register({
+    required String fullName,
+    required String countryCode,
+    required String mobileNumber,
+    String? email,
+    required String password,
+  }) async {
+    final response = await _request(
+      () => _dio.post(
+        '/auth/register',
+        data: {
+          'fullName': fullName,
+          'countryCode': countryCode,
+          'mobileNumber': mobileNumber,
+          'email': email,
+          'password': password,
+          'confirmPassword': password,
+          'acceptedTerms': true,
+        },
+      ),
+    );
+
+    return OtpChallenge.fromJson(_responseData(response));
+  }
+
+  Future<OtpChallenge> login({
+    required String countryCode,
+    required String mobileNumber,
+    bool rememberMe = false,
+  }) async {
+    final response = await _request(
+      () => _dio.post(
+        '/auth/login',
+        data: {
+          'countryCode': countryCode,
+          'mobileNumber': mobileNumber,
+          'rememberMe': rememberMe,
+        },
+      ),
+    );
+
+    return OtpChallenge.fromJson(_responseData(response));
+  }
+
+  Future<OtpChallenge> resendOtp(String challengeId) async {
+    final response = await _request(
+      () => _dio.post(
+        '/auth/resend-otp',
+        data: {
+          'challengeId': challengeId,
+        },
+      ),
+    );
+
+    return OtpChallenge.fromJson(_responseData(response));
+  }
+
+  Future<Map<String, dynamic>> verifyOtp({
+    required String challengeId,
+    required String otp,
+  }) async {
+    final response = await _request(
+      () => _dio.post(
+        '/auth/verify-otp',
+        data: {
+          'challengeId': challengeId,
+          'otp': otp,
+        },
+      ),
+    );
+
+    final data = _responseData(response);
+    final token = data['accessToken'].toString();
+
+    await _storage.write(
+      key: _tokenKey,
+      value: token,
+    );
+
+    return data;
+  }
+
+  Future<Map<String, dynamic>> getCurrentUser() async {
+    final response = await _request(
+      () => _dio.get('/auth/me'),
+    );
+
+    final data = _responseData(response);
+    return Map<String, dynamic>.from(data['user'] as Map);
+  }
+
+  Future<bool> checkAuthentication() async {
+    final response = await _request(
+      () => _dio.get('/auth/check'),
+    );
+
+    final data = _responseData(response);
+    return data['isLoggedIn'] == true;
+  }
+
+  Future<void> logout() async {
+    // There is currently no user logout endpoint, so delete the local token.
+    await _storage.delete(key: _tokenKey);
+  }
+}
+
+
+5. INITIALIZE THE SERVICE
+=========================
+
+For an Android emulator:
+
+final authApi = DelevezAuthApi(
+  baseUrl: 'http://10.0.2.2:3001/api/v1',
+);
+
+
+6. LOGIN SCREEN EXAMPLE
+=======================
+
+Future<void> login() async {
+  try {
+    final challenge = await authApi.login(
+      countryCode: '+91',
+      mobileNumber: mobileController.text.trim(),
+      rememberMe: true,
+    );
+
+    if (!mounted) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => OtpPage(
+          challenge: challenge,
+          authApi: authApi,
+        ),
+      ),
+    );
+  } catch (error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(error.toString())),
+    );
+  }
+}
+
+
+7. OTP SCREEN EXAMPLE
+=====================
+
+Future<void> verifyOtp() async {
+  try {
+    final result = await authApi.verifyOtp(
+      challengeId: challenge.challengeId,
+      otp: otpController.text.trim(),
+    );
+
+    final user = Map<String, dynamic>.from(result['user'] as Map);
+
+    if (!mounted) return;
+
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/dashboard',
+      (_) => false,
+      arguments: user,
+    );
+  } catch (error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(error.toString())),
+    );
+  }
+}
+
+
+8. RESEND OTP EXAMPLE
+=====================
+
+Future<void> resendOtp() async {
+  try {
+    final newChallenge = await authApi.resendOtp(
+      challenge.challengeId,
+    );
+
+    setState(() {
+      challenge = newChallenge;
+    });
+  } catch (error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(error.toString())),
+    );
+  }
+}
+
+Always replace the old challenge after resending. The backend invalidates the
+old challenge ID and old OTP.
+
+
+9. BACKEND REQUEST AND RESPONSE EXAMPLES
+========================================
+
+Login request:
+
+POST /api/v1/auth/login
+
+{
+  "countryCode": "+91",
+  "mobileNumber": "9876543210",
+  "rememberMe": true
+}
+
+Development login response:
+
+{
+  "status": "success",
+  "message": "OTP generated successfully. Verify it to continue.",
+  "data": {
+    "otpRequired": true,
+    "challengeId": "00000000-0000-4000-8000-000000000000",
+    "expiresAt": "2026-08-24T10:05:00.000Z",
+    "destination": "+91 ******3210",
+    "developmentOtp": "123456",
+    "developmentOnly": true
+  }
+}
+
+OTP verification request:
+
+POST /api/v1/auth/verify-otp
+
+{
+  "challengeId": "COPY_FROM_LOGIN_RESPONSE",
+  "otp": "123456"
+}
+
+Successful verification response:
+
+{
+  "status": "success",
+  "message": "OTP verified successfully.",
+  "data": {
+    "user": {
+      "id": "USER_ID",
+      "fullName": "Ravi Kumar",
+      "countryCode": "+91",
+      "mobileNumber": "9876543210",
+      "email": "ravi@example.com",
+      "role": "USER"
+    },
+    "accessToken": "JWT_TOKEN",
+    "tokenType": "Bearer",
+    "expiresIn": "30d"
+  }
+}
+
+
+10. IMPORTANT PRODUCTION NOTES
+==============================
+
+1. The backend currently generates an OTP but does not send it through an SMS
+   provider. In development, the response includes developmentOtp. Production
+   responses do not contain it. Connect an SMS provider before deployment.
+
+2. OTPs expire after five minutes by default.
+
+3. Each OTP challenge permits five incorrect attempts.
+
+4. A resent OTP returns a new challengeId. Do not continue using the old one.
+
+5. Store the JWT using flutter_secure_storage, not SharedPreferences.
+
+6. Always use HTTPS in production.
+
+7. For local Android HTTP development, Android may require this attribute in
+   android/app/src/main/AndroidManifest.xml:
+
+   android:usesCleartextTraffic="true"
+
+   Enable clear-text HTTP only for local development.
+
+8. Protected API requests must contain:
+
+   Authorization: Bearer YOUR_ACCESS_TOKEN
+
+
+11. START THE BACKEND
+=====================
+
+From the main backend directory, run:
+
+npm start
+
+The Delevez One App module is mounted by the main EZ Logistics server and does
+not need to be started separately.
