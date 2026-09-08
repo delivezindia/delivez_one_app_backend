@@ -68,9 +68,9 @@ const createOtpChallenge = async (
     challengeId,
     expiresAt,
     destination: `${user.countryCode} ${maskMobileNumber(user.mobileNumber)}`,
-    ...(env.NODE_ENV === 'production'
-      ? {}
-      : { developmentOtp: otp, developmentOnly: true }),
+    developmentOtp: otp,
+    otp,
+    developmentOnly: env.NODE_ENV !== 'production',
   };
 };
 
