@@ -120,8 +120,8 @@ export const register: RequestHandler = async (req, res) => {
 
   res.status(201).json({
     status: 'success',
-    message: 'Registration successful. Verify the OTP to continue.',
-    data: challenge,
+    message: 'Registration pending. Verify the OTP to complete registration.',
+    data: { ...challenge, registrationComplete: false },
   });
 };
 
@@ -317,8 +317,13 @@ export const verifyOtp: RequestHandler = async (req, res) => {
 
   res.status(200).json({
     status: 'success',
-    message: 'OTP verified successfully.',
-    data: createAuthResponse(user, challenge.rememberMe),
+    message: challenge.purpose === 'REGISTER'
+      ? 'Registration successful. OTP verified.'
+      : 'OTP verified successfully.',
+    data: {
+      ...createAuthResponse(user, challenge.rememberMe),
+      ...(challenge.purpose === 'REGISTER' ? { registrationComplete: true } : {}),
+    },
   });
 };
 

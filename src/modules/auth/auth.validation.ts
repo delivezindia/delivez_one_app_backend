@@ -30,6 +30,9 @@ const validatePhone = (countryCode: string, mobileNumber: string): void => {
 };
 
 export const validateRegistration = (body: Record<string, any> = {}) => {
+  if ('password' in body || 'confirmPassword' in body) {
+    throw new AppError(400, 'Registration does not accept password or confirmPassword. Verify the OTP to complete registration.');
+  }
   const fullName = typeof body.fullName === 'string' ? body.fullName.trim() : '';
   const countryCode = normalizeCountryCode(body.countryCode);
   const mobileNumber = normalizeMobileNumber(body.mobileNumber);

@@ -35,7 +35,7 @@ Send **1. Register**, POST {{baseUrl}}/auth/register:
 }
 ```
 
-No password or confirmPassword. Email is optional. Full name must have 2–100 characters, mobile number 7–15 digits, and acceptedTerms must be true. Duplicate phone/email returns 409. Expect 201 with a challengeId and OTP, automatically saved by Postman.
+Password and confirmPassword are rejected with HTTP 400, even if empty. Email is optional. Full name must have 2–100 characters, mobile number 7–15 digits, and acceptedTerms must be true. Duplicate phone/email returns 409. Expect 201 with registrationComplete=false, a challengeId and OTP, automatically saved by Postman. This creates an unverified user record; registration is pending and no access token is issued.
 
 Send **2. Verify OTP**, POST {{baseUrl}}/auth/verify-otp:
 
@@ -43,7 +43,7 @@ Send **2. Verify OTP**, POST {{baseUrl}}/auth/verify-otp:
 { "challengeId": "{{challengeId}}", "otp": "{{otp}}" }
 ```
 
-Expect 200 with data.accessToken and data.user. Postman saves the token.
+Only a correct OTP returns 200 with registrationComplete=true, data.accessToken and data.user, and the message "Registration successful. OTP verified." Postman saves the token. A wrong, expired or consumed OTP cannot complete registration. The OTP belongs in this verification request, after the initial registration request creates the challenge.
 
 ## Login: mobile number, then OTP
 

@@ -25,6 +25,8 @@ describe('Passwordless authentication and devices', () => {
   it('registers without password', async () => {
     const res = await request(app).post('/api/v1/auth/register').send({ fullName: 'Test User', mobileNumber: user.mobileNumber, acceptedTerms: true });
     expect(res.status).toBe(201);
+    expect(res.body.data.registrationComplete).toBe(false);
+    expect(res.body.data.accessToken).toBeUndefined();
     expect(db.user.create.mock.calls[0]![0].data).not.toHaveProperty('passwordHash');
   });
   it('requests OTP using only mobile number', async () => {
@@ -32,6 +34,23 @@ describe('Passwordless authentication and devices', () => {
     expect(res.status).toBe(200);
     expect(res.body.data.challengeId).toBeTypeOf('string');
     expect(db.userDevice.upsert).not.toHaveBeenCalled();
+  });
+  it.each([{ password: 'Password123' }, { confirmPassword: '' }])('rejects registration password fields %j', async fields => {
+    const res = await request(app).post('/api/v1/auth/register').send({ fullName: 'Test User', mobileNumber: user.mobileNumber, acceptedTerms: true, ...fields });
+    expect(res.status).toBe(400);
+    expect(db.user.create).not.toHaveBeenCalled();
+  });
+  it('completes registration only after correct OTP', async () => {
+    const challenge = await db.authOtp.findUnique();
+    db.authOtp.findUnique.mockResolvedValue({ ...challenge, purpose: 'REGISTER' });
+    const wrong = await request(app).post('/api/v1/auth/verify-otp').send({ challengeId, otp: '000000' });
+    expect(wrong.status).toBe(400);
+    expect(db.user.update).not.toHaveBeenCalled();
+    const correct = await request(app).post('/api/v1/auth/verify-otp').send({ challengeId, otp: '123456' });
+    expect(correct.status).toBe(200);
+    expect(correct.body.data.registrationComplete).toBe(true);
+    expect(correct.body.message).toBe('Registration successful. OTP verified.');
+    expect(db.user.update).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ mobileVerifiedAt: expect.any(Date) }) }));
   });
   it('verifies OTP without a device', async () => {
     const res = await request(app).post('/api/v1/auth/verify-otp').send({ challengeId, otp: '123456' });
