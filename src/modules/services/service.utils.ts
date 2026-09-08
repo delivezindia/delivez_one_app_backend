@@ -11,7 +11,9 @@ export const SLUG_ALIASES: Record<string, string> = {
   'airport-luggage': 'luggage-delivery',
   'confidential-courier': 'confidential-delivery',
   'personal-return-pickup': 'return-pickup',
-  'gift-and-surprise': 'gift-delivery',
+  'gift-and-surprise': 'know-more',
+  'gift-delivery': 'know-more',
+  'know-more': 'know-more',
 };
 
 export const canonicalSlug = (slug: string): string => {

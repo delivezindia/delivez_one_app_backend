@@ -1,4 +1,4 @@
-export interface VaultItemType {
+﻿export interface VaultItemType {
   id: string;
   name: string;
   description: string;
@@ -10,7 +10,6 @@ export interface VaultSecurityLevel {
   name: string;
   description: string;
   badge: string;
-  tag?: string;
   fee: number;
 }
 
@@ -18,7 +17,14 @@ export interface VaultPackaging {
   id: string;
   name: string;
   description: string;
-  tag?: string;
+  badge?: string;
+  fee: number;
+}
+
+export interface VaultAddonProtection {
+  id: string;
+  name: string;
+  description: string;
   fee: number;
 }
 
@@ -28,7 +34,6 @@ export interface VaultServiceType {
   description: string;
   expectedDelivery: string;
   tag?: string;
-  category: 'POPULAR' | 'MORE';
   fee: number;
 }
 
@@ -36,6 +41,7 @@ export interface VaultVerificationMethod {
   id: string;
   name: string;
   description: string;
+  badge?: string;
   tag?: string;
 }
 
@@ -54,194 +60,147 @@ export const vaultItemTypes: VaultItemType[] = [
 
 export const vaultSecurityLevels: VaultSecurityLevel[] = [
   {
-    id: 'STANDARD_CONFIDENTIAL',
-    name: 'Standard Confidential',
-    description: 'Business-sensitive documents with secure handling, OTP verification & basic tracking.',
-    badge: 'Standard',
-    tag: 'Good',
+    id: 'STANDARD_SECURITY',
+    name: 'Standard Security',
+    description: 'Basic security with sealed packaging and tracking.',
+    badge: 'Included',
     fee: 0,
   },
   {
-    id: 'HIGHLY_CONFIDENTIAL',
-    name: 'Highly Confidential',
-    description: 'Restricted recipient access, tamper protection, named recipient, full chain of custody & verified delivery.',
-    badge: 'High',
-    tag: 'Recommended',
+    id: 'ENHANCED_SECURITY',
+    name: 'Enhanced Security',
+    description: 'Tamper-proof packaging and real-time tracking.',
+    badge: 'Recommended',
     fee: 30,
   },
   {
-    id: 'CRITICAL',
-    name: 'Critical',
-    description: 'Highest level of security & control with enhanced verification, direct delivery & detailed audit trail.',
-    badge: 'Ultra',
-    tag: 'Maximum',
+    id: 'MAXIMUM_SECURITY',
+    name: 'Maximum Security',
+    description: 'Armed escort / high security for critical items.',
+    badge: 'Premium',
     fee: 60,
   },
 ];
 
 export const vaultPackagingOptions: VaultPackaging[] = [
   {
-    id: 'VAULT_SECURE_ENVELOPE',
-    name: 'Vault Secure Envelope',
-    description: 'Tamper-evident and water-resistant. Includes tamper-proof security seal & unique seal ID.',
-    tag: 'RECOMMENDED',
-    fee: 49,
-  },
-  {
-    id: 'MY_SEALED_ENVELOPE',
-    name: 'My Sealed Envelope',
-    description: "I'll provide my own sealed packaging. We ensure secure handling & seal verification at pickup.",
-    tag: 'No Extra Cost',
+    id: 'STANDARD_BOX',
+    name: 'Standard Box',
+    description: 'Sturdy corrugated box suitable for general shipments.',
+    badge: 'Most Used',
     fee: 0,
   },
   {
-    id: 'VAULT_SECURE_BOX',
-    name: 'Vault Secure Box',
-    description: 'For bulkier documents or items. Rugged & tamper-evident box with extra protection for bulky items.',
-    fee: 99,
+    id: 'PADDED_ENVELOPE',
+    name: 'Padded Envelope',
+    description: 'Lightweight padded mailer for documents and small items.',
+    fee: 0,
+  },
+  {
+    id: 'TAMPER_PROOF_POUCH',
+    name: 'Tamper Proof Pouch',
+    description: 'Secure, tamper-evident pouch for confidential items.',
+    fee: 20,
+  },
+  {
+    id: 'BUBBLE_WRAP',
+    name: 'Bubble Wrap',
+    description: 'Extra cushioning for fragile or breakable items.',
+    fee: 25,
+  },
+  {
+    id: 'HEAVY_DUTY_CRATE',
+    name: 'Heavy Duty Crate',
+    description: 'Maximum protection for heavy, delicate or high-value items.',
+    fee: 50,
+  },
+  {
+    id: 'DOCUMENT_SLEEVE',
+    name: 'Document Sleeve',
+    description: 'Water-resistant sleeve for important documents.',
+    fee: 15,
+  },
+  {
+    id: 'MY_OWN_PACKAGE',
+    name: 'My Own Package',
+    description: 'I will pack using my own packaging.',
+    fee: 0,
   },
 ];
 
+export const vaultAddonProtections: VaultAddonProtection[] = [
+  { id: 'EXTRA_BUBBLE_WRAP', name: 'Extra Bubble Wrap', description: 'Additional cushioning for extra safety.', fee: 30 },
+  { id: 'CORNER_GUARD', name: 'Corner Guard', description: 'Protects corners and edges from damage.', fee: 25 },
+  { id: 'WATERPROOF_COVER', name: 'Waterproof Cover', description: 'Protects from moisture and light rain.', fee: 20 },
+  { id: 'FRAGILE_STICKER', name: 'Fragile Sticker', description: 'Alerts handlers to handle with care.', fee: 10 },
+  { id: 'SEAL_SECURITY_TAPE', name: 'Seal & Security Tape', description: 'Tamper-evident sealing for added security.', fee: 15 },
+];
+
 export const vaultServiceTypes: VaultServiceType[] = [
-  // Popular Services
   {
     id: 'VAULT_SECURE',
     name: 'Vault Secure',
-    description: 'Standard secure delivery with full verification and chain of custody.',
+    description: 'Standard secure delivery with full verification and',
     expectedDelivery: '1-2 Days',
     tag: 'Recommended',
-    category: 'POPULAR',
     fee: 0,
   },
   {
     id: 'VAULT_PRIORITY',
     name: 'Vault Priority',
-    description: 'Faster delivery with priority handling and dedicated partner.',
+    description: 'Faster delivery with priority handling and',
     expectedDelivery: 'Same / Next Day',
     tag: 'Fastest',
-    category: 'POPULAR',
     fee: 40,
   },
   {
     id: 'VAULT_DIRECT',
     name: 'Vault Direct',
-    description: 'Point-to-point delivery with no stops in between. Maximum custody speed.',
+    description: 'Point-to-point delivery with no stops in between. Maxi...',
     expectedDelivery: '1-2 Days',
-    category: 'POPULAR',
-    fee: 80,
-  },
-  // More Services
-  {
-    id: 'VAULT_SAME_DAY',
-    name: 'Vault Same Day',
-    description: 'Same day secure delivery for local city routes.',
-    expectedDelivery: 'Today by 08:00 PM',
-    category: 'MORE',
     fee: 50,
   },
   {
-    id: 'VAULT_EXPRESS',
-    name: 'Vault Express',
-    description: 'Fastest available on-demand courier dispatch.',
-    expectedDelivery: 'Within 2-3 Hours',
-    category: 'MORE',
+    id: 'VAULT_PRECISE',
+    name: 'Vault Precise',
+    description: 'Deliver at a specific date and time window of',
+    expectedDelivery: 'Scheduled',
+    fee: 30,
+  },
+  {
+    id: 'VAULT_HAND_CARRY',
+    name: 'Vault Hand Carry',
+    description: 'Dedicated hand carry by authorized',
+    expectedDelivery: '1-2 Days',
     fee: 60,
   },
   {
-    id: 'VAULT_SCHEDULED',
-    name: 'Vault Scheduled',
-    description: 'Pre-book for specific calendar date & time slot.',
-    expectedDelivery: 'Chosen Slot',
-    category: 'MORE',
-    fee: 0,
-  },
-  {
-    id: 'VAULT_INTERCITY',
-    name: 'Vault Intercity',
-    description: 'City-to-city secure sealed transit.',
-    expectedDelivery: '24-48 Hours',
-    category: 'MORE',
-    fee: 120,
-  },
-  {
-    id: 'VAULT_AIR',
-    name: 'Vault Air',
-    description: 'Air-enabled express transport for long-distance confidential parcels.',
-    expectedDelivery: 'Next Flight Out',
-    category: 'MORE',
-    fee: 200,
+    id: 'VAULT_RETURN',
+    name: 'Vault Return',
+    description: 'Deliver and collect signed or processed documents and ...',
+    expectedDelivery: '1-3 Days',
+    fee: 45,
   },
   {
     id: 'VAULT_EXCHANGE',
     name: 'Vault Exchange',
-    description: 'Two-way confidential document exchange and counter-signing return.',
-    expectedDelivery: '1-2 Days',
-    category: 'MORE',
-    fee: 70,
-  },
-  {
-    id: 'VAULT_MULTIPLE',
-    name: 'Vault Multiple',
-    description: 'Multiple secure drop-off points with individual digital custody receipts.',
-    expectedDelivery: 'Custom Route',
-    category: 'MORE',
-    fee: 90,
-  },
-  {
-    id: 'VAULT_BULK',
-    name: 'Vault Bulk',
-    description: 'Bulk confidential filings and corporate record transfers.',
-    expectedDelivery: '1-2 Days',
-    category: 'MORE',
-    fee: 150,
-  },
-  {
-    id: 'VAULT_LEGAL',
-    name: 'Vault Legal',
-    description: 'For court filings and registrar submissions with timestamped custody logs.',
-    expectedDelivery: 'Court Hours',
-    category: 'MORE',
-    fee: 45,
-  },
-  {
-    id: 'VAULT_TENDER',
-    name: 'Vault Tender',
-    description: 'Tender & bid submissions with strict deadline guarantee.',
-    expectedDelivery: 'Strict Deadline',
-    category: 'MORE',
-    fee: 100,
-  },
-  {
-    id: 'VAULT_BANKING',
-    name: 'Vault Banking',
-    description: 'For banking drafts, bonds, and high-value instruments.',
-    expectedDelivery: 'Banking Hours',
-    category: 'MORE',
-    fee: 50,
-  },
-  {
-    id: 'VAULT_BOARD',
-    name: 'Vault Board',
-    description: 'Board packs & executive confidential dossier delivery.',
-    expectedDelivery: 'Same Day',
-    category: 'MORE',
-    fee: 80,
-  },
-  {
-    id: 'VAULT_WHITE_GLOVE',
-    name: 'Vault White Glove',
-    description: 'Premium handling, tamper audit & dedicated executive escort.',
-    expectedDelivery: 'Direct Non-Stop',
-    category: 'MORE',
-    fee: 120,
+    description: 'Two-way document or item exchange in',
+    expectedDelivery: '1-3 Days',
+    fee: 55,
   },
   {
     id: 'VAULT_CRITICAL',
     name: 'Vault Critical',
-    description: 'Highest control & rapid response delivery with active GPS telemetry.',
-    expectedDelivery: 'Immediate',
-    category: 'MORE',
-    fee: 180,
+    description: 'Highest level of security with armed escort',
+    expectedDelivery: 'Same Day',
+    fee: 90,
+  },
+  {
+    id: 'VAULT_MULTIPOINT',
+    name: 'Vault MultiPoint',
+    description: 'Multiple secure stops in a single journey with',
+    expectedDelivery: '1-3 Days',
+    fee: 70,
   },
 ];
 
@@ -250,25 +209,53 @@ export const vaultAccessRequirements = [
   'Visitor Pass',
   'Lift Access',
   'ID Proof',
-  'Parking',
+];
+
+export const vaultItemHandlingOptions = [
+  'Fragile',
+  'Handle with Care',
+  'This Side Up',
+  'Keep Dry',
+  'Do Not Stack',
 ];
 
 export const vaultVerificationMethods: VaultVerificationMethod[] = [
   {
     id: 'OTP',
     name: 'OTP Verification',
-    description: 'Recipient will receive an OTP on mobile to verify identity.',
-    tag: 'RECOMMENDED',
+    description: 'Recipient will receive an OTP on their registered mobile number for verification.',
+    badge: 'Recommended',
+    tag: 'Best for secure and contact-based deliveries',
   },
   {
-    id: 'QR_CODE',
-    name: 'QR Code Verification',
-    description: 'Recipient must scan the secure QR code at the time of delivery.',
+    id: 'ID_PROOF',
+    name: 'ID Proof Verification',
+    description: 'Verify recipient using a valid government-issued ID proof.',
+    tag: 'Suitable for high value and important shipments',
   },
   {
-    id: 'GOVT_ID',
-    name: 'Authorized ID Verification',
-    description: 'Verify recipient using valid Govt. ID at delivery.',
+    id: 'SIGNATURE',
+    name: 'Signature Verification',
+    description: 'Collect recipient\'s signature at the time of delivery.',
+    tag: 'Standard method for most deliveries',
+  },
+  {
+    id: 'FACE_VERIFICATION',
+    name: 'Face Verification',
+    description: 'Verify recipient using live photo capture at delivery.',
+    tag: 'High security with live face match',
+  },
+  {
+    id: 'AUTHORIZED_PERSON',
+    name: 'Authorized Person Verification',
+    description: 'Allow delivery to an authorized person on behalf of the recipient.',
+    tag: 'For cases where recipient is not personally available',
+  },
+  {
+    id: 'PIN',
+    name: 'PIN Verification',
+    description: 'Recipient must provide a pre-shared PIN to receive the delivery.',
+    tag: 'Extra layer of security for sensitive items',
   },
 ];
 
@@ -292,20 +279,14 @@ export function getVaultOptions() {
     itemTypes: vaultItemTypes,
     securityLevels: vaultSecurityLevels,
     packagingOptions: vaultPackagingOptions,
+    addonProtections: vaultAddonProtections,
     serviceTypes: vaultServiceTypes,
     accessRequirements: vaultAccessRequirements,
+    itemHandlingOptions: vaultItemHandlingOptions,
     verificationMethods: vaultVerificationMethods,
     timeSlots: vaultTimeSlots,
     additionalServices: vaultAdditionalServices,
     encryptionStandard: 'AES-256 End-to-End Encrypted',
     securityBadge: 'Norton SECURED',
-    guarantees: [
-      '100% Secure & Encrypted',
-      'Tamper-Evident Void Seals',
-      'Dual-Party OTP Verification',
-      'Real-Time Live Milestone Telemetry',
-      'Enterprise SLA Guarantee',
-    ],
   };
 }
-

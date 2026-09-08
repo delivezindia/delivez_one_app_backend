@@ -37,10 +37,10 @@ const services = [
     displayOrder: 5,
   },
   {
-    name: 'Gift Delivery',
-    slug: 'gift-delivery',
-    legacySlugs: ['gift-and-surprise'],
-    shortDescription: 'Beautifully wrapped delivery for gifts and special occasions.',
+    name: 'Know More',
+    slug: 'know-more',
+    legacySlugs: ['gift-delivery', 'gift-and-surprise'],
+    shortDescription: 'Explore our full range of tailored logistics, enterprise solutions, and 24/7 support.',
     displayOrder: 6,
   },
 ];

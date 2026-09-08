@@ -1,5 +1,11 @@
 # Passwordless authentication in Postman
 
+## Local Postman collection
+
+Import `Delivery_App_Backend_Auth_Local.postman_collection.json` for local testing. Its baseUrl is `http://localhost:4000/api/v1`, and its name ends in **Local** so it can coexist with the production collection.
+
+Ensure your local `.env` DATABASE_URL points to the intended local database. Run `npm run db:deploy`, `npm run db:generate`, then `npm run dev` from the backend folder. Keep the server terminal open. In Postman select No environment, open the Local collection, and send Health → Readiness first. Then run Register → Verify OTP → Get Current User. Returning users can run Login with OTP → Verify Login OTP. Registration and login do not require passwords.
+
 ## Deploy the backend changes first
 
 On your backend server, check DATABASE_URL targets the intended database, then run:
