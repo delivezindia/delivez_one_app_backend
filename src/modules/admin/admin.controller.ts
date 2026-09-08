@@ -32,7 +32,7 @@ export const adminLogin: RequestHandler = async (req, res) => {
     },
   });
 
-  const passwordMatches = account
+  const passwordMatches = account?.passwordHash
     ? await bcrypt.compare(data.password, account.passwordHash)
     : false;
 

@@ -40,6 +40,7 @@ const createOtpChallenge = async (
   user: PublicUser,
   purpose: string,
   rememberMe = false,
+  deviceId: string | null = null,
 ) => {
   const challengeId = createOtpChallengeId();
   const otp = createOtpCode();
@@ -56,6 +57,7 @@ const createOtpChallenge = async (
         id: challengeId,
         userId: user.id,
         purpose,
+        deviceId,
         codeHash: hashOtpCode(challengeId, otp),
         rememberMe,
         expiresAt,
@@ -104,19 +106,17 @@ export const register: RequestHandler = async (req, res) => {
     );
   }
 
-  const passwordHash = await bcrypt.hash(data.password, 12);
   const user = await prisma.user.create({
     data: {
       fullName: data.fullName,
       countryCode: data.countryCode,
       mobileNumber: data.mobileNumber,
       email: data.email,
-      passwordHash,
       termsAcceptedAt: new Date(),
     },
     select: publicUserSelect,
   });
-  const challenge = await createOtpChallenge(user, 'REGISTER');
+  const challenge = await createOtpChallenge(user, 'REGISTER', false, data.deviceId);
 
   res.status(201).json({
     status: 'success',
@@ -165,7 +165,7 @@ export const login: RequestHandler = async (req, res) => {
       },
     });
 
-    const passwordMatches = account
+    const passwordMatches = account?.passwordHash
       ? await bcrypt.compare(rawPassword, account.passwordHash)
       : false;
 
@@ -204,7 +204,7 @@ export const login: RequestHandler = async (req, res) => {
     select: publicUserSelect,
   });
 
-  if (!user) {
+  if (!user || user.role !== 'USER') {
     throw new AppError(
       404,
       'No user account was found with this mobile number. Please sign up first.',
@@ -228,6 +228,7 @@ export const verifyOtp: RequestHandler = async (req, res) => {
       id: true,
       userId: true,
       purpose: true,
+      deviceId: true,
       codeHash: true,
       rememberMe: true,
       attempts: true,
@@ -288,7 +289,7 @@ export const verifyOtp: RequestHandler = async (req, res) => {
 
     if (consumed.count !== 1) return null;
 
-    return transaction.user.update({
+    const verifiedUser = await transaction.user.update({
       where: { id: challenge.userId },
       data: {
         mobileVerifiedAt: now,
@@ -296,6 +297,18 @@ export const verifyOtp: RequestHandler = async (req, res) => {
       },
       select: publicUserSelect,
     });
+    if (verifiedUser.role !== 'USER') {
+      throw new AppError(400, 'This OTP challenge is no longer valid.');
+    }
+    const deviceId = data.deviceId ?? challenge.deviceId;
+    if (deviceId) {
+      await transaction.userDevice.upsert({
+        where: { userId_deviceId: { userId: verifiedUser.id, deviceId } },
+        create: { userId: verifiedUser.id, deviceId, lastLoginAt: now },
+        update: { lastLoginAt: now },
+      });
+    }
+    return verifiedUser;
   });
 
   if (!user || user.role !== 'USER') {
@@ -315,6 +328,7 @@ export const resendOtp: RequestHandler = async (req, res) => {
     where: { id: data.challengeId },
     select: {
       purpose: true,
+      deviceId: true,
       rememberMe: true,
       consumedAt: true,
       user: { select: publicUserSelect },
@@ -336,6 +350,7 @@ export const resendOtp: RequestHandler = async (req, res) => {
     previousChallenge.user,
     previousChallenge.purpose,
     previousChallenge.rememberMe,
+    previousChallenge.deviceId,
   );
 
   res.status(200).json({
@@ -343,6 +358,16 @@ export const resendOtp: RequestHandler = async (req, res) => {
     message: 'A new OTP was generated successfully.',
     data: challenge,
   });
+};
+
+export const getCurrentUserDevices: RequestHandler = async (req, res) => {
+  if (!req.user) throw new AppError(401, 'Please log in to continue.');
+  const devices = await prisma.userDevice.findMany({
+    where: { userId: req.user.id },
+    select: { id: true, deviceId: true, createdAt: true, lastLoginAt: true },
+    orderBy: { lastLoginAt: 'desc' },
+  });
+  res.status(200).json({ status: 'success', data: { devices } });
 };
 
 export const getCurrentUser: RequestHandler = (req, res) => {

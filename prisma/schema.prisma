@@ -159,7 +159,7 @@ model User {
   countryCode      String    @default("+91") @map("country_code")
   mobileNumber     String    @default("") @map("mobile_number")
   email            String?   @unique
-  passwordHash     String    @map("password_hash")
+  passwordHash     String?   @map("password_hash")
   role             UserRole  @default(USER)
   termsAcceptedAt  DateTime  @default(now()) @map("terms_accepted_at")
   mobileVerifiedAt DateTime? @map("mobile_verified_at")
@@ -168,6 +168,7 @@ model User {
   updatedAt        DateTime  @updatedAt @map("updated_at")
 
   authOtps                    AuthOtp[]
+  devices                     UserDevice[]
   addresses                   UserAddress[]
   courierBookings             CourierBooking[]
   confidentialCourierBookings ConfidentialCourierBooking[]
@@ -184,6 +185,7 @@ model AuthOtp {
   id         String    @id @default(uuid())
   userId     String    @map("user_id")
   purpose    String
+  deviceId   String?   @map("device_id") @db.VarChar(255)
   codeHash   String    @map("code_hash")
   rememberMe Boolean   @default(false) @map("remember_me")
   attempts   Int       @default(0)
@@ -195,6 +197,18 @@ model AuthOtp {
   @@index([userId, purpose, expiresAt])
   @@index([expiresAt])
   @@map("auth_otps")
+}
+
+model UserDevice {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  deviceId    String   @map("device_id") @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at")
+  lastLoginAt DateTime @default(now()) @map("last_login_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, deviceId])
+  @@map("user_devices")
 }
 
 model Service {
@@ -1075,6 +1089,5 @@ model GiftDeliveryConfig {
 
   @@map("gift_delivery_configs")
 }
-
 
 

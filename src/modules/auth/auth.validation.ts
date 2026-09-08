@@ -1,7 +1,12 @@
 import { AppError } from '../../lib/app-error.js';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,72}$/;
+const validateDeviceId = (value: unknown): string => {
+  if (typeof value !== 'string' || !/^[A-Za-z0-9._:-]{1,255}$/.test(value.trim())) {
+    throw new AppError(400, 'deviceId must contain 1 to 255 letters, numbers, dots, underscores, colons or hyphens.');
+  }
+  return value.trim();
+};
 
 const normalizeCountryCode = (value: unknown = '+91'): string => {
   const normalized = String(value).replace(/[\s()-]/g, '');
@@ -29,9 +34,7 @@ export const validateRegistration = (body: Record<string, any> = {}) => {
   const countryCode = normalizeCountryCode(body.countryCode);
   const mobileNumber = normalizeMobileNumber(body.mobileNumber);
   const email = normalizeEmail(body.email);
-  const password = typeof body.password === 'string' ? body.password : '';
-  const confirmPassword =
-    typeof body.confirmPassword === 'string' ? body.confirmPassword : '';
+  const deviceId = body.deviceId === undefined ? null : validateDeviceId(body.deviceId);
 
   if (fullName.length < 2 || fullName.length > 100) {
     throw new AppError(400, 'fullName must contain 2 to 100 characters.');
@@ -43,17 +46,6 @@ export const validateRegistration = (body: Record<string, any> = {}) => {
     throw new AppError(400, 'email must be valid when provided.');
   }
 
-  if (!PASSWORD_PATTERN.test(password)) {
-    throw new AppError(
-      400,
-      'password must be 8 to 72 characters and include uppercase, lowercase, and a number.',
-    );
-  }
-
-  if (password !== confirmPassword) {
-    throw new AppError(400, 'password and confirmPassword do not match.');
-  }
-
   if (body.acceptedTerms !== true) {
     throw new AppError(400, 'acceptedTerms must be true.');
   }
@@ -63,7 +55,7 @@ export const validateRegistration = (body: Record<string, any> = {}) => {
     countryCode,
     mobileNumber,
     email: email || null,
-    password,
+    deviceId,
   };
 };
 
@@ -164,6 +156,7 @@ export const validateOtpLogin = (body: Record<string, any> = {}) => {
 };
 
 export const validateOtpVerification = (body: Record<string, any> = {}) => {
+  const deviceId = body.deviceId === undefined ? null : validateDeviceId(body.deviceId);
   const challengeId =
     typeof body.challengeId === 'string' ? body.challengeId.trim() : '';
   const otp = String(body.otp ?? '').trim();
@@ -180,7 +173,7 @@ export const validateOtpVerification = (body: Record<string, any> = {}) => {
     throw new AppError(400, 'otp must contain exactly 6 digits.');
   }
 
-  return { challengeId, otp };
+  return { challengeId, otp, deviceId };
 };
 
 export const validateOtpResend = (body: Record<string, any> = {}) => {

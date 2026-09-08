@@ -5,6 +5,7 @@ import { authenticate } from '../../middleware/auth.middleware.js';
 import {
   checkAuthentication,
   getCurrentUser,
+  getCurrentUserDevices,
   updateCurrentUser,
   login,
   register,
@@ -20,4 +21,5 @@ authRouter.post('/verify-otp', authRateLimit, verifyOtp);
 authRouter.post('/resend-otp', authRateLimit, resendOtp);
 authRouter.get('/check', checkAuthentication);
 authRouter.get('/me', authenticate, getCurrentUser);
+authRouter.get('/devices', authenticate, getCurrentUserDevices);
 authRouter.patch('/me', authenticate, updateCurrentUser);
