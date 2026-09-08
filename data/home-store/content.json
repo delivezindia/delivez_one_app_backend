@@ -1,0 +1,361 @@
+{
+  "location": {
+    "current": {
+      "label": "Home",
+      "addressLine": "123, MG Road, Bengaluru, Karnataka",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postalCode": "560001",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "isServiceable": true
+    },
+    "presets": [
+      {
+        "id": "home-default",
+        "label": "Home",
+        "addressLine": "123, MG Road, Bengaluru, Karnataka",
+        "city": "Bengaluru",
+        "state": "Karnataka",
+        "postalCode": "560001",
+        "latitude": 12.9716,
+        "longitude": 77.5946
+      },
+      {
+        "id": "work-indiranagar",
+        "label": "Work",
+        "addressLine": "100 Feet Rd, Indiranagar, Bengaluru",
+        "city": "Bengaluru",
+        "state": "Karnataka",
+        "postalCode": "560038",
+        "latitude": 12.9784,
+        "longitude": 77.6408
+      },
+      {
+        "id": "other-koramangala",
+        "label": "Koramangala",
+        "addressLine": "80 Feet Rd, 4th Block, Koramangala, Bengaluru",
+        "city": "Bengaluru",
+        "state": "Karnataka",
+        "postalCode": "560034",
+        "latitude": 12.9352,
+        "longitude": 77.6245
+      },
+      {
+        "id": "city-mumbai",
+        "label": "Mumbai Hub",
+        "addressLine": "Bandra Kurla Complex, Bandra East, Mumbai",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "postalCode": "400051",
+        "latitude": 19.0657,
+        "longitude": 72.8687
+      },
+      {
+        "id": "city-delhi",
+        "label": "Delhi Hub",
+        "addressLine": "Connaught Place, Central Delhi, New Delhi",
+        "city": "New Delhi",
+        "state": "Delhi",
+        "postalCode": "110001",
+        "latitude": 28.6315,
+        "longitude": 77.2167
+      },
+      {
+        "id": "city-hyderabad",
+        "label": "Hyderabad Hub",
+        "addressLine": "Hitec City, Madhapur, Hyderabad",
+        "city": "Hyderabad",
+        "state": "Telangana",
+        "postalCode": "500081",
+        "latitude": 17.4435,
+        "longitude": 78.3772
+      }
+    ]
+  },
+  "hero": {
+    "greetingPrefix": "Hi",
+    "defaultName": "Arjun",
+    "greetingEmoji": "👋",
+    "headline": "What do you need delivered today?",
+    "highlightWord": "delivered",
+    "subtitle": "AI will take care of the rest.",
+    "searchTitle": "Tell us in your own words... ?",
+    "searchPlaceholder": "Example: Pick up my laptop from office and deliver home by 8 PM.",
+    "micEnabled": true,
+    "hasCustomImage": true,
+    "sideImageUrl": null,
+    "sideImageUpdatedAt": "2026-09-08T13:37:03.324Z",
+    "sideImageMimeType": "image/png",
+    "sideImageFileName": "mascot.png"
+  },
+  "quickActions": [
+    {
+      "id": "ship-now",
+      "title": "Ship Now",
+      "subtitle": "Book a new shipment",
+      "icon": "box",
+      "actionType": "ROUTE",
+      "actionTarget": "/courier",
+      "badge": "Express",
+      "displayOrder": 1,
+      "isActive": true,
+      "hasCustomImage": true,
+      "imageUrl": null,
+      "imageMimeType": "image/png",
+      "imageFileName": "mascot.png",
+      "imageUpdatedAt": "2026-09-08T13:37:03.340Z"
+    },
+    {
+      "id": "track-shipment",
+      "title": "Track Shipment",
+      "subtitle": "Track your shipments",
+      "icon": "truck",
+      "actionType": "ROUTE",
+      "actionTarget": "#track-order",
+      "badge": "Live",
+      "displayOrder": 2,
+      "isActive": true,
+      "hasCustomImage": false,
+      "imageUrl": null
+    },
+    {
+      "id": "find-pincode",
+      "title": "Find Pincode",
+      "subtitle": "Check service availability",
+      "icon": "map-pin",
+      "actionType": "MODAL",
+      "actionTarget": "PINCODE_MODAL",
+      "badge": "Check",
+      "displayOrder": 3,
+      "isActive": true,
+      "hasCustomImage": false,
+      "imageUrl": null
+    },
+    {
+      "id": "help-support",
+      "title": "Help & Support",
+      "subtitle": "24/7 assistance",
+      "icon": "headset",
+      "actionType": "MODAL",
+      "actionTarget": "SUPPORT_MODAL",
+      "badge": "24/7",
+      "displayOrder": 4,
+      "isActive": true,
+      "hasCustomImage": false,
+      "imageUrl": null
+    }
+  ],
+  "banner": {
+    "title": "Priority. Protection. Performance.",
+    "subtitle": "Delivered the Delivez way.",
+    "buttonText": "Know More",
+    "buttonLink": "#services",
+    "backgroundColor": "#F59E0B",
+    "textColor": "#111827",
+    "iconName": "ShieldCheck",
+    "isActive": true
+  },
+  "chips": [
+    {
+      "id": "price-calculator",
+      "label": "Price Calculator",
+      "icon": "calculator",
+      "target": "#services",
+      "isActive": true
+    },
+    {
+      "id": "schedule-pickup",
+      "label": "Schedule Pickup",
+      "icon": "calendar",
+      "target": "/courier",
+      "isActive": true
+    },
+    {
+      "id": "delivez-money",
+      "label": "Delivez Money",
+      "icon": "wallet",
+      "target": "#wallet",
+      "isActive": true
+    },
+    {
+      "id": "best-offers",
+      "label": "Best Offers",
+      "icon": "tag",
+      "target": "#services",
+      "isActive": true
+    }
+  ],
+  "pincodes": [
+    {
+      "pincode": "560001",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "isServiceable": true,
+      "estimatedDelivery": "Same Day (2-4 Hours)",
+      "availableServices": [
+        "courier-delivery",
+        "luggage-delivery",
+        "confidential-delivery",
+        "forgot-something",
+        "return-pickup",
+        "know-more"
+      ],
+      "codAvailable": true
+    },
+    {
+      "pincode": "560038",
+      "city": "Bengaluru (Indiranagar)",
+      "state": "Karnataka",
+      "isServiceable": true,
+      "estimatedDelivery": "Same Day (2-4 Hours)",
+      "availableServices": [
+        "courier-delivery",
+        "luggage-delivery",
+        "confidential-delivery",
+        "forgot-something",
+        "return-pickup",
+        "know-more"
+      ],
+      "codAvailable": true
+    },
+    {
+      "pincode": "560034",
+      "city": "Bengaluru (Koramangala)",
+      "state": "Karnataka",
+      "isServiceable": true,
+      "estimatedDelivery": "Same Day (2-4 Hours)",
+      "availableServices": [
+        "courier-delivery",
+        "luggage-delivery",
+        "confidential-delivery",
+        "forgot-something",
+        "return-pickup",
+        "know-more"
+      ],
+      "codAvailable": true
+    },
+    {
+      "pincode": "110001",
+      "city": "New Delhi (Connaught Place)",
+      "state": "Delhi",
+      "isServiceable": true,
+      "estimatedDelivery": "Same Day / Next Day",
+      "availableServices": [
+        "courier-delivery",
+        "luggage-delivery",
+        "confidential-delivery",
+        "forgot-something",
+        "return-pickup",
+        "know-more"
+      ],
+      "codAvailable": true
+    },
+    {
+      "pincode": "400001",
+      "city": "Mumbai (Fort / South Mumbai)",
+      "state": "Maharashtra",
+      "isServiceable": true,
+      "estimatedDelivery": "Same Day / Next Day",
+      "availableServices": [
+        "courier-delivery",
+        "luggage-delivery",
+        "confidential-delivery",
+        "forgot-something",
+        "return-pickup",
+        "know-more"
+      ],
+      "codAvailable": true
+    },
+    {
+      "pincode": "500081",
+      "city": "Hyderabad (Hitec City)",
+      "state": "Telangana",
+      "isServiceable": true,
+      "estimatedDelivery": "Same Day / Next Day",
+      "availableServices": [
+        "courier-delivery",
+        "luggage-delivery",
+        "confidential-delivery",
+        "forgot-something",
+        "return-pickup",
+        "know-more"
+      ],
+      "codAvailable": true
+    },
+    {
+      "pincode": "600017",
+      "city": "Chennai (T. Nagar)",
+      "state": "Tamil Nadu",
+      "isServiceable": true,
+      "estimatedDelivery": "Next Day Express",
+      "availableServices": [
+        "courier-delivery",
+        "luggage-delivery",
+        "confidential-delivery",
+        "forgot-something",
+        "return-pickup",
+        "know-more"
+      ],
+      "codAvailable": true
+    },
+    {
+      "pincode": "411001",
+      "city": "Pune (Camp / Station)",
+      "state": "Maharashtra",
+      "isServiceable": true,
+      "estimatedDelivery": "Next Day Express",
+      "availableServices": [
+        "courier-delivery",
+        "luggage-delivery",
+        "confidential-delivery",
+        "forgot-something",
+        "return-pickup",
+        "know-more"
+      ],
+      "codAvailable": true
+    },
+    {
+      "pincode": "700001",
+      "city": "Kolkata (BBD Bagh)",
+      "state": "West Bengal",
+      "isServiceable": true,
+      "estimatedDelivery": "Same Day Express",
+      "availableServices": [
+        "courier-delivery",
+        "luggage-delivery",
+        "confidential-delivery"
+      ],
+      "codAvailable": true
+    }
+  ],
+  "support": {
+    "helpline": "+91 1800-DELIVEZ-247 (Toll Free)",
+    "whatsapp": "+91 98765 43210",
+    "email": "support@delivez.com",
+    "operatingHours": "24/7 Assistance • All 365 Days",
+    "chatEnabled": true,
+    "faqs": [
+      {
+        "question": "How do I book an urgent delivery?",
+        "answer": "Click \"Ship Now\" on the home screen or choose from our specialized services like Courier, Confidential, or Luggage delivery.",
+        "category": "Booking"
+      },
+      {
+        "question": "How do I track my shipment?",
+        "answer": "Enter your tracking ID (e.g. DLVZ... or DV-...) in the Track Shipment section for real-time live updates and driver telemetry.",
+        "category": "Tracking"
+      },
+      {
+        "question": "Is Confidential Delivery really secure?",
+        "answer": "Yes, Delivez Vault uses AES-256 encryption, tamper-evident void seals, armed executive transit, and dual-party OTP verification.",
+        "category": "Security"
+      },
+      {
+        "question": "How can I check service availability in my area?",
+        "answer": "Click on \"Find Pincode\" or enter your 6-digit postal code to check instant serviceability and estimated turnaround time.",
+        "category": "Serviceability"
+      }
+    ]
+  }
+}

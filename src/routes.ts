@@ -1,3 +1,5 @@
+import { homeContentRouter, locationRouter, pincodeRouter, supportRouter } from './modules/home-content/home-content.routes.js';
+import { homeContentAdminRouter } from './modules/home-content/home-content-admin.routes.js';
 import { getActivePublicBroadcasts } from './modules/admin/admin-broadcast.controller.js';
 import { Router } from 'express';
 
@@ -48,6 +50,11 @@ apiRouter.use('/gift-delivery', giftDeliveryRouter);
 apiRouter.use('/gifts', giftDeliveryRouter);
 apiRouter.use('/health', systemRouter);
 apiRouter.use('/services', serviceRouter);
+apiRouter.use('/home', homeContentRouter);
+apiRouter.use('/location', locationRouter);
+apiRouter.use('/pincode', pincodeRouter);
+apiRouter.use('/support', supportRouter);
+apiRouter.use('/admin/home', homeContentAdminRouter);
 apiRouter.get('/track/:trackingId', universalTrackOrder);
 apiRouter.get('/broadcasts/active', getActivePublicBroadcasts);
 
