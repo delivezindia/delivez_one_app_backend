@@ -1,0 +1,1760 @@
+{
+  "info": {
+    "_postman_id": "e6b6f790-2bb8-41df-a72e-0a56de163f91",
+    "name": "Delivez - Core 4 Services API (Courier, Luggage, Confidential, Forgot Something)",
+    "description": "Complete, production-ready Postman collection for Delivez delivery services:\\n\\n1. Personal Courier Delivery\\n2. Luggage Delivery\\n3. Confidential Delivery (Vault)\\n4. Forgot Something (Item Retrieval)\\n\\nIncludes automated token management, dynamic quotes, bookings creation, tracking, OTP verifications, sandbox payments, cancellations, and live audit logging.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Authentication",
+      "description": "Authentication endpoints to obtain User Access Token and Admin Access Token. Test scripts will automatically save the tokens to environment variables.",
+      "item": [
+        {
+          "name": "User Login (OTP / Password)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ],
+              "query": []
+            },
+            "description": "Logs in customer user and stores {{accessToken}} into the active Postman environment.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"countryCode\": \"+91\",\n  \"mobileNumber\": \"{{userMobile}}\",\n  \"password\": \"{{userPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.accessToken) {",
+                  "    pm.environment.set(\"accessToken\", json.data.accessToken);",
+                  "    console.log(\"accessToken set: \" + json.data.accessToken.substring(0, 15) + \"...\");",
+                  "} else if (json.data && json.data.token) {",
+                  "    pm.environment.set(\"accessToken\", json.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "auth",
+                "login"
+              ],
+              "query": []
+            },
+            "description": "Logs in platform administrator and stores {{adminAccessToken}} into the active Postman environment.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.accessToken) {",
+                  "    pm.environment.set(\"adminAccessToken\", json.data.accessToken);",
+                  "    console.log(\"adminAccessToken set: \" + json.data.accessToken.substring(0, 15) + \"...\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Current User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ],
+              "query": []
+            },
+            "description": "Returns the currently logged in user profile."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Personal Courier Delivery",
+      "description": "Endpoints for standard doorstep-to-doorstep point-to-point courier parcels, document envelopes, and package delivery.",
+      "item": [
+        {
+          "name": "1. Get Courier Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/options",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "options"
+              ],
+              "query": []
+            },
+            "description": "Retrieve package types, size tiers, vehicle classes, delivery speeds, and addon protections."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Calculate Courier Quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/quote",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "quote"
+              ],
+              "query": []
+            },
+            "description": "Calculates dynamic quote with distance fee, weight multiplier, and selected speed.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"addressLine1\": \"Tower 4, Prestige Tech Park\",\n    \"addressLine2\": \"Outer Ring Rd, Kadubeesanahalli\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560103\",\n    \"latitude\": 12.9352,\n    \"longitude\": 77.6946\n  },\n  \"dropoff\": {\n    \"addressLine1\": \"Flat 302, Green Glen Layout\",\n    \"addressLine2\": \"Bellandur\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560103\",\n    \"latitude\": 12.9279,\n    \"longitude\": 77.6771\n  },\n  \"packageType\": \"BOX\",\n  \"weightKg\": 2.5,\n  \"speed\": \"EXPRESS\",\n  \"selectedProtection\": \"STANDARD\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Create Courier Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "idemp-courier-{{$timestamp}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "bookings"
+              ],
+              "query": []
+            },
+            "description": "Places a personal courier delivery order and automatically stores {{courierBookingId}}.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"contactName\": \"Rahul Sharma\",\n    \"phoneNumber\": \"+919876543210\",\n    \"addressLine1\": \"Tower 4, Prestige Tech Park\",\n    \"addressLine2\": \"A Block, 2nd Floor\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560103\",\n    \"latitude\": 12.9352,\n    \"longitude\": 77.6946\n  },\n  \"dropoff\": {\n    \"contactName\": \"Priya Verma\",\n    \"phoneNumber\": \"+919876543211\",\n    \"addressLine1\": \"Flat 302, Green Glen Layout\",\n    \"addressLine2\": \"Bellandur\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560103\",\n    \"latitude\": 12.9279,\n    \"longitude\": 77.6771\n  },\n  \"packageType\": \"BOX\",\n  \"weightKg\": 2.5,\n  \"speed\": \"EXPRESS\",\n  \"instructions\": \"Call before arrival, ring door bell at 302\",\n  \"paymentMethod\": \"CASH\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Booking created\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "var id = (json.data && json.data.booking && json.data.booking.id) || (json.data && json.data.id);",
+                  "if (id) {",
+                  "    pm.environment.set(\"courierBookingId\", id);",
+                  "    console.log(\"Saved courierBookingId: \" + id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "4. List Courier Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/bookings?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "bookings"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                }
+              ]
+            },
+            "description": "Fetches paginated courier bookings for the authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Get Courier Booking Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/bookings/{{courierBookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "bookings",
+                "{{courierBookingId}}"
+              ],
+              "query": []
+            },
+            "description": "Fetches single courier booking status, partner assignment, and coordinates."
+          },
+          "response": []
+        },
+        {
+          "name": "6. Track Courier Booking (Milestones)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/bookings/{{courierBookingId}}/track",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "bookings",
+                "{{courierBookingId}}",
+                "track"
+              ],
+              "query": []
+            },
+            "description": "Returns real-time milestone timeline (CREATED, ASSIGNED, PICKED_UP, IN_TRANSIT, DELIVERED)."
+          },
+          "response": []
+        },
+        {
+          "name": "7. Get Courier Proof of Delivery (POD)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/bookings/{{courierBookingId}}/pod",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "bookings",
+                "{{courierBookingId}}",
+                "pod"
+              ],
+              "query": []
+            },
+            "description": "Returns proof of delivery including recipient confirmation, receiver signature, and timestamp."
+          },
+          "response": []
+        },
+        {
+          "name": "8. Update Courier Instructions",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/bookings/{{courierBookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "bookings",
+                "{{courierBookingId}}"
+              ],
+              "query": []
+            },
+            "description": "Updates delivery notes and instructions for active courier.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instructions\": \"Leave package with security gate if recipient is unavailable.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "9. Complete Courier Sandbox Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/bookings/{{courierBookingId}}/payments/sandbox",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "bookings",
+                "{{courierBookingId}}",
+                "payments",
+                "sandbox"
+              ],
+              "query": []
+            },
+            "description": "Simulates successful sandbox payment confirmation.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethod\": \"UPI\",\n  \"status\": \"COMPLETED\",\n  \"transactionId\": \"TXN_{{$timestamp}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "10. Cancel Courier Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/bookings/{{courierBookingId}}/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "bookings",
+                "{{courierBookingId}}",
+                "cancel"
+              ],
+              "query": []
+            },
+            "description": "Cancels the active courier booking.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Client requested postponement to tomorrow.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Luggage Delivery",
+      "description": "Endpoints for Airport luggage belt collection, terminal pickup, and hotel front desk luggage delivery.",
+      "item": [
+        {
+          "name": "1. Get Luggage Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/luggage-delivery/options",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "luggage-delivery",
+                "options"
+              ],
+              "query": []
+            },
+            "description": "Fetches bag categories, weight tiers, terminal lists, belt collection choices, and airport luggage insurance add-ons."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Calculate Luggage Quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/luggage-delivery/quote",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "luggage-delivery",
+                "quote"
+              ],
+              "query": []
+            },
+            "description": "Calculates price quote including airport fee, bag count breakdown, and weight fees.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"addressLine1\": \"Terminal 2, Kempegowda International Airport\",\n    \"addressLine2\": \"Arrival Hall, Luggage Belt 04\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560300\",\n    \"latitude\": 13.1986,\n    \"longitude\": 77.7066\n  },\n  \"dropoff\": {\n    \"addressLine1\": \"The Leela Palace, Old Airport Road\",\n    \"addressLine2\": \"HAL 2nd Stage, Kodihalli\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560008\",\n    \"latitude\": 12.9606,\n    \"longitude\": 77.6484\n  },\n  \"pickupOption\": \"luggage_belt\",\n  \"luggageBelt\": \"04\",\n  \"terminal\": \"T2\",\n  \"flightNumber\": \"6E-2041\",\n  \"luggageList\": [\n    {\n      \"id\": \"bag-1\",\n      \"type\": \"Check-in Bag\",\n      \"size\": \"Large\",\n      \"weight\": 23\n    },\n    {\n      \"id\": \"bag-2\",\n      \"type\": \"Cabin Trolley\",\n      \"size\": \"Medium\",\n      \"weight\": 10\n    }\n  ],\n  \"hotelFrontDeskDrop\": true,\n  \"selectedProtection\": \"PREMIUM_TAG\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Create Luggage Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "idemp-luggage-{{$timestamp}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/luggage-delivery/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "luggage-delivery",
+                "bookings"
+              ],
+              "query": []
+            },
+            "description": "Books airport/hotel luggage delivery and stores {{luggageBookingId}}.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"contactName\": \"Vikram Malhotra\",\n    \"phoneNumber\": \"+919876543212\",\n    \"addressLine1\": \"Terminal 2, Kempegowda International Airport\",\n    \"addressLine2\": \"Belt 04, International Arrival Hall\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560300\",\n    \"latitude\": 13.1986,\n    \"longitude\": 77.7066\n  },\n  \"dropoff\": {\n    \"contactName\": \"Vikram Malhotra (Front Desk)\",\n    \"phoneNumber\": \"+919876543212\",\n    \"addressLine1\": \"The Leela Palace, 23 Old Airport Road\",\n    \"addressLine2\": \"Reservation under Vikram Malhotra\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560008\",\n    \"latitude\": 12.9606,\n    \"longitude\": 77.6484\n  },\n  \"pickupOption\": \"luggage_belt\",\n  \"flightNumber\": \"6E-2041\",\n  \"terminal\": \"T2\",\n  \"luggageBelt\": \"04\",\n  \"luggageList\": [\n    {\n      \"type\": \"Check-in Bag\",\n      \"size\": \"Large\",\n      \"weight\": 23,\n      \"tagNumber\": \"BLR-6E-9941\"\n    }\n  ],\n  \"hotelFrontDeskDrop\": true,\n  \"paymentMethod\": \"UPI\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Luggage booking created\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "var id = (json.data && json.data.booking && json.data.booking.id) || (json.data && json.data.id);",
+                  "if (id) {",
+                  "    pm.environment.set(\"luggageBookingId\", id);",
+                  "    console.log(\"Saved luggageBookingId: \" + id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "4. List Luggage Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/luggage-delivery/bookings?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "luggage-delivery",
+                "bookings"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                }
+              ]
+            },
+            "description": "Lists all luggage delivery bookings for the authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Get Luggage Booking Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/luggage-delivery/bookings/{{luggageBookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "luggage-delivery",
+                "bookings",
+                "{{luggageBookingId}}"
+              ],
+              "query": []
+            },
+            "description": "Returns airport terminal details, flight number, bag tags, and delivery status."
+          },
+          "response": []
+        },
+        {
+          "name": "6. Complete Luggage Sandbox Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/luggage-delivery/bookings/{{luggageBookingId}}/payments/sandbox",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "luggage-delivery",
+                "bookings",
+                "{{luggageBookingId}}",
+                "payments",
+                "sandbox"
+              ],
+              "query": []
+            },
+            "description": "Completes sandbox payment for luggage transit.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethod\": \"UPI\",\n  \"status\": \"COMPLETED\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7. Cancel Luggage Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/luggage-delivery/bookings/{{luggageBookingId}}/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "luggage-delivery",
+                "bookings",
+                "{{luggageBookingId}}",
+                "cancel"
+              ],
+              "query": []
+            },
+            "description": "Cancels luggage booking.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Flight delayed or luggage already collected.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Confidential Delivery (Vault)",
+      "description": "Endpoints for tamper-proof, high-security legal documents, confidential records, and high-value vault transit.",
+      "item": [
+        {
+          "name": "1. Get Vault Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/options",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "options"
+              ],
+              "query": []
+            },
+            "description": "Returns security levels (Standard, Enhanced, Maximum Security), tamper-proof pouch options, and verification methods."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Calculate Vault Quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/quote",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "quote"
+              ],
+              "query": []
+            },
+            "description": "Calculates quote including security handling, tamper-evident seals, and specialized escort fees.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"addressLine1\": \"Advocates Chambers, High Court Complex\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560001\",\n    \"latitude\": 12.9778,\n    \"longitude\": 77.5926\n  },\n  \"dropoff\": {\n    \"addressLine1\": \"KPMG Corporate Office, Embassy GolfLinks\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560071\",\n    \"latitude\": 12.9538,\n    \"longitude\": 77.6484\n  },\n  \"securityLevel\": \"MAXIMUM_SECURITY\",\n  \"packagingType\": \"TAMPER_PROOF_POUCH\",\n  \"verificationMethod\": \"OTP\",\n  \"serviceType\": \"VAULT_SECURE\",\n  \"addonProtections\": [\n    \"EXTRA_BUBBLE_WRAP\",\n    \"SEAL_SECURITY_TAPE\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Create Vault Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "idemp-vault-{{$timestamp}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings"
+              ],
+              "query": []
+            },
+            "description": "Books a confidential vault shipment and saves {{confidentialBookingId}} and {{vaultId}}.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"contactName\": \"Advocate Ramesh Sen\",\n    \"phoneNumber\": \"+919876543220\",\n    \"addressLine1\": \"High Court Complex, Chamber 14\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560001\",\n    \"latitude\": 12.9778,\n    \"longitude\": 77.5926\n  },\n  \"delivery\": {\n    \"contactName\": \"Director Anita Roy\",\n    \"phoneNumber\": \"+919876543221\",\n    \"addressLine1\": \"Embassy GolfLinks Business Park, Pebble Beach\",\n    \"addressLine2\": \"3rd Floor Legal Wing\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560071\",\n    \"latitude\": 12.9538,\n    \"longitude\": 77.6484\n  },\n  \"dropoff\": {\n    \"contactName\": \"Director Anita Roy\",\n    \"phoneNumber\": \"+919876543221\",\n    \"addressLine1\": \"Embassy GolfLinks Business Park, Pebble Beach\",\n    \"addressLine2\": \"3rd Floor Legal Wing\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560071\",\n    \"latitude\": 12.9538,\n    \"longitude\": 77.6484\n  },\n  \"securityLevel\": \"MAXIMUM_SECURITY\",\n  \"packagingType\": \"TAMPER_PROOF_POUCH\",\n  \"verificationMethod\": \"OTP\",\n  \"itemDescription\": \"Original Deed Agreement & Legal Records\",\n  \"handlingInstructions\": \"Do not fold, direct handoff only to Anita Roy with ID check.\",\n  \"paymentMethod\": \"ONLINE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Vault booking created\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "var b = (json.data && json.data.booking) || json.data;",
+                  "if (b && b.id) {",
+                  "    pm.environment.set(\"confidentialBookingId\", b.id);",
+                  "    pm.environment.set(\"vaultId\", b.vaultId || b.trackingId || b.id);",
+                  "    console.log(\"Saved confidentialBookingId: \" + b.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "4. List Vault Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings"
+              ],
+              "query": []
+            },
+            "description": "Lists all confidential deliveries for the authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Get Vault Booking Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings/{{confidentialBookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings",
+                "{{confidentialBookingId}}"
+              ],
+              "query": []
+            },
+            "description": "Fetches vault booking details, tamper status, security level, and assigned escort."
+          },
+          "response": []
+        },
+        {
+          "name": "6. Track Vault Shipment (Public / Secured)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/track/{{vaultId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "track",
+                "{{vaultId}}"
+              ],
+              "query": []
+            },
+            "description": "Returns tamper seal integrity, security level badge, and live chain of custody checkpoints."
+          },
+          "response": []
+        },
+        {
+          "name": "7. Verify Vault Delivery OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/track/{{confidentialBookingId}}/verify-otp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "track",
+                "{{confidentialBookingId}}",
+                "verify-otp"
+              ],
+              "query": []
+            },
+            "description": "Validates delivery OTP before confidential parcel release.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"otp\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8. Complete Vault Sandbox Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings/{{confidentialBookingId}}/payments/sandbox",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings",
+                "{{confidentialBookingId}}",
+                "payments",
+                "sandbox"
+              ],
+              "query": []
+            },
+            "description": "Completes sandbox payment for vault delivery.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethod\": \"ONLINE\",\n  \"status\": \"COMPLETED\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "9. Admin Update Vault Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/admin/bookings/{{confidentialBookingId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "admin",
+                "bookings",
+                "{{confidentialBookingId}}",
+                "status"
+              ],
+              "query": []
+            },
+            "description": "Platform Admin updates the chain of custody status and tamper condition.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"IN_TRANSIT\",\n  \"tamperSealIntact\": true,\n  \"notes\": \"Armed courier dispatched from Vault hub.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "10. Cancel Vault Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings/{{confidentialBookingId}}/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings",
+                "{{confidentialBookingId}}",
+                "cancel"
+              ],
+              "query": []
+            },
+            "description": "Cancels confidential delivery.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Document signing postponed.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Forgot Something (Item Retrieval)",
+      "description": "Endpoints for retrieving forgotten items (keys, laptop, charger, wallet, documents) from office, restaurant, hotel, or home.",
+      "item": [
+        {
+          "name": "1. Get Forgot Something Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/options",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "options"
+              ],
+              "query": []
+            },
+            "description": "Returns item categories (Keys, Laptop, Phone, Documents, Bag, Charger, Wallet, Glasses), location types, handover options, and speeds."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Calculate Forgot Something Quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/quote",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "quote"
+              ],
+              "query": []
+            },
+            "description": "Calculates retrieval fare, distance fee, and secure packaging charges.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"addressLine1\": \"WeWork Galaxy, 43 Residency Road\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560025\",\n    \"latitude\": 12.9716,\n    \"longitude\": 77.6083\n  },\n  \"dropoff\": {\n    \"addressLine1\": \"Indiranagar 100ft Road, 12th Main\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560038\",\n    \"latitude\": 12.9784,\n    \"longitude\": 77.6408\n  },\n  \"itemCategory\": \"LAPTOP\",\n  \"speed\": \"INSTANT\",\n  \"tamperProofPackaging\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Create Forgot Something Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "idemp-forgot-{{$timestamp}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "bookings"
+              ],
+              "query": []
+            },
+            "description": "Creates item retrieval booking and stores {{forgotBookingId}}.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"contactName\": \"Sunil (Reception)\",\n    \"phoneNumber\": \"+919876543230\",\n    \"addressLine1\": \"WeWork Galaxy, 43 Residency Road\",\n    \"addressLine2\": \"Front Desk 4th Floor\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560025\",\n    \"latitude\": 12.9716,\n    \"longitude\": 77.6083\n  },\n  \"dropoff\": {\n    \"contactName\": \"Aakash Mehta\",\n    \"phoneNumber\": \"+919876543231\",\n    \"addressLine1\": \"Villa 12, Indiranagar Defense Colony\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560038\",\n    \"latitude\": 12.9784,\n    \"longitude\": 77.6408\n  },\n  \"itemCategory\": \"LAPTOP\",\n  \"itemName\": \"MacBook Pro 16-inch Silver in Black Sleeve\",\n  \"itemDescription\": \"Left on desk 402 near cafeteria, with charging brick\",\n  \"locationType\": \"OFFICE\",\n  \"handoverPerson\": \"Sunil (Reception)\",\n  \"handoverPhone\": \"+919876543230\",\n  \"speed\": \"INSTANT\",\n  \"tamperProofPackaging\": true,\n  \"pickupOtpRequired\": true,\n  \"deliveryOtpRequired\": true,\n  \"paymentMethod\": \"UPI\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Forgot Something booking created\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "var b = (json.data && json.data.booking) || json.data;",
+                  "if (b && b.id) {",
+                  "    pm.environment.set(\"forgotBookingId\", b.id);",
+                  "    console.log(\"Saved forgotBookingId: \" + b.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "4. List Forgot Something Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/bookings?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "bookings"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                }
+              ]
+            },
+            "description": "Returns paginated item retrieval bookings for user."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Get Forgot Something Booking Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/bookings/{{forgotBookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "bookings",
+                "{{forgotBookingId}}"
+              ],
+              "query": []
+            },
+            "description": "Fetches retrieval item details, handover contact, and assigned runner."
+          },
+          "response": []
+        },
+        {
+          "name": "6. Track Forgot Something Retrieval",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/track/{{forgotBookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "track",
+                "{{forgotBookingId}}"
+              ],
+              "query": []
+            },
+            "description": "Public tracking URL showing item retrieval status and runner location."
+          },
+          "response": []
+        },
+        {
+          "name": "7. Verify Retrieval OTP (Pickup / Delivery)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/track/{{forgotBookingId}}/verify-otp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "track",
+                "{{forgotBookingId}}",
+                "verify-otp"
+              ],
+              "query": []
+            },
+            "description": "Verifies the pickup or delivery OTP.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"DELIVERY\",\n  \"otp\": \"456789\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8. Update Retrieval Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/track/{{forgotBookingId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "track",
+                "{{forgotBookingId}}",
+                "status"
+              ],
+              "query": []
+            },
+            "description": "Updates retrieval lifecycle status (RETRIEVING, PICKED_UP, OUT_FOR_DELIVERY, DELIVERED).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"OUT_FOR_DELIVERY\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "9. Complete Retrieval Sandbox Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/bookings/{{forgotBookingId}}/payments/sandbox",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "bookings",
+                "{{forgotBookingId}}",
+                "payments",
+                "sandbox"
+              ],
+              "query": []
+            },
+            "description": "Completes sandbox payment for item retrieval.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethod\": \"UPI\",\n  \"status\": \"COMPLETED\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "10. Cancel Forgot Something Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/bookings/{{forgotBookingId}}/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "bookings",
+                "{{forgotBookingId}}",
+                "cancel"
+              ],
+              "query": []
+            },
+            "description": "Cancels the retrieval booking.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Colleague found the item and brought it home.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. Live Audit & Unified Operations",
+      "description": "Endpoints to inspect universal tracking and verify that actions appear in the live Enterprise Audit Trail.",
+      "item": [
+        {
+          "name": "Universal Track Order",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/track/{{courierBookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "track",
+                "{{courierBookingId}}"
+              ],
+              "query": []
+            },
+            "description": "Universal tracker resolving tracking IDs across all 4 services."
+          },
+          "response": []
+        },
+        {
+          "name": "Unified Orders Stream (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders/unified",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "orders",
+                "unified"
+              ],
+              "query": []
+            },
+            "description": "Returns unified real-time order stream across Courier, Luggage, Confidential, and Forgot Something."
+          },
+          "response": []
+        },
+        {
+          "name": "Live Audit Logs Stream (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/audit-logs?category=ALL&timeframe=24h",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "audit-logs"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "ALL",
+                  "description": ""
+                },
+                {
+                  "key": "timeframe",
+                  "value": "24h",
+                  "description": ""
+                }
+              ]
+            },
+            "description": "Fetches compliance audit records verifying that all state mutations were recorded."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000/api/v1",
+      "type": "string"
+    }
+  ]
+}

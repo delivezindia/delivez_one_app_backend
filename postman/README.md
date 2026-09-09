@@ -1,90 +1,118 @@
-# Passwordless authentication in Postman
+## 📦 Mobile Application Collections & Environments
 
-## Local Postman collection
+| Collection File | Environment / Scope | Base URL (`{{baseUrl}}`) |
+|---|---|---|
+| **`Delivez-Mobile-App-Production.postman_collection.json`** | **Mobile Production (Ready-to-Run)** | `http://40.81.244.167:3012/api/v1` |
+| **`Delivez-Mobile-App-Local.postman_collection.json`** | **Mobile Localhost (Port 4000 / Emulator)** | `http://localhost:4000/api/v1` |
+| **`Delivez-Mobile-App.postman_collection.json`** | **Mobile Generic (Environment Driven)** | `{{baseUrl}}` |
 
-Import `Delivery_App_Backend_Auth_Local.postman_collection.json` for local testing. Its baseUrl is `http://localhost:4000/api/v1`, and its name ends in **Local** so it can coexist with the production collection.
+### 🌍 Mobile Dedicated Environments
 
-Ensure your local `.env` DATABASE_URL points to the intended local database. Run `npm run db:deploy`, `npm run db:generate`, then `npm run dev` from the backend folder. Keep the server terminal open. In Postman select No environment, open the Local collection, and send Health → Readiness first. Then run Register → Verify OTP → Get Current User. Returning users can run Login with OTP → Verify Login OTP. Registration and login do not require passwords.
+| Environment File | Environment | Base URL |
+|---|---|---|
+| **`Delivez.Mobile.Production.postman_environment.json`** | **Production Live Server** | `http://40.81.244.167:3012/api/v1` |
+| **`Delivez.Mobile.Local.postman_environment.json`** | **Localhost Development** | `http://localhost:4000/api/v1` |
 
-## Deploy the backend changes first
+---
 
-On your backend server, check DATABASE_URL targets the intended database, then run:
+## 📦 Core 4 Services Postman Collection (Web & Backend Full Suite)
 
-```sh
-npm ci
-npm run db:deploy
-npm run db:generate
-npm run build
-```
+| Collection File | Description |
+|---|---|
+| **`Delivez-Four-Services.postman_collection.json`** | Comprehensive Postman collection covering all 4 core services: **Personal Courier Delivery**, **Luggage Delivery**, **Confidential Delivery (Vault)**, and **Forgot Something (Item Retrieval)**, plus Admin Operations & Live Audit Stream. |
 
-Restart your backend service. The migration makes password_hash optional, adds an optional device ID to OTP challenges, and creates user_devices. Existing accounts/passwords are preserved. These workspace changes have not been deployed or applied to the production database.
+---
 
-## Set up Postman
+## 📥 Quick Import Guide (Postman)
 
-1. Import Delivery_App_Backend_Auth.postman_collection.json again.
-2. Click the collection → Variables. Set fullName, countryCode, mobileNumber and email. No password is needed.
-3. baseUrl is http://40.81.244.167:3012/api/v1. For local testing use http://localhost:4000/api/v1.
-4. Select No environment to avoid overriding the collection variables.
-5. Send Health → Readiness. Expect HTTP 200 with database connected.
+1. Open **Postman**.
+2. Click **Import** (top-left button or `Ctrl + O` / `Cmd + O`).
+3. Drag & drop:
+   - `Delivez-Four-Services.postman_collection.json`
+   - `Delivez.Local.postman_environment.json`
+   - `Delivez.Production.postman_environment.json`
+4. In the top-right environment selector in Postman, select:
+   - **Delivez - Local Environment** (for local testing on port 4000) or
+   - **Delivez - Production Environment** (for production staging/live)
+5. **Run Request 1 (Authentication):**
+   - Run `1. Authentication -> User Login` to automatically set `{{accessToken}}`.
+   - Run `1. Authentication -> Admin Login` to automatically set `{{adminAccessToken}}`.
+6. Now you can run any of the 4 service requests in sequence!
 
-## Register
+---
 
-Send **1. Register**, POST {{baseUrl}}/auth/register:
+## 📂 4 Services Folder Structure & Endpoints
 
-```json
-{
-  "fullName": "Test User",
-  "countryCode": "+91",
-  "mobileNumber": "9876543210",
-  "email": "test@example.com",
-  "acceptedTerms": true
-}
-```
+### 1. Authentication
+* `POST {{baseUrl}}/auth/login` — Customer login (sets `{{accessToken}}` automatically via test script).
+* `POST {{baseUrl}}/admin/auth/login` — Administrator login (sets `{{adminAccessToken}}` automatically via test script).
+* `GET {{baseUrl}}/auth/me` — Authenticated profile verification.
 
-Password and confirmPassword are rejected with HTTP 400, even if empty. Email is optional. Full name must have 2–100 characters, mobile number 7–15 digits, and acceptedTerms must be true. Duplicate phone/email returns 409. Expect 201 with registrationComplete=false, a challengeId and OTP, automatically saved by Postman. This creates an unverified user record; registration is pending and no access token is issued.
+### 2. Personal Courier Delivery (`/courier`)
+* `GET {{baseUrl}}/courier/options` — Service options, vehicle classes, weight tiers, and addon protections.
+* `POST {{baseUrl}}/courier/quote` — Price calculator for doorstep parcel and document transit.
+* `POST {{baseUrl}}/courier/bookings` — Create a new courier booking (auto-stores `{{courierBookingId}}`).
+* `GET {{baseUrl}}/courier/bookings` — List user's courier bookings with pagination.
+* `GET {{baseUrl}}/courier/bookings/{{courierBookingId}}` — Retrieve single courier booking details.
+* `GET {{baseUrl}}/courier/bookings/{{courierBookingId}}/track` — Real-time milestones & timeline.
+* `GET {{baseUrl}}/courier/bookings/{{courierBookingId}}/pod` — Proof of Delivery signature, recipient, timestamp.
+* `PATCH {{baseUrl}}/courier/bookings/{{courierBookingId}}` — Update delivery instructions.
+* `POST {{baseUrl}}/courier/bookings/{{courierBookingId}}/payments/sandbox` — Simulate sandbox payment completion.
+* `POST {{baseUrl}}/courier/bookings/{{courierBookingId}}/cancel` — Cancel courier booking.
 
-Send **2. Verify OTP**, POST {{baseUrl}}/auth/verify-otp:
+### 3. Luggage Delivery (`/luggage-delivery`)
+* `GET {{baseUrl}}/luggage-delivery/options` — Airport terminals, belt collection choices, and bag size options.
+* `POST {{baseUrl}}/luggage-delivery/quote` — Calculate luggage transit quote (airport fee, bag count breakdown).
+* `POST {{baseUrl}}/luggage-delivery/bookings` — Book airport arrival / hotel front desk luggage delivery (auto-stores `{{luggageBookingId}}`).
+* `GET {{baseUrl}}/luggage-delivery/bookings` — List luggage delivery bookings.
+* `GET {{baseUrl}}/luggage-delivery/bookings/{{luggageBookingId}}` — Retrieve flight number, belt number, and luggage status.
+* `POST {{baseUrl}}/luggage-delivery/bookings/{{luggageBookingId}}/payments/sandbox` — Complete luggage sandbox payment.
+* `POST {{baseUrl}}/luggage-delivery/bookings/{{luggageBookingId}}/cancel` — Cancel luggage delivery booking.
 
-```json
-{ "challengeId": "{{challengeId}}", "otp": "{{otp}}" }
-```
+### 4. Confidential Delivery (Vault) (`/confidential-delivery`)
+* `GET {{baseUrl}}/confidential-delivery/options` — Security levels (Standard, Enhanced, Maximum Security) and tamper-proof pouches.
+* `POST {{baseUrl}}/confidential-delivery/quote` — Calculate security handling, escort fee, and tamper protection.
+* `POST {{baseUrl}}/confidential-delivery/bookings` — Create a confidential vault delivery (auto-stores `{{confidentialBookingId}}` & `{{vaultId}}`).
+* `GET {{baseUrl}}/confidential-delivery/bookings` — List confidential vault shipments.
+* `GET {{baseUrl}}/confidential-delivery/bookings/{{confidentialBookingId}}` — Retrieve confidential booking & tamper status.
+* `GET {{baseUrl}}/confidential-delivery/track/{{vaultId}}` — Public / secured tracking page for vault transit.
+* `POST {{baseUrl}}/confidential-delivery/track/{{confidentialBookingId}}/verify-otp` — Verify delivery handover OTP.
+* `POST {{baseUrl}}/confidential-delivery/bookings/{{confidentialBookingId}}/payments/sandbox` — Complete sandbox payment.
+* `PATCH {{baseUrl}}/confidential-delivery/admin/bookings/{{confidentialBookingId}}/status` — Admin update chain of custody & status.
+* `POST {{baseUrl}}/confidential-delivery/bookings/{{confidentialBookingId}}/cancel` — Cancel confidential shipment.
 
-Only a correct OTP returns 200 with registrationComplete=true, data.accessToken and data.user, and the message "Registration successful. OTP verified." Postman saves the token. A wrong, expired or consumed OTP cannot complete registration. The OTP belongs in this verification request, after the initial registration request creates the challenge.
+### 5. Forgot Something (Item Retrieval) (`/forgot-something`)
+* `GET {{baseUrl}}/forgot-something/options` — Item categories (Keys, Laptop, Phone, Documents, Wallet, etc.) & location types.
+* `POST {{baseUrl}}/forgot-something/quote` — Calculate retrieval fee, distance fee, and secure packaging.
+* `POST {{baseUrl}}/forgot-something/bookings` — Book forgotten item retrieval from office/hotel/home (auto-stores `{{forgotBookingId}}`).
+* `GET {{baseUrl}}/forgot-something/bookings` — List item retrieval bookings.
+* `GET {{baseUrl}}/forgot-something/bookings/{{forgotBookingId}}` — Retrieve handover person & runner details.
+* `GET {{baseUrl}}/forgot-something/track/{{forgotBookingId}}` — Track retrieval in real-time.
+* `POST {{baseUrl}}/forgot-something/track/{{forgotBookingId}}/verify-otp` — Verify pickup or delivery OTP.
+* `PATCH {{baseUrl}}/forgot-something/track/{{forgotBookingId}}/status` — Simulate / update retrieval lifecycle status.
+* `POST {{baseUrl}}/forgot-something/bookings/{{forgotBookingId}}/payments/sandbox` — Complete sandbox payment.
+* `POST {{baseUrl}}/forgot-something/bookings/{{forgotBookingId}}/cancel` — Cancel retrieval booking.
 
-## Login: mobile number, then OTP
+### 6. Live Audit & Unified Operations
+* `GET {{baseUrl}}/track/{{courierBookingId}}` — Universal shipment tracking across all service types.
+* `GET {{baseUrl}}/admin/orders/unified` — Admin unified orders stream.
+* `GET {{baseUrl}}/admin/audit-logs` — Live compliance audit trail recording all executed mutations.
 
-Send **Login with OTP**, POST {{baseUrl}}/auth/login:
+---
 
-```json
-{ "mobileNumber": "9876543210" }
-```
+## ⚡ Environment Variables Reference
 
-Neither password nor deviceId is required. countryCode defaults to +91; supply it for other countries. Optional rememberMe=true selects the longer token expiry.
-
-Expect 200 with a challengeId. Send **Verify Login OTP** next with challengeId and otp, just like registration verification. Expect 200 with an access token. Unknown phone returns 404.
-
-For a new code, send **Resend OTP** before verification with { "challengeId": "{{challengeId}}" }. Postman saves the replacement challenge and code. Codes currently expire in five minutes, allow five incorrect attempts, and can be used only once.
-
-## Optional device storage
-
-If your app has a stable installation identifier, optionally include it during OTP verification:
-
-```json
-{
-  "challengeId": "{{challengeId}}",
-  "otp": "{{otp}}",
-  "deviceId": "android-installation-001"
-}
-```
-
-deviceId accepts 1–255 letters, numbers, dots, underscores, colons or hyphens. Registration also accepts an optional deviceId, retained on its challenge and through resend. Verification may supply the current device ID. The device is associated with the user only after successful verification, in the same database transaction. Repeated verification from the same user/device updates lastLoginAt instead of creating duplicates. Without a device ID, verification still succeeds and no device record is created.
-
-Send **Get My Devices**, GET {{baseUrl}}/auth/devices. The collection supplies Authorization: Bearer {{accessToken}}. The response contains data.devices, with id, deviceId, createdAt and lastLoginAt for only the authenticated user, most recent first. This is device history, not active sessions or proof of device ownership.
-
-## Profile and logout
-
-Send Get Current User to see your profile. Logout - Clear Local Token clears the collection token and checks /auth/check without authentication. There is no server-side revocation; copied JWTs remain valid until expiry and device records are retained.
-
-## Current limitations
-
-Existing password accounts and administrator password login still work. New passwordless accounts use OTP login. OTPs are currently returned in API responses even in production; SMS delivery is not implemented. Integrate delivery and remove production OTP response fields before using this as real phone verification. JWT expiry defaults to 7 days, or 30 days with rememberMe=true. Example responses are illustrative, not live captures.
+| Variable | Description | Default (Local) | Default (Production) |
+|---|---|---|---|
+| `baseUrl` | API base endpoint | `http://localhost:4000/api/v1` | `https://api.delivez.com/api/v1` |
+| `userMobile` | Customer phone number | `9876543210` | `9876543210` |
+| `userPassword` | Customer password | `Password123!` | (Enter your password) |
+| `adminEmail` | Administrator email | `admin@delevez.com` | `admin@delivez.com` |
+| `adminPassword` | Administrator password | `Password123!` | (Enter your password) |
+| `accessToken` | Customer JWT Bearer Token | *Auto-populated on login* | *Auto-populated on login* |
+| `adminAccessToken` | Admin JWT Bearer Token | *Auto-populated on login* | *Auto-populated on login* |
+| `courierBookingId` | Active courier booking ID | *Auto-populated on booking* | *Auto-populated on booking* |
+| `luggageBookingId` | Active luggage booking ID | *Auto-populated on booking* | *Auto-populated on booking* |
+| `confidentialBookingId` | Active vault booking ID | *Auto-populated on booking* | *Auto-populated on booking* |
+| `vaultId` | Public vault tracking code | *Auto-populated on booking* | *Auto-populated on booking* |
+| `forgotBookingId` | Active forgot item booking ID | *Auto-populated on booking* | *Auto-populated on booking* |

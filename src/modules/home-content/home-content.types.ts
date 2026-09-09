@@ -55,6 +55,11 @@ export interface QuickActionItem {
 }
 
 export interface PromoBannerConfig {
+  hasCustomImage?: boolean;
+  imageUrl?: string | null;
+  imageMimeType?: string | null;
+  imageFileName?: string | null;
+  imageUpdatedAt?: string | null;
   title: string;
   subtitle: string;
   buttonText: string;
@@ -98,6 +103,24 @@ export interface SupportConfig {
   faqs: SupportFaq[];
 }
 
+
+export interface PromptExampleItem {
+  id: string;
+  title: string;
+  shortText: string;
+  promptText: string;
+  serviceSlug: string;
+  icon: string;
+  iconColor: string;
+  displayOrder: number;
+  isActive: boolean;
+  hasCustomImage: boolean;
+  imageUrl: string | null;
+  imageMimeType?: string | null;
+  imageFileName?: string | null;
+  imageUpdatedAt?: string | null;
+}
+
 export interface HomeStoreData {
   location: {
     current: LocationBarData;
@@ -109,4 +132,5 @@ export interface HomeStoreData {
   chips: ActionChipItem[];
   pincodes: PincodeRecord[];
   support: SupportConfig;
+  promptExamples: PromptExampleItem[];
 }

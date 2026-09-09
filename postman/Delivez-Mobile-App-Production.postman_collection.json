@@ -1,0 +1,1553 @@
+{
+  "info": {
+    "_postman_id": "b9c8af21-55ed-420c-b121-9a00f5ecc033",
+    "name": "Delivez - Mobile App (Production) API Suite",
+    "description": "PRODUCTION Postman collection for iOS & Android mobile app developers integrating Delivez.\\n\\nPre-configured with Production server URL (http://40.81.244.167:3012/api/v1).\\nContains all 10 screen-by-screen flows (Splash, OTP Auth, GPS Location, Address Book, Courier, Luggage, Vault, Forgot Something, Tracking, Support).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Screen 0: Splash & App Startup",
+      "item": [
+        {
+          "name": "1. Health Check (Server Connectivity)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ],
+              "query": []
+            },
+            "description": "Called by Mobile Splash screen to verify API connectivity before opening app UI."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Active Emergency Broadcasts / Banners",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/broadcasts/active",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "broadcasts",
+                "active"
+              ],
+              "query": []
+            },
+            "description": "Fetches real-time alert banners, weather delays, or operational notices."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Screen 1: Mobile Auth & Onboarding",
+      "item": [
+        {
+          "name": "1. Send 6-Digit Login OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ],
+              "query": []
+            },
+            "description": "Triggered when user enters phone number. Dispatches SMS OTP and stores {{challengeId}}.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"countryCode\": \"+91\",\n  \"mobileNumber\": \"{{userMobile}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"OTP challenge dispatched\", function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.challengeId) {",
+                  "    pm.environment.set(\"challengeId\", json.data.challengeId);",
+                  "    console.log(\"challengeId saved: \" + json.data.challengeId);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "2. Verify 6-Digit OTP (Returns Token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/verify-otp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "verify-otp"
+              ],
+              "query": []
+            },
+            "description": "Verifies the OTP and automatically stores {{accessToken}} for all subsequent authenticated screens.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"challengeId\": \"{{challengeId}}\",\n  \"otp\": \"482910\",\n  \"deviceId\": \"pixel-8-android-uuid\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Authenticated successfully\", function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.accessToken) {",
+                  "    pm.environment.set(\"accessToken\", json.data.accessToken);",
+                  "    console.log(\"accessToken saved to environment!\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "3. Resend OTP (If Expired)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/resend-otp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "resend-otp"
+              ],
+              "query": []
+            },
+            "description": "Resends a fresh OTP if the 60-second mobile timer runs out.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"challengeId\": \"{{challengeId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Register New User Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ],
+              "query": []
+            },
+            "description": "Registers a new customer profile.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Rahul Sharma\",\n  \"countryCode\": \"+91\",\n  \"mobileNumber\": \"{{userMobile}}\",\n  \"email\": \"rahul.sharma@example.com\",\n  \"acceptedTerms\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ],
+              "query": []
+            },
+            "description": "Returns profile details for the account tab and drawer."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Screen 2: Home Feed & Location Bar",
+      "item": [
+        {
+          "name": "1. Detect Current GPS Location",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/location/detect?lat=12.9352&lng=77.6946",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "location",
+                "detect"
+              ],
+              "query": [
+                {
+                  "key": "lat",
+                  "value": "12.9352",
+                  "description": ""
+                },
+                {
+                  "key": "lng",
+                  "value": "77.6946",
+                  "description": ""
+                }
+              ]
+            },
+            "description": "Reverse-geocodes mobile device GPS coordinates to city, area, pincode, and serviceability."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Get Master Home Feed",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/home/all",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "home",
+                "all"
+              ],
+              "query": []
+            },
+            "description": "Master call fetching Hero, Quick Action cards, Promo Banner, and Action Chips in 1 request."
+          },
+          "response": []
+        },
+        {
+          "name": "3. Services Catalog (Home Grid)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/services",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "services"
+              ],
+              "query": []
+            },
+            "description": "Returns all delivery service modules (Courier, Luggage, Vault, Forgot Something)."
+          },
+          "response": []
+        },
+        {
+          "name": "4. Check Pincode Serviceability",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pincode/560103",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pincode",
+                "560103"
+              ],
+              "query": []
+            },
+            "description": "Quick check if a delivery pincode is covered."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Screen 3: Address Book",
+      "item": [
+        {
+          "name": "1. Fetch Saved Addresses",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/addresses",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addresses"
+              ],
+              "query": []
+            },
+            "description": "Populates Saved Addresses list (Home, Office, Recent)."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Save New Address",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/addresses",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addresses"
+              ],
+              "query": []
+            },
+            "description": "Saves a new destination address to user profile.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"label\": \"Home\",\n  \"contactName\": \"Rahul Sharma\",\n  \"phoneNumber\": \"+919876543210\",\n  \"addressLine1\": \"Flat 302, Green Glen Layout\",\n  \"addressLine2\": \"Bellandur Outer Ring Road\",\n  \"city\": \"Bengaluru\",\n  \"state\": \"Karnataka\",\n  \"postalCode\": \"560103\",\n  \"isDefault\": true,\n  \"latitude\": 12.9279,\n  \"longitude\": 77.6771\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Screen Flow 4: Personal Courier Delivery",
+      "item": [
+        {
+          "name": "1. Fetch Courier Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/options",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "options"
+              ],
+              "query": []
+            },
+            "description": "Loads package types (Envelope, Small Box, Box), speeds, and addon protections."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Calculate Courier Quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/quote",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "quote"
+              ],
+              "query": []
+            },
+            "description": "Calculates dynamic quote with distance fee and ETA.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"addressLine1\": \"Tower 4, Prestige Tech Park\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560103\",\n    \"latitude\": 12.9352,\n    \"longitude\": 77.6946\n  },\n  \"dropoff\": {\n    \"addressLine1\": \"Flat 302, Green Glen Layout\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560103\",\n    \"latitude\": 12.9279,\n    \"longitude\": 77.6771\n  },\n  \"packageType\": \"BOX\",\n  \"weightKg\": 2.5,\n  \"speed\": \"EXPRESS\",\n  \"selectedProtection\": \"STANDARD\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Create Courier Booking (Place Order)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "idemp-courier-{{$timestamp}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "bookings"
+              ],
+              "query": []
+            },
+            "description": "Submits courier order and auto-saves {{courierBookingId}}.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"contactName\": \"Rahul Sharma\",\n    \"phoneNumber\": \"+919876543210\",\n    \"addressLine1\": \"Tower 4, Prestige Tech Park\",\n    \"addressLine2\": \"A Block, 2nd Floor\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560103\",\n    \"latitude\": 12.9352,\n    \"longitude\": 77.6946\n  },\n  \"dropoff\": {\n    \"contactName\": \"Priya Verma\",\n    \"phoneNumber\": \"+919876543211\",\n    \"addressLine1\": \"Flat 302, Green Glen Layout\",\n    \"addressLine2\": \"Bellandur\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560103\",\n    \"latitude\": 12.9279,\n    \"longitude\": 77.6771\n  },\n  \"packageType\": \"BOX\",\n  \"weightKg\": 2.5,\n  \"speed\": \"EXPRESS\",\n  \"instructions\": \"Call before arrival\",\n  \"paymentMethod\": \"UPI\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "var id = (json.data && json.data.booking && json.data.booking.id) || (json.data && json.data.id);",
+                  "if (id) pm.environment.set(\"courierBookingId\", id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "4. Complete In-App Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/bookings/{{courierBookingId}}/payments/sandbox",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "bookings",
+                "{{courierBookingId}}",
+                "payments",
+                "sandbox"
+              ],
+              "query": []
+            },
+            "description": "Simulates successful in-app payment gateway response.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethod\": \"UPI\",\n  \"status\": \"COMPLETED\",\n  \"transactionId\": \"TXN_{{$timestamp}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Live Courier Tracking & Milestones",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/bookings/{{courierBookingId}}/track",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "bookings",
+                "{{courierBookingId}}",
+                "track"
+              ],
+              "query": []
+            },
+            "description": "Live order tracking screen showing rider name, vehicle, status, and milestone history."
+          },
+          "response": []
+        },
+        {
+          "name": "6. Proof of Delivery (POD) Receipt",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/bookings/{{courierBookingId}}/pod",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "bookings",
+                "{{courierBookingId}}",
+                "pod"
+              ],
+              "query": []
+            },
+            "description": "Shows signed delivery receipt upon completion."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Screen Flow 5: Luggage Delivery (Airport & Hotel)",
+      "item": [
+        {
+          "name": "1. Fetch Luggage Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/luggage-delivery/options",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "luggage-delivery",
+                "options"
+              ],
+              "query": []
+            },
+            "description": "Loads baggage types, weight tiers, airport terminals, and belt collection options."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Calculate Luggage Quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/luggage-delivery/quote",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "luggage-delivery",
+                "quote"
+              ],
+              "query": []
+            },
+            "description": "Calculates airport transit quote.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"addressLine1\": \"Terminal 2, Kempegowda International Airport\",\n    \"addressLine2\": \"Luggage Belt 04\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560300\"\n  },\n  \"dropoff\": {\n    \"addressLine1\": \"The Leela Palace, Old Airport Road\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560008\"\n  },\n  \"pickupOption\": \"luggage_belt\",\n  \"luggageBelt\": \"04\",\n  \"terminal\": \"T2\",\n  \"flightNumber\": \"6E-2041\",\n  \"luggageList\": [\n    {\n      \"id\": \"bag-1\",\n      \"type\": \"Check-in Bag\",\n      \"size\": \"Large\",\n      \"weight\": 23\n    }\n  ],\n  \"hotelFrontDeskDrop\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Create Luggage Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "idemp-luggage-{{$timestamp}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/luggage-delivery/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "luggage-delivery",
+                "bookings"
+              ],
+              "query": []
+            },
+            "description": "Books luggage delivery and auto-saves {{luggageBookingId}}.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"contactName\": \"Vikram Malhotra\",\n    \"phoneNumber\": \"+919876543212\",\n    \"addressLine1\": \"Terminal 2, Kempegowda International Airport\",\n    \"addressLine2\": \"Belt 04, International Arrival\",\n    \"city\": \"Bengaluru\",\n    \"postalCode\": \"560300\"\n  },\n  \"dropoff\": {\n    \"contactName\": \"Vikram Malhotra (Front Desk)\",\n    \"phoneNumber\": \"+919876543212\",\n    \"addressLine1\": \"The Leela Palace, 23 Old Airport Road\",\n    \"addressLine2\": \"Reservation under Vikram Malhotra\",\n    \"city\": \"Bengaluru\",\n    \"postalCode\": \"560008\"\n  },\n  \"pickupOption\": \"luggage_belt\",\n  \"flightNumber\": \"6E-2041\",\n  \"terminal\": \"T2\",\n  \"luggageBelt\": \"04\",\n  \"luggageList\": [\n    {\n      \"type\": \"Check-in Bag\",\n      \"size\": \"Large\",\n      \"weight\": 23,\n      \"tagNumber\": \"BLR-6E-9941\"\n    }\n  ],\n  \"hotelFrontDeskDrop\": true,\n  \"paymentMethod\": \"UPI\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "var id = (json.data && json.data.booking && json.data.booking.id) || (json.data && json.data.id);",
+                  "if (id) pm.environment.set(\"luggageBookingId\", id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "4. Luggage Order Tracking",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/luggage-delivery/bookings/{{luggageBookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "luggage-delivery",
+                "bookings",
+                "{{luggageBookingId}}"
+              ],
+              "query": []
+            },
+            "description": "Luggage tracking screen with flight, belt, and bag details."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Screen Flow 6: Confidential Vault Delivery",
+      "item": [
+        {
+          "name": "1. Fetch Vault Security Tiers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/options",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "options"
+              ],
+              "query": []
+            },
+            "description": "Loads Standard, Enhanced, and Maximum Security tiers, tamper pouches, and verification options."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Calculate Vault Quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/quote",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "quote"
+              ],
+              "query": []
+            },
+            "description": "Calculates tamper-proof handling and security escort fee.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"addressLine1\": \"High Court Complex, Chamber 14\",\n    \"city\": \"Bengaluru\",\n    \"postalCode\": \"560001\"\n  },\n  \"dropoff\": {\n    \"addressLine1\": \"KPMG Office, Embassy GolfLinks\",\n    \"city\": \"Bengaluru\",\n    \"postalCode\": \"560071\"\n  },\n  \"securityLevel\": \"MAXIMUM_SECURITY\",\n  \"packagingType\": \"TAMPER_PROOF_POUCH\",\n  \"verificationMethod\": \"OTP\",\n  \"addonProtections\": [\n    \"EXTRA_BUBBLE_WRAP\",\n    \"SEAL_SECURITY_TAPE\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Create Vault Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "idemp-vault-{{$timestamp}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings"
+              ],
+              "query": []
+            },
+            "description": "Places vault order and saves {{confidentialBookingId}} & {{vaultId}}.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"contactName\": \"Advocate Ramesh Sen\",\n    \"phoneNumber\": \"+919876543220\",\n    \"addressLine1\": \"High Court Complex, Chamber 14\",\n    \"city\": \"Bengaluru\",\n    \"postalCode\": \"560001\"\n  },\n  \"delivery\": {\n    \"contactName\": \"Director Anita Roy\",\n    \"phoneNumber\": \"+919876543221\",\n    \"addressLine1\": \"Embassy GolfLinks Business Park, 3rd Floor\",\n    \"city\": \"Bengaluru\",\n    \"postalCode\": \"560071\"\n  },\n  \"dropoff\": {\n    \"contactName\": \"Director Anita Roy\",\n    \"phoneNumber\": \"+919876543221\",\n    \"addressLine1\": \"Embassy GolfLinks Business Park, 3rd Floor\",\n    \"city\": \"Bengaluru\",\n    \"postalCode\": \"560071\"\n  },\n  \"securityLevel\": \"MAXIMUM_SECURITY\",\n  \"packagingType\": \"TAMPER_PROOF_POUCH\",\n  \"verificationMethod\": \"OTP\",\n  \"itemDescription\": \"Original Deed Agreement & Legal Records\",\n  \"handlingInstructions\": \"Strict handoff only to Anita Roy with ID check.\",\n  \"paymentMethod\": \"ONLINE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "var b = (json.data && json.data.booking) || json.data;",
+                  "if (b && b.id) {",
+                  "    pm.environment.set(\"confidentialBookingId\", b.id);",
+                  "    pm.environment.set(\"vaultId\", b.vaultId || b.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "4. Secured Vault Live Tracking",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/track/{{vaultId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "track",
+                "{{vaultId}}"
+              ],
+              "query": []
+            },
+            "description": "Shows live tamper seal condition, custody checkpoints, and courier authorization."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Verify Delivery OTP at Handoff",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/track/{{confidentialBookingId}}/verify-otp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "track",
+                "{{confidentialBookingId}}",
+                "verify-otp"
+              ],
+              "query": []
+            },
+            "description": "Recipient validates delivery OTP to release confidential parcel.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"otp\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Screen Flow 7: Forgot Something (Item Retrieval)",
+      "item": [
+        {
+          "name": "1. Fetch Item Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/options",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "options"
+              ],
+              "query": []
+            },
+            "description": "Loads categories (Keys, Laptop, Phone, Documents, Wallet, Glasses) and location types."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Calculate Retrieval Quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/quote",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "quote"
+              ],
+              "query": []
+            },
+            "description": "Calculates retrieval fare and secure packaging fee.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"addressLine1\": \"WeWork Galaxy, 43 Residency Road\",\n    \"city\": \"Bengaluru\",\n    \"postalCode\": \"560025\"\n  },\n  \"dropoff\": {\n    \"addressLine1\": \"Indiranagar 100ft Road, 12th Main\",\n    \"city\": \"Bengaluru\",\n    \"postalCode\": \"560038\"\n  },\n  \"itemCategory\": \"LAPTOP\",\n  \"speed\": \"INSTANT\",\n  \"tamperProofPackaging\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Create Item Retrieval Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "idemp-forgot-{{$timestamp}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "bookings"
+              ],
+              "query": []
+            },
+            "description": "Dispatches runner for retrieval and saves {{forgotBookingId}}.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pickup\": {\n    \"contactName\": \"Sunil (Reception)\",\n    \"phoneNumber\": \"+919876543230\",\n    \"addressLine1\": \"WeWork Galaxy, 43 Residency Road\",\n    \"addressLine2\": \"Front Desk 4th Floor\",\n    \"city\": \"Bengaluru\",\n    \"postalCode\": \"560025\"\n  },\n  \"dropoff\": {\n    \"contactName\": \"Aakash Mehta\",\n    \"phoneNumber\": \"+919876543231\",\n    \"addressLine1\": \"Villa 12, Indiranagar Defense Colony\",\n    \"city\": \"Bengaluru\",\n    \"postalCode\": \"560038\"\n  },\n  \"itemCategory\": \"LAPTOP\",\n  \"itemName\": \"MacBook Pro 16-inch Silver in Black Sleeve\",\n  \"itemDescription\": \"Left on desk 402 near cafeteria, with charging brick\",\n  \"locationType\": \"OFFICE\",\n  \"handoverPerson\": \"Sunil (Reception)\",\n  \"handoverPhone\": \"+919876543230\",\n  \"speed\": \"INSTANT\",\n  \"tamperProofPackaging\": true,\n  \"pickupOtpRequired\": true,\n  \"deliveryOtpRequired\": true,\n  \"paymentMethod\": \"UPI\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "var b = (json.data && json.data.booking) || json.data;",
+                  "if (b && b.id) pm.environment.set(\"forgotBookingId\", b.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "4. Live Runner Tracking",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/track/{{forgotBookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "track",
+                "{{forgotBookingId}}"
+              ],
+              "query": []
+            },
+            "description": "Shows live runner map coordinates and retrieval progress."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Verify Pickup / Delivery OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/track/{{forgotBookingId}}/verify-otp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "track",
+                "{{forgotBookingId}}",
+                "verify-otp"
+              ],
+              "query": []
+            },
+            "description": "Validates OTP at handover.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"DELIVERY\",\n  \"otp\": \"456789\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Screen Flow 8: Universal Tracking & Orders History",
+      "item": [
+        {
+          "name": "1. Universal Search Bar Tracker",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/track/{{courierBookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "track",
+                "{{courierBookingId}}"
+              ],
+              "query": []
+            },
+            "description": "Single search bar that tracks orders across all 4 services."
+          },
+          "response": []
+        },
+        {
+          "name": "2. User Courier Bookings List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/courier/bookings?page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courier",
+                "bookings"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                }
+              ]
+            },
+            "description": "Populates My Orders -> Courier tab."
+          },
+          "response": []
+        },
+        {
+          "name": "3. User Luggage Bookings List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/luggage-delivery/bookings?page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "luggage-delivery",
+                "bookings"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                }
+              ]
+            },
+            "description": "Populates My Orders -> Luggage tab."
+          },
+          "response": []
+        },
+        {
+          "name": "4. User Vault Shipments List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings"
+              ],
+              "query": []
+            },
+            "description": "Populates My Orders -> Confidential Vault tab."
+          },
+          "response": []
+        },
+        {
+          "name": "5. User Forgot Something Bookings List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forgot-something/bookings?page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "forgot-something",
+                "bookings"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                }
+              ]
+            },
+            "description": "Populates My Orders -> Forgot Something tab."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Screen Flow 9: Help, Support & FAQs",
+      "item": [
+        {
+          "name": "1. Get Helpline Numbers & FAQs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/support/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "support",
+                "config"
+              ],
+              "query": []
+            },
+            "description": "Populates toll-free helpline, WhatsApp chat button, operating hours, and accordion FAQs."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Submit Support Inquiry / Ticket",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/support/inquiry",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "support",
+                "inquiry"
+              ],
+              "query": []
+            },
+            "description": "Submits customer support ticket from the app.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rahul Sharma\",\n  \"email\": \"rahul@example.com\",\n  \"phone\": \"+919876543210\",\n  \"subject\": \"Delivery address correction\",\n  \"message\": \"Please update delivery address to Gate 2.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://40.81.244.167:3012/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "userMobile",
+      "value": "9876543210",
+      "type": "string"
+    },
+    {
+      "key": "challengeId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "courierBookingId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "luggageBookingId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "confidentialBookingId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "vaultId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "forgotBookingId",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

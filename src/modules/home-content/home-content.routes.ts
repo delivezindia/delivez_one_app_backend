@@ -9,8 +9,12 @@ import {
   getHomeAll,
   getLocationPresets,
   getPromoBanner,
+  getPromoBannerImage,
   getQuickActionImage,
   getQuickActions,
+  getPromptExamples,
+  getPromptExampleImage,
+  getPromptExampleById,
   getSupportConfig,
   submitSupportInquiry,
 } from './home-content.controller.js';
@@ -29,12 +33,22 @@ homeContentRouter.get('/location/presets', getLocationPresets);
 homeContentRouter.get('/hero', getHero);
 homeContentRouter.get('/hero/image', getHeroImage);
 
+
+// Prompt Examples (Both plural /prompt-examples and singular /prompt-example)
+homeContentRouter.get('/prompt-examples', getPromptExamples);
+homeContentRouter.get('/prompt-example', getPromptExamples);
+homeContentRouter.get('/prompt-examples/:id/image', getPromptExampleImage);
+homeContentRouter.get('/prompt-example/:id/image', getPromptExampleImage);
+homeContentRouter.get('/prompt-examples/:id', getPromptExampleById);
+homeContentRouter.get('/prompt-example/:id', getPromptExampleById);
+
 // Quick actions subroutes on /home
 homeContentRouter.get('/quick-actions', getQuickActions);
 homeContentRouter.get('/quick-actions/:id/image', getQuickActionImage);
 
 // Banner & Chips on /home
 homeContentRouter.get('/banner', getPromoBanner);
+homeContentRouter.get('/banner/image', getPromoBannerImage);
 homeContentRouter.get('/chips', getActionChips);
 
 // Pincode & Support subroutes on /home
@@ -59,3 +73,9 @@ pincodeRouter.get('/:pincode', checkPincode);
 export const supportRouter = Router();
 supportRouter.get('/config', getSupportConfig);
 supportRouter.post('/inquiry', submitSupportInquiry);
+
+// 5. Dedicated prompt examples router: /api/v1/prompt-examples and /api/v1/prompt-example
+export const promptExamplesRouter = Router();
+promptExamplesRouter.get('/', getPromptExamples);
+promptExamplesRouter.get('/:id/image', getPromptExampleImage);
+promptExamplesRouter.get('/:id', getPromptExampleById);

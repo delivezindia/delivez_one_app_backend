@@ -79,15 +79,15 @@
     "greetingEmoji": "👋",
     "headline": "What do you need delivered today?",
     "highlightWord": "delivered",
-    "subtitle": "AI will take care of the rest.",
-    "searchTitle": "Tell us in your own words... ?",
+    "subtitle": "From urgent keys & office laptops to heavy luggage & surprise gifts.",
+    "searchTitle": "Tell us in your own words...",
     "searchPlaceholder": "Example: Pick up my laptop from office and deliver home by 8 PM.",
     "micEnabled": true,
     "hasCustomImage": true,
     "sideImageUrl": null,
-    "sideImageUpdatedAt": "2026-09-08T13:37:03.324Z",
-    "sideImageMimeType": "image/png",
-    "sideImageFileName": "mascot.png"
+    "sideImageUpdatedAt": "2026-09-09T10:01:41.607Z",
+    "sideImageMimeType": "image/jpeg",
+    "sideImageFileName": "WhatsApp Image 2026-09-09 at 1.55.44 PM.jpeg"
   },
   "quickActions": [
     {
@@ -154,7 +154,11 @@
     "backgroundColor": "#F59E0B",
     "textColor": "#111827",
     "iconName": "ShieldCheck",
-    "isActive": true
+    "isActive": true,
+    "hasCustomImage": true,
+    "imageMimeType": "image/png",
+    "imageFileName": "test-banner.png",
+    "imageUpdatedAt": "2026-09-09T09:13:10.109Z"
   },
   "chips": [
     {
@@ -357,5 +361,85 @@
         "category": "Serviceability"
       }
     ]
-  }
+  },
+  "promptExamples": [
+    {
+      "id": "laptop-office",
+      "title": "Pick up my laptop from office and deliver home by 8 PM",
+      "shortText": "Pick up my laptop from office and deliv...",
+      "promptText": "Pick up my laptop from office and deliver home by 8 PM",
+      "serviceSlug": "courier-delivery",
+      "icon": "laptop",
+      "iconColor": "#d97706",
+      "displayOrder": 1,
+      "isActive": true,
+      "hasCustomImage": false,
+      "imageUrl": null
+    },
+    {
+      "id": "airport-luggage",
+      "title": "Send my luggage to Bengaluru Airport Terminal 1",
+      "shortText": "Send my luggage to Bengaluru Airport T...",
+      "promptText": "Send my luggage to Bengaluru Airport Terminal 1",
+      "serviceSlug": "luggage-delivery",
+      "icon": "luggage",
+      "iconColor": "#16a34a",
+      "displayOrder": 2,
+      "isActive": true,
+      "hasCustomImage": false,
+      "imageUrl": null
+    },
+    {
+      "id": "legal-documents",
+      "title": "Deliver important documents to my lawyer",
+      "shortText": "Deliver important documents to my law...",
+      "promptText": "Deliver important confidential documents to my lawyer with tamper-proof void seal",
+      "serviceSlug": "confidential-delivery",
+      "icon": "file-text",
+      "iconColor": "#9333ea",
+      "displayOrder": 3,
+      "isActive": true,
+      "hasCustomImage": false,
+      "imageUrl": null
+    },
+    {
+      "id": "birthday-gift",
+      "title": "Send a birthday gift to my wife at home",
+      "shortText": "Send a birthday gift to my wife at ho...",
+      "promptText": "Send a surprise birthday gift to my wife at home with special gift wrap",
+      "serviceSlug": "gift-delivery",
+      "icon": "gift",
+      "iconColor": "#e11d48",
+      "displayOrder": 4,
+      "isActive": true,
+      "hasCustomImage": false,
+      "imageUrl": null
+    },
+    {
+      "id": "zara-return",
+      "title": "Pick up my return from Zara and deliver to logistics hub",
+      "shortText": "Pick up my return from Zara and deliv...",
+      "promptText": "Pick up my clothing return package from Zara and deliver to return center",
+      "serviceSlug": "return-pickup",
+      "icon": "hanger",
+      "iconColor": "#0284c7",
+      "displayOrder": 5,
+      "isActive": true,
+      "hasCustomImage": false,
+      "imageUrl": null
+    },
+    {
+      "id": "forgot-keys",
+      "title": "I forgot my car keys at home. Deliver to office",
+      "shortText": "I forgot my car keys at home. Deliver to...",
+      "promptText": "I forgot my car keys at home. Please retrieve them from home and deliver to my office immediately",
+      "serviceSlug": "forgot-something",
+      "icon": "key",
+      "iconColor": "#ea580c",
+      "displayOrder": 6,
+      "isActive": true,
+      "hasCustomImage": false,
+      "imageUrl": null
+    }
+  ]
 }

@@ -1,3 +1,20 @@
+
+const sanitizeCourierBookingAddress = (addr: any, defaultLabel: string) => ({
+  label: String(addr?.label || defaultLabel),
+  contactName: String(addr?.contactName || 'Contact'),
+  countryCode: String(addr?.countryCode || '+91'),
+  phoneNumber: String(addr?.phoneNumber || '+919876543210'),
+  addressLine1: String(addr?.addressLine1 || 'Address Line 1'),
+  addressLine2: addr?.addressLine2 ? String(addr.addressLine2) : null,
+  landmark: addr?.landmark ? String(addr.landmark) : null,
+  city: String(addr?.city || 'Bengaluru'),
+  state: String(addr?.state || 'Karnataka'),
+  postalCode: String(addr?.postalCode || '560001'),
+  country: String(addr?.country || 'India'),
+  latitude: addr?.latitude === null || addr?.latitude === undefined ? null : Number(addr.latitude),
+  longitude: addr?.longitude === null || addr?.longitude === undefined ? null : Number(addr.longitude),
+});
+
 import { createHash, randomBytes } from 'node:crypto';
 import type { RequestHandler } from 'express';
 import type { Prisma } from '@prisma/client';
@@ -432,8 +449,8 @@ export const createBooking: RequestHandler = async (req, res) => {
         confirmedAt,
         addresses: {
           create: [
-            { kind: 'PICKUP', ...input.pickup },
-            { kind: 'DROPOFF', ...input.dropoff },
+            { kind: 'PICKUP', ...sanitizeCourierBookingAddress(input.pickup, 'Pickup Location') },
+            { kind: 'DROPOFF', ...sanitizeCourierBookingAddress(input.dropoff, 'Delivery Location') },
           ],
         },
         package: {

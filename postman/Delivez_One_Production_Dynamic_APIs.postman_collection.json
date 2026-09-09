@@ -1070,6 +1070,276 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "9. Prompt Examples (Try These Examples Modal)",
+      "description": "Dynamic AI Natural Language Prompt Examples matching mobile screen (Laptop, Luggage, Documents, Gift, Return, Keys) with custom image upload and admin control.",
+      "item": [
+        {
+          "name": "Public: Get Active Prompt Examples",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/home/prompt-examples",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "home",
+                "prompt-examples"
+              ]
+            },
+            "description": "Returns list of 6 dynamic prompt example cards (titles, short texts, promptText, icons, colors, displayOrder, and custom imageUrl if uploaded)."
+          }
+        },
+        {
+          "name": "Public: Get Active Prompt Examples (Singular Alias /prompt-example)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/home/prompt-example",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "home",
+                "prompt-example"
+              ]
+            },
+            "description": "Singular route alias for /home/prompt-examples or /prompt-example."
+          }
+        },
+        {
+          "name": "Public: Get Prompt Example Image",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/home/prompt-examples/laptop-office/image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "home",
+                "prompt-examples",
+                "laptop-office",
+                "image"
+              ]
+            },
+            "description": "Returns the custom uploaded image binary for a prompt example item."
+          }
+        },
+        {
+          "name": "Admin: List All Prompt Examples",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/prompt-examples",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "prompt-examples"
+              ]
+            },
+            "description": "Admin endpoint to view all prompt example cards including inactive ones and custom image metadata."
+          }
+        },
+        {
+          "name": "Admin: Create New Prompt Example",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Pick up medical report from hospital\",\n  \"shortText\": \"Pick up medical report from hosp...\",\n  \"promptText\": \"Pick up medical report from hospital and deliver home safely\",\n  \"serviceSlug\": \"confidential-delivery\",\n  \"icon\": \"file-text\",\n  \"iconColor\": \"#059669\",\n  \"displayOrder\": 7\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/prompt-examples",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "prompt-examples"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Update Prompt Example",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Pick up my laptop from office and deliver home by 8 PM\",\n  \"shortText\": \"Pick up my laptop from office and deliv...\",\n  \"promptText\": \"Pick up my work laptop from Tech Park and deliver home by 8 PM\",\n  \"serviceSlug\": \"courier-delivery\",\n  \"icon\": \"laptop\",\n  \"iconColor\": \"#d97706\",\n  \"displayOrder\": 1,\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/prompt-examples/laptop-office",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "prompt-examples",
+                "laptop-office"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Upload Prompt Example Image (Form-Data)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "description": "Select PNG, WEBP, or JPG image asset"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/prompt-examples/laptop-office/image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "prompt-examples",
+                "laptop-office",
+                "image"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Delete Prompt Example Image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/prompt-examples/laptop-office/image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "prompt-examples",
+                "laptop-office",
+                "image"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Delete Prompt Example",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/prompt-examples/laptop-office",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "prompt-examples",
+                "laptop-office"
+              ]
+            }
+          }
+        }
+      ]
     }
   ]
 }

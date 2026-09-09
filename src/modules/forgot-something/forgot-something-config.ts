@@ -131,22 +131,6 @@ export const SECURITY_TOGGLES: ForgotSomethingSecurityToggleConfig[] = [
     defaultChecked: true,
     fee: 39,
   },
-  {
-    id: 'receiverSignature',
-    name: 'Receiver Signature',
-    description: 'Collect signature upon delivery.',
-    icon: 'PenTool',
-    defaultChecked: false,
-    fee: 0,
-  },
-  {
-    id: 'callBeforeArrival',
-    name: 'Call Before Arrival',
-    description: 'Call the receiver before arriving.',
-    icon: 'PhoneCall',
-    defaultChecked: false,
-    fee: 0,
-  },
 ];
 
 export const ITEM_TAGS: string[] = ['Fragile', 'High Value', 'Urgent', 'Small Item'];

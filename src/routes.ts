@@ -1,4 +1,4 @@
-import { homeContentRouter, locationRouter, pincodeRouter, supportRouter } from './modules/home-content/home-content.routes.js';
+import { homeContentRouter, locationRouter, pincodeRouter, supportRouter, promptExamplesRouter } from './modules/home-content/home-content.routes.js';
 import { homeContentAdminRouter } from './modules/home-content/home-content-admin.routes.js';
 import { getActivePublicBroadcasts } from './modules/admin/admin-broadcast.controller.js';
 import { Router } from 'express';
@@ -54,6 +54,10 @@ apiRouter.use('/home', homeContentRouter);
 apiRouter.use('/location', locationRouter);
 apiRouter.use('/pincode', pincodeRouter);
 apiRouter.use('/support', supportRouter);
+apiRouter.use('/prompt-examples', promptExamplesRouter);
+apiRouter.use('/prompt-example', promptExamplesRouter);
+apiRouter.use('/admin/prompt-examples', homeContentAdminRouter);
+apiRouter.use('/admin/prompt-example', homeContentAdminRouter);
 apiRouter.use('/admin/home', homeContentAdminRouter);
 apiRouter.get('/track/:trackingId', universalTrackOrder);
 apiRouter.get('/broadcasts/active', getActivePublicBroadcasts);

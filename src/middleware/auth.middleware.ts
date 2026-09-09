@@ -23,9 +23,17 @@ export const authenticate = async (
       token === 'undefined'
     ) {
       throw new AppError({
-        message: 'A Bearer access token is required.',
+        message: 'A Bearer access token is required. Please log in and provide Authorization: Bearer <token>.',
         statusCode: 401,
         code: 'UNAUTHORIZED',
+      });
+    }
+
+    if (token.startsWith('{{') && token.endsWith('}}')) {
+      throw new AppError({
+        message: `Unresolved Postman variable detected: ${token}. Please run 'User Login' or 'Admin Login' first to generate a token, or select the active environment in Postman.`,
+        statusCode: 401,
+        code: 'UNRESOLVED_POSTMAN_VARIABLE',
       });
     }
 
@@ -35,13 +43,13 @@ export const authenticate = async (
     } catch (err: any) {
       if (err instanceof jwt.TokenExpiredError) {
         throw new AppError({
-          message: 'The access token has expired.',
+          message: 'The access token has expired. Please log in again.',
           statusCode: 401,
           code: 'TOKEN_EXPIRED',
         });
       }
       throw new AppError({
-        message: 'The access token is invalid.',
+        message: `The access token is invalid (${err?.message || 'verification failed'}). Please run Login to obtain a fresh token.`,
         statusCode: 401,
         code: 'INVALID_TOKEN',
       });
@@ -49,7 +57,7 @@ export const authenticate = async (
 
     if (!payload || typeof payload !== 'object' || !payload.sub) {
       throw new AppError({
-        message: 'The access token is invalid.',
+        message: 'The access token payload is malformed.',
         statusCode: 401,
         code: 'INVALID_TOKEN',
       });
@@ -62,7 +70,7 @@ export const authenticate = async (
 
     if (!user) {
       throw new AppError({
-        message: 'The access token is no longer valid.',
+        message: 'The user associated with this token no longer exists. Please register or log in with another account.',
         statusCode: 401,
         code: 'USER_NOT_FOUND',
       });

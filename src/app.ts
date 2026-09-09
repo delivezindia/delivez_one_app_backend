@@ -8,6 +8,7 @@ import { env } from './config/env.js';
 import { errorHandler } from './middleware/error-handler.js';
 import { notFoundHandler } from './middleware/not-found.js';
 import { requestLogger } from './middleware/request-logger.js';
+import { autoAuditLogger } from './middleware/audit-logger.middleware.js';
 import { systemRouter } from './modules/system/system.routes.js';
 import { apiRouter } from './routes.js';
 
@@ -38,6 +39,7 @@ app.use(
 app.use(compression());
 app.use(express.json({ limit: env.JSON_BODY_LIMIT }));
 app.use(express.urlencoded({ extended: false, limit: env.JSON_BODY_LIMIT }));
+app.use(autoAuditLogger);
 
 app.use('/health', systemRouter);
 app.use(

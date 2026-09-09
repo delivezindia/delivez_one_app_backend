@@ -103,13 +103,32 @@ export const createBooking: RequestHandler = async (req, res) => {
   }
 
   const body = req.body ?? {};
-  if (!body.pickup || !body.delivery) {
+  const delivery = body.delivery || body.dropoff;
+  const pickup = body.pickup;
+  if (!pickup || !delivery) {
     throw new AppError({
-      message: 'Pickup and delivery details are required.',
+      message: 'Pickup and delivery (or dropoff) details are required.',
       statusCode: 400,
       code: 'BAD_REQUEST',
     });
   }
+  body.delivery = delivery;
+  body.dropoff = delivery;
+  body.pickup = pickup;
+
+  pickup.city = pickup.city || 'Bengaluru';
+  pickup.state = pickup.state || 'Karnataka';
+  pickup.postalCode = String(pickup.postalCode || '560001');
+  pickup.contactName = pickup.contactName || user.fullName || 'Authorized Sender';
+  pickup.phoneNumber = pickup.phoneNumber || user.mobileNumber || '+919876543210';
+  pickup.addressLine1 = pickup.addressLine1 || 'Pickup Address';
+
+  delivery.city = delivery.city || 'Bengaluru';
+  delivery.state = delivery.state || 'Karnataka';
+  delivery.postalCode = String(delivery.postalCode || '560001');
+  delivery.contactName = delivery.contactName || 'Authorized Recipient';
+  delivery.phoneNumber = delivery.phoneNumber || '+919876543211';
+  delivery.addressLine1 = delivery.addressLine1 || 'Delivery Address';
 
   const quote = calculateVaultQuote({
     securityLevel: body.securityLevel,

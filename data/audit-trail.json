@@ -1,0 +1,382 @@
+[
+  {
+    "id": "aud-1788959083823-6066",
+    "timestamp": "2026-09-09T13:04:43.823Z",
+    "category": "ORDERS",
+    "action": "POST_COURIER_BOOKINGS",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/courier/bookings executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/courier/bookings",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1788959066956-9649",
+    "timestamp": "2026-09-09T13:04:26.956Z",
+    "category": "ORDERS",
+    "action": "POST_COURIER_QUOTE",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/courier/quote executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/courier/quote",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1788958287828-2816",
+    "timestamp": "2026-09-09T12:51:27.828Z",
+    "category": "ORDERS",
+    "action": "POST_COURIER_BOOKINGS",
+    "severity": "SUCCESS",
+    "actorName": "Test Return User",
+    "actorEmail": "return_99b979d9@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/courier/bookings executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/courier/bookings",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1788958196936-6115",
+    "timestamp": "2026-09-09T12:49:56.936Z",
+    "category": "ORDERS",
+    "action": "POST_COURIER_BOOKINGS",
+    "severity": "CRITICAL",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/courier/bookings executed with status 500 (CRITICAL)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/courier/bookings",
+      "statusCode": 500
+    }
+  },
+  {
+    "id": "aud-1788958189070-9573",
+    "timestamp": "2026-09-09T12:49:49.070Z",
+    "category": "ORDERS",
+    "action": "POST_COURIER_BOOKINGS__7B_7BCOURIERBOOKINGID_",
+    "severity": "WARNING",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/courier/bookings/%7B%7BcourierBookingId%7D%7D/payments/sandbox executed with status 404 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/courier/bookings/%7B%7BcourierBookingId%7D%7D/payments/sandbox",
+      "statusCode": 404
+    }
+  },
+  {
+    "id": "aud-1788958163510-4552",
+    "timestamp": "2026-09-09T12:49:23.510Z",
+    "category": "ORDERS",
+    "action": "POST_COURIER_BOOKINGS__7B_7BCOURIERBOOKINGID_",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/courier/bookings/%7B%7BcourierBookingId%7D%7D/payments/sandbox executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/courier/bookings/%7B%7BcourierBookingId%7D%7D/payments/sandbox",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1788958151478-3308",
+    "timestamp": "2026-09-09T12:49:11.478Z",
+    "category": "ORDERS",
+    "action": "POST_COURIER_BOOKINGS",
+    "severity": "CRITICAL",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/courier/bookings executed with status 500 (CRITICAL)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/courier/bookings",
+      "statusCode": 500
+    }
+  },
+  {
+    "id": "aud-1788958145079-9488",
+    "timestamp": "2026-09-09T12:49:05.079Z",
+    "category": "ORDERS",
+    "action": "POST_COURIER_QUOTE",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/courier/quote executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/courier/quote",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1788958141158-5930",
+    "timestamp": "2026-09-09T12:49:01.158Z",
+    "category": "ORDERS",
+    "action": "POST_COURIER_QUOTE",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/courier/quote executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/courier/quote",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1788958125785-4170",
+    "timestamp": "2026-09-09T12:48:45.785Z",
+    "category": "ORDERS",
+    "action": "POST_COURIER_QUOTE",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/courier/quote executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/courier/quote",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1788958010378-4696",
+    "timestamp": "2026-09-09T12:46:50.378Z",
+    "category": "ORDERS",
+    "action": "POST_COURIER_BOOKINGS",
+    "severity": "CRITICAL",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/courier/bookings executed with status 500 (CRITICAL)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/courier/bookings",
+      "statusCode": 500
+    }
+  },
+  {
+    "id": "aud-1788957894408-9819",
+    "timestamp": "2026-09-09T12:44:54.408Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_BOOKINGS",
+    "severity": "SUCCESS",
+    "actorName": "Test Return User",
+    "actorEmail": "return_99b979d9@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/bookings executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/bookings",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1788957744698-7979",
+    "timestamp": "2026-09-09T12:42:24.698Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/bookings executed with status 400 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/bookings",
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "aud-1788957721582-9368",
+    "timestamp": "2026-09-09T12:42:01.582Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/bookings executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/bookings",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1788957699555-1850",
+    "timestamp": "2026-09-09T12:41:39.555Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_VERIFY_OTP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/verify-otp executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-otp",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1788957687552-9192",
+    "timestamp": "2026-09-09T12:41:27.552Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1788957477730-4302",
+    "timestamp": "2026-09-09T12:37:57.730Z",
+    "category": "ORDERS",
+    "action": "POST_COURIER_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/courier/bookings executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/courier/bookings",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1788955507274-6661",
+    "timestamp": "2026-09-09T12:05:07.274Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_QUOTE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/quote executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/quote",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1788955496099-8310",
+    "timestamp": "2026-09-09T12:04:56.099Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/bookings executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/bookings",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1788953438754-2808",
+    "timestamp": "2026-09-09T11:30:38.754Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 401
+    }
+  }
+]

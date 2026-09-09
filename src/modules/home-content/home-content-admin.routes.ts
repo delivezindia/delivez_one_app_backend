@@ -14,6 +14,10 @@ import {
   adminListPincodes,
   adminListQuickActions,
   adminUpdateBanner,
+  adminUploadBannerImage,
+  adminDeleteBannerImage,
+  getPromoBanner,
+  getActionChips,
   adminUpdateChips,
   adminUpdateHero,
   adminUpdateLocationConfig,
@@ -22,6 +26,12 @@ import {
   adminUpdateSupportConfig,
   adminUploadHeroImage,
   adminUploadQuickActionImage,
+  adminListPromptExamples,
+  adminCreatePromptExample,
+  adminUpdatePromptExample,
+  adminUploadPromptExampleImage,
+  adminDeletePromptExampleImage,
+  adminDeletePromptExample,
 } from './home-content.controller.js';
 
 export const homeContentAdminRouter = Router();
@@ -30,22 +40,44 @@ homeContentAdminRouter.use(authenticate, requireAdmin);
 
 // Hero Management
 homeContentAdminRouter.get('/hero', adminGetHero);
-homeContentAdminRouter.put('/hero', adminUpdateHero);
+homeContentAdminRouter.put('/hero', uploadServiceImage, adminUpdateHero);
 homeContentAdminRouter.patch('/hero', adminUpdateHero);
 homeContentAdminRouter.post('/hero/image', uploadServiceImage, adminUploadHeroImage);
 homeContentAdminRouter.delete('/hero/image', adminDeleteHeroImage);
 
 // Quick Actions Management (Ship Now, Track Shipment, Find Pincode, Help & Support)
 homeContentAdminRouter.get('/quick-actions', adminListQuickActions);
-homeContentAdminRouter.post('/quick-actions', adminCreateQuickAction);
-homeContentAdminRouter.put('/quick-actions/:id', adminUpdateQuickAction);
-homeContentAdminRouter.patch('/quick-actions/:id', adminUpdateQuickAction);
+homeContentAdminRouter.post('/quick-actions', uploadServiceImage, adminCreateQuickAction);
+homeContentAdminRouter.put('/quick-actions/:id', uploadServiceImage, adminUpdateQuickAction);
+homeContentAdminRouter.patch('/quick-actions/:id', uploadServiceImage, adminUpdateQuickAction);
 homeContentAdminRouter.post('/quick-actions/:id/image', uploadServiceImage, adminUploadQuickActionImage);
 homeContentAdminRouter.delete('/quick-actions/:id/image', adminDeleteQuickActionImage);
 homeContentAdminRouter.delete('/quick-actions/:id', adminDeleteQuickAction);
 
+
+// Prompt Examples Management (Try These Examples Modal - both plural and singular)
+homeContentAdminRouter.get('/prompt-examples', adminListPromptExamples);
+homeContentAdminRouter.get('/prompt-example', adminListPromptExamples);
+homeContentAdminRouter.post('/prompt-examples', uploadServiceImage, adminCreatePromptExample);
+homeContentAdminRouter.post('/prompt-example', uploadServiceImage, adminCreatePromptExample);
+homeContentAdminRouter.put('/prompt-examples/:id', uploadServiceImage, adminUpdatePromptExample);
+homeContentAdminRouter.put('/prompt-example/:id', uploadServiceImage, adminUpdatePromptExample);
+homeContentAdminRouter.patch('/prompt-examples/:id', uploadServiceImage, adminUpdatePromptExample);
+homeContentAdminRouter.patch('/prompt-example/:id', uploadServiceImage, adminUpdatePromptExample);
+homeContentAdminRouter.post('/prompt-examples/:id/image', uploadServiceImage, adminUploadPromptExampleImage);
+homeContentAdminRouter.post('/prompt-example/:id/image', uploadServiceImage, adminUploadPromptExampleImage);
+homeContentAdminRouter.delete('/prompt-examples/:id/image', adminDeletePromptExampleImage);
+homeContentAdminRouter.delete('/prompt-example/:id/image', adminDeletePromptExampleImage);
+homeContentAdminRouter.delete('/prompt-examples/:id', adminDeletePromptExample);
+homeContentAdminRouter.delete('/prompt-example/:id', adminDeletePromptExample);
+
 // Banner & Chips
-homeContentAdminRouter.put('/banner', adminUpdateBanner);
+homeContentAdminRouter.get('/banner', getPromoBanner);
+homeContentAdminRouter.put('/banner', uploadServiceImage, adminUpdateBanner);
+homeContentAdminRouter.patch('/banner', uploadServiceImage, adminUpdateBanner);
+homeContentAdminRouter.post('/banner/image', uploadServiceImage, adminUploadBannerImage);
+homeContentAdminRouter.delete('/banner/image', adminDeleteBannerImage);
+homeContentAdminRouter.get('/chips', getActionChips);
 homeContentAdminRouter.patch('/banner', adminUpdateBanner);
 homeContentAdminRouter.put('/chips', adminUpdateChips);
 homeContentAdminRouter.patch('/chips', adminUpdateChips);

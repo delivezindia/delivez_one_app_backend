@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import type { HomeStoreData, PincodeRecord, QuickActionItem } from './home-content.types.js';
+import type { HomeStoreData, PincodeRecord, QuickActionItem, PromptExampleItem } from './home-content.types.js';
 
 const DATA_DIR = path.resolve(process.cwd(), 'data/home-store');
 const STORE_FILE = path.join(DATA_DIR, 'content.json');
@@ -271,6 +271,86 @@ const DEFAULT_STORE: HomeStoreData = {
       },
     ],
   },
+  promptExamples: [
+    {
+      id: 'laptop-office',
+      title: 'Pick up my laptop from office and deliver home by 8 PM',
+      shortText: 'Pick up my laptop from office and deliv...',
+      promptText: 'Pick up my laptop from office and deliver home by 8 PM',
+      serviceSlug: 'courier-delivery',
+      icon: 'laptop',
+      iconColor: '#d97706',
+      displayOrder: 1,
+      isActive: true,
+      hasCustomImage: false,
+      imageUrl: null,
+    },
+    {
+      id: 'airport-luggage',
+      title: 'Send my luggage to Bengaluru Airport Terminal 1',
+      shortText: 'Send my luggage to Bengaluru Airport T...',
+      promptText: 'Send my luggage to Bengaluru Airport Terminal 1',
+      serviceSlug: 'luggage-delivery',
+      icon: 'luggage',
+      iconColor: '#16a34a',
+      displayOrder: 2,
+      isActive: true,
+      hasCustomImage: false,
+      imageUrl: null,
+    },
+    {
+      id: 'legal-documents',
+      title: 'Deliver important documents to my lawyer',
+      shortText: 'Deliver important documents to my law...',
+      promptText: 'Deliver important confidential documents to my lawyer with tamper-proof void seal',
+      serviceSlug: 'confidential-delivery',
+      icon: 'file-text',
+      iconColor: '#9333ea',
+      displayOrder: 3,
+      isActive: true,
+      hasCustomImage: false,
+      imageUrl: null,
+    },
+    {
+      id: 'birthday-gift',
+      title: 'Send a birthday gift to my wife at home',
+      shortText: 'Send a birthday gift to my wife at ho...',
+      promptText: 'Send a surprise birthday gift to my wife at home with special gift wrap',
+      serviceSlug: 'gift-delivery',
+      icon: 'gift',
+      iconColor: '#e11d48',
+      displayOrder: 4,
+      isActive: true,
+      hasCustomImage: false,
+      imageUrl: null,
+    },
+    {
+      id: 'zara-return',
+      title: 'Pick up my return from Zara and deliver to logistics hub',
+      shortText: 'Pick up my return from Zara and deliv...',
+      promptText: 'Pick up my clothing return package from Zara and deliver to return center',
+      serviceSlug: 'return-pickup',
+      icon: 'hanger',
+      iconColor: '#0284c7',
+      displayOrder: 5,
+      isActive: true,
+      hasCustomImage: false,
+      imageUrl: null,
+    },
+    {
+      id: 'forgot-keys',
+      title: 'I forgot my car keys at home. Deliver to office',
+      shortText: 'I forgot my car keys at home. Deliver to...',
+      promptText: 'I forgot my car keys at home. Please retrieve them from home and deliver to my office immediately',
+      serviceSlug: 'forgot-something',
+      icon: 'key',
+      iconColor: '#ea580c',
+      displayOrder: 6,
+      isActive: true,
+      hasCustomImage: false,
+      imageUrl: null,
+    },
+  ],
 };
 
 let memoryStore: HomeStoreData = (() => {
@@ -288,6 +368,7 @@ let memoryStore: HomeStoreData = (() => {
         quickActions: parsed.quickActions?.length ? parsed.quickActions : DEFAULT_STORE.quickActions,
         chips: parsed.chips?.length ? parsed.chips : DEFAULT_STORE.chips,
         pincodes: parsed.pincodes?.length ? parsed.pincodes : DEFAULT_STORE.pincodes,
+        promptExamples: parsed.promptExamples?.length ? parsed.promptExamples : DEFAULT_STORE.promptExamples,
       };
     }
   } catch (err) {
@@ -341,6 +422,44 @@ export function getHeroImageFile(): { buffer: Buffer; mimeType: string; fileName
       buffer: fs.readFileSync(filePath),
       mimeType: memoryStore.hero.sideImageMimeType,
       fileName: memoryStore.hero.sideImageFileName || `hero-image.${ext}`,
+    };
+  }
+  return null;
+}
+
+export function saveBannerImage(buffer: Buffer, mimeType: string, originalName: string): string {
+  const ext = mimeType === 'image/png' ? 'png' : mimeType === 'image/webp' ? 'webp' : 'jpg';
+  const fileName = `banner-image.${ext}`;
+  const filePath = path.join(IMAGES_DIR, fileName);
+  fs.writeFileSync(filePath, buffer);
+
+  memoryStore.banner.hasCustomImage = true;
+  memoryStore.banner.imageMimeType = mimeType;
+  memoryStore.banner.imageFileName = originalName;
+  memoryStore.banner.imageUpdatedAt = new Date().toISOString();
+  saveHomeStore();
+  return fileName;
+}
+
+export function removeBannerImage(): void {
+  memoryStore.banner.hasCustomImage = false;
+  memoryStore.banner.imageMimeType = null;
+  memoryStore.banner.imageFileName = null;
+  memoryStore.banner.imageUpdatedAt = new Date().toISOString();
+  saveHomeStore();
+}
+
+export function getBannerImageFile(): { buffer: Buffer; mimeType: string; fileName: string } | null {
+  if (!memoryStore.banner.hasCustomImage || !memoryStore.banner.imageMimeType) {
+    return null;
+  }
+  const ext = memoryStore.banner.imageMimeType === 'image/png' ? 'png' : memoryStore.banner.imageMimeType === 'image/webp' ? 'webp' : 'jpg';
+  const filePath = path.join(IMAGES_DIR, `banner-image.${ext}`);
+  if (fs.existsSync(filePath)) {
+    return {
+      buffer: fs.readFileSync(filePath),
+      mimeType: memoryStore.banner.imageMimeType,
+      fileName: memoryStore.banner.imageFileName || `banner-image.${ext}`,
     };
   }
   return null;
@@ -419,4 +538,46 @@ export function getDefaultRobotSvg(): Buffer {
   <rect x="74" y="108" width="52" height="10" rx="5" fill="#FFFFFF" />
 </svg>`;
   return Buffer.from(svg, 'utf8');
+}
+
+export function savePromptExampleImage(exampleId: string, buffer: Buffer, mimeType: string, originalName: string): void {
+  const ext = mimeType === 'image/png' ? 'png' : mimeType === 'image/webp' ? 'webp' : 'jpg';
+  const fileName = `example-${exampleId}.${ext}`;
+  const filePath = path.join(IMAGES_DIR, fileName);
+  fs.writeFileSync(filePath, buffer);
+
+  const item = memoryStore.promptExamples.find((e) => e.id === exampleId);
+  if (item) {
+    item.hasCustomImage = true;
+    item.imageMimeType = mimeType;
+    item.imageFileName = originalName;
+    item.imageUpdatedAt = new Date().toISOString();
+    saveHomeStore();
+  }
+}
+
+export function getPromptExampleImageFile(exampleId: string): { buffer: Buffer; mimeType: string; fileName: string } | null {
+  const item = memoryStore.promptExamples?.find((e) => e.id === exampleId);
+  if (!item?.hasCustomImage || !item.imageMimeType) return null;
+  const ext = item.imageMimeType === 'image/png' ? 'png' : item.imageMimeType === 'image/webp' ? 'webp' : 'jpg';
+  const filePath = path.join(IMAGES_DIR, `example-${exampleId}.${ext}`);
+  if (fs.existsSync(filePath)) {
+    return {
+      buffer: fs.readFileSync(filePath),
+      mimeType: item.imageMimeType,
+      fileName: item.imageFileName || `example-${exampleId}.${ext}`,
+    };
+  }
+  return null;
+}
+
+export function removePromptExampleImage(exampleId: string): void {
+  const item = memoryStore.promptExamples?.find((e) => e.id === exampleId);
+  if (item) {
+    item.hasCustomImage = false;
+    item.imageMimeType = null;
+    item.imageFileName = null;
+    item.imageUpdatedAt = new Date().toISOString();
+    saveHomeStore();
+  }
 }
