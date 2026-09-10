@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { prisma } from '../../lib/prisma.js';
 import type { KnowMoreCard, CreateKnowMoreCardInput, UpdateKnowMoreCardInput, ServiceCategory } from './know-more.types.js';
 
 const DATA_DIR = path.resolve(process.cwd(), 'data/know-more');
@@ -97,35 +98,82 @@ const INITIAL_CARDS: KnowMoreCard[] = [
   }
 ];
 
-let cachedCards: KnowMoreCard[] | null = null;
+let cachedCards: KnowMoreCard[] = [...INITIAL_CARDS];
+let hasAttemptedDbLoad = false;
 
-function loadStore(): KnowMoreCard[] {
-  if (cachedCards) return cachedCards;
+export async function syncDatabaseToMemory(): Promise<void> {
   try {
-    if (fs.existsSync(STORE_FILE)) {
-      const data = fs.readFileSync(STORE_FILE, 'utf8');
-      const parsed = JSON.parse(data);
+    const dbRecord = await prisma.service.findUnique({ where: { slug: 'know-more' } });
+    if (dbRecord?.description) {
+      const parsed = JSON.parse(dbRecord.description);
       if (Array.isArray(parsed) && parsed.length > 0) {
         cachedCards = parsed;
-        return cachedCards;
+        try {
+          fs.writeFileSync(STORE_FILE, JSON.stringify(cachedCards, null, 2), 'utf8');
+        } catch {
+          // ignore disk write errors
+        }
+        return;
       }
     }
   } catch (err) {
-    console.error('[KnowMoreStore] Failed to parse cards.json', err);
+    console.error('[KnowMoreStore] PostgreSQL initial read error:', err);
   }
 
-  cachedCards = [...INITIAL_CARDS];
-  saveStore(cachedCards);
+  // Fallback to disk
+  try {
+    if (fs.existsSync(STORE_FILE)) {
+      const fileData = fs.readFileSync(STORE_FILE, 'utf8');
+      const parsed = JSON.parse(fileData);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        cachedCards = parsed;
+        return;
+      }
+    }
+  } catch (err) {
+    console.error('[KnowMoreStore] File read fallback error:', err);
+  }
+}
+
+// Background sync to PostgreSQL database
+export async function syncCardsToDatabase(cards: KnowMoreCard[]): Promise<void> {
+  try {
+    const serialized = JSON.stringify(cards);
+    await prisma.service.upsert({
+      where: { slug: 'know-more' },
+      update: {
+        description: serialized,
+        updatedAt: new Date(),
+      },
+      create: {
+        slug: 'know-more',
+        name: 'Know More',
+        shortDescription: 'Explore our full range of tailored logistics, enterprise solutions, and 24/7 support.',
+        description: serialized,
+        isActive: true,
+      },
+    });
+  } catch (err) {
+    console.error('[KnowMoreStore] PostgreSQL write sync error:', err);
+  }
+}
+
+function loadStore(): KnowMoreCard[] {
+  if (!hasAttemptedDbLoad) {
+    hasAttemptedDbLoad = true;
+    syncDatabaseToMemory().catch(() => {});
+  }
   return cachedCards;
 }
 
 function saveStore(cards: KnowMoreCard[]): void {
+  cachedCards = cards;
   try {
     fs.writeFileSync(STORE_FILE, JSON.stringify(cards, null, 2), 'utf8');
-    cachedCards = cards;
   } catch (err) {
     console.error('[KnowMoreStore] Failed to save cards.json', err);
   }
+  syncCardsToDatabase(cards).catch(() => {});
 }
 
 export function getAllCards(filter?: { serviceSlug?: string; activeOnly?: boolean }): KnowMoreCard[] {
@@ -136,7 +184,7 @@ export function getAllCards(filter?: { serviceSlug?: string; activeOnly?: boolea
   if (filter?.activeOnly) {
     list = list.filter(item => item.isActive !== false);
   }
-  return list.sort((a, b) => (a.order || 0) - (b.order || 0));
+  return [...list].sort((a, b) => (a.order || 0) - (b.order || 0));
 }
 
 export function getCardById(id: string): KnowMoreCard | null {
@@ -162,8 +210,8 @@ export function createCard(input: CreateKnowMoreCardInput): KnowMoreCard {
     updatedAt: new Date().toISOString(),
   };
 
-  list.push(newCard);
-  saveStore(list);
+  const updatedList = [...list, newCard];
+  saveStore(updatedList);
   return newCard;
 }
 
@@ -192,8 +240,9 @@ export function updateCard(id: string, input: UpdateKnowMoreCardInput): KnowMore
     updatedAt: new Date().toISOString(),
   };
 
-  list[index] = updated;
-  saveStore(list);
+  const updatedList = [...list];
+  updatedList[index] = updated;
+  saveStore(updatedList);
   return updated;
 }
 
@@ -211,7 +260,7 @@ export function toggleCardActive(id: string): KnowMoreCard | null {
   if (!item) return null;
   item.isActive = !item.isActive;
   item.updatedAt = new Date().toISOString();
-  saveStore(list);
+  saveStore([...list]);
   return item;
 }
 
@@ -234,3 +283,6 @@ export function getCardImageFile(filename: string): { buffer: Buffer; mimeType: 
   const buffer = fs.readFileSync(filePath);
   return { buffer, mimeType };
 }
+
+// Initial DB sync on module import
+syncDatabaseToMemory().catch(() => {});

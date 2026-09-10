@@ -55,6 +55,7 @@ apiRouter.use('/health', systemRouter);
 apiRouter.use('/services/sliders', publicServiceSlidersRouter);
 apiRouter.use('/services/image-sliders', publicServiceSlidersRouter);
 apiRouter.get('/services/:serviceSlug/slider', getServiceSliderBySlugHandler);
+apiRouter.get('/services/:serviceSlug/sliders', getServiceSliderBySlugHandler);
 apiRouter.use('/admin/service-sliders', adminServiceSlidersRouter);
 apiRouter.use('/admin/services/sliders', adminServiceSlidersRouter);
 

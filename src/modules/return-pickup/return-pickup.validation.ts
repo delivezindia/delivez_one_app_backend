@@ -157,8 +157,147 @@ export const createReturnPickupSchema = z.object({
 
 export type CreateReturnPickupInput = z.infer<typeof createReturnPickupSchema>;
 
+
+export function normalizeReturnPickupInput(raw: any): any {
+  if (!raw || typeof raw !== 'object') return raw;
+
+  // 1. Normalize returnType (from mobile UI strings or enums)
+  let returnType = raw.returnType;
+  if (typeof returnType === 'string') {
+    const trimmed = returnType.trim();
+    const lower = trimmed.toLowerCase();
+    if (lower.includes('return an item') || lower === 'return_item') {
+      returnType = 'RETURN_ITEM';
+    } else if (lower.includes('exchange') || lower === 'exchange_item') {
+      returnType = 'EXCHANGE_ITEM';
+    } else if (lower.includes('repair') || lower.includes('service') || lower === 'repair_service') {
+      returnType = 'REPAIR_SERVICE';
+    } else if (lower.includes('warranty') || lower === 'warranty_return') {
+      returnType = 'WARRANTY_RETURN';
+    } else if (lower.includes('rental') || lower === 'rental_return') {
+      returnType = 'RENTAL_RETURN';
+    } else if (lower.includes('someone') || lower.includes('person') || lower.includes('send_back')) {
+      returnType = 'SEND_BACK_TO_PERSON';
+    } else if (lower.includes('other') || lower === 'other_return') {
+      returnType = 'OTHER';
+    }
+  }
+
+  // 2. Normalize destinationType
+  let destinationType = raw.destinationType;
+  if (typeof destinationType === 'string') {
+    const lower = destinationType.trim().toLowerCase();
+    if (lower.includes('online') || lower === 'online_store') {
+      destinationType = 'ONLINE_STORE';
+    } else if (lower.includes('local') || lower === 'local_store') {
+      destinationType = 'LOCAL_STORE';
+    } else if (lower.includes('brand') || lower === 'brand_store') {
+      destinationType = 'BRAND_STORE';
+    } else if (lower.includes('service') || lower.includes('repair') || lower === 'service_centre' || lower === 'service_center') {
+      destinationType = 'SERVICE_CENTRE';
+    } else if (lower.includes('warehouse')) {
+      destinationType = 'WAREHOUSE';
+    } else if (lower.includes('person') || lower.includes('another')) {
+      destinationType = 'ANOTHER_PERSON';
+    } else if (lower.includes('other')) {
+      destinationType = 'OTHER';
+    }
+  }
+
+  // 3. Normalize itemCondition (int 0, 1, 2 or string)
+  let itemCondition = raw.itemCondition ?? raw.condition;
+  if (itemCondition === 0 || itemCondition === '0' || (typeof itemCondition === 'string' && itemCondition.toLowerCase().includes('new'))) {
+    itemCondition = 'NEW_UNUSED';
+  } else if (itemCondition === 1 || itemCondition === '1' || (typeof itemCondition === 'string' && itemCondition.toLowerCase().includes('good'))) {
+    itemCondition = 'USED_GOOD';
+  } else if (itemCondition === 2 || itemCondition === '2' || (typeof itemCondition === 'string' && (itemCondition.toLowerCase().includes('damage') || itemCondition.toLowerCase().includes('defect')))) {
+    itemCondition = 'DAMAGED';
+  }
+
+  // 4. Normalize deliveryService
+  let deliveryService = raw.deliveryService ?? raw.serviceType;
+  if (typeof deliveryService === 'string') {
+    const lower = deliveryService.trim().toLowerCase();
+    if (lower.includes('express')) deliveryService = 'EXPRESS';
+    else if (lower.includes('precise')) deliveryService = 'PRECISE_TIME';
+    else if (lower.includes('appointment')) deliveryService = 'APPOINTMENT_BASED';
+    else if (lower.includes('standard')) deliveryService = 'STANDARD';
+  }
+
+  // 5. Pickup Location Aliases
+  const pickupStoreName = raw.pickupStoreName || raw.storeName || raw.shopName || raw.storeOrShopName || raw.serviceCenterName || raw.pickupLocationName || 'Store';
+  const pickupAddress = raw.pickupAddress || raw.address || raw.pickupStreet || (raw.houseBuilding ? [raw.houseBuilding, raw.street, raw.area].filter(Boolean).join(', ') : '');
+  const pickupCity = raw.pickupCity || raw.city || raw.pickupTown || 'Bengaluru';
+  const pickupPostalCode = String(raw.pickupPostalCode || raw.pincode || raw.postalCode || raw.pickupPincode || '560001');
+  const pickupContactName = raw.pickupContactName || raw.contactPersonName || raw.contactName || raw.pickupContact || 'Sender';
+  const pickupPhoneNumber = String(raw.pickupPhoneNumber || raw.contactPhoneNumber || raw.contactPhone || raw.phone || raw.pickupPhone || '9876543210');
+  const pickupReferenceNumber = raw.pickupReferenceNumber || raw.referenceNumber || raw.orderNumber || raw.jobNumber || raw.orderId || null;
+
+  // 6. Return / Delivery Location Aliases
+  const returnAddressType = raw.returnAddressType || raw.deliveryOption || raw.deliveryType || 'My Home';
+  const returnAddress = raw.returnAddress || raw.deliveryAddress || raw.destinationAddress || raw.returnStreet || (raw.deliveryHouseBuilding ? [raw.deliveryHouseBuilding, raw.deliveryStreet, raw.deliveryArea].filter(Boolean).join(', ') : '') || pickupAddress;
+  const returnCity = raw.returnCity || raw.deliveryCity || raw.destinationCity || pickupCity;
+  const returnPostalCode = String(raw.returnPostalCode || raw.deliveryPostalCode || raw.deliveryPincode || raw.destinationPostalCode || pickupPostalCode);
+  const returnContactName = raw.returnContactName || raw.deliveryContactName || raw.deliveryContactPerson || raw.recipientName || pickupContactName;
+  const returnPhoneNumber = String(raw.returnPhoneNumber || raw.deliveryPhoneNumber || raw.deliveryPhone || raw.recipientPhone || pickupPhoneNumber);
+  const returnLandmark = raw.returnLandmark || raw.landmark || raw.deliveryLandmark || null;
+
+  // 7. Item Aliases
+  const itemCategory = raw.itemCategory || raw.category || 'ELECTRONICS';
+  const itemDescription = raw.itemDescription || raw.description || raw.itemDesc || 'Item for return';
+  const itemQuantity = raw.itemQuantity ?? raw.quantity ?? 1;
+  const declaredValue = raw.declaredValue ?? raw.itemValue ?? raw.approxValue ?? raw.value ?? null;
+  const approxWeightKg = raw.approxWeightKg ?? raw.weightKg ?? raw.weight ?? raw.approxWeight ?? 0.5;
+
+  // Dimensions
+  const lengthCm = raw.lengthCm ?? raw.length ?? (raw.dimensions && raw.dimensions.length) ?? null;
+  const widthCm = raw.widthCm ?? raw.width ?? (raw.dimensions && raw.dimensions.width) ?? null;
+  const heightCm = raw.heightCm ?? raw.height ?? (raw.dimensions && raw.dimensions.height) ?? null;
+
+  // Special Handling
+  const specialHandlingTags = raw.specialHandlingTags || raw.specialHandling || raw.tags || [];
+
+  // Schedule
+  const scheduledDate = raw.scheduledDate || raw.pickupDate || raw.date || null;
+  const scheduledTimeSlot = raw.scheduledTimeSlot || raw.timeSlot || raw.pickupTimeSlot || '11:00 AM - 1:00 PM';
+
+  return {
+    ...raw,
+    returnType: returnType || 'RETURN_ITEM',
+    destinationType: destinationType || 'ONLINE_STORE',
+    pickupStoreName,
+    pickupAddress,
+    pickupCity,
+    pickupPostalCode,
+    pickupContactName,
+    pickupPhoneNumber,
+    pickupReferenceNumber,
+    returnAddressType,
+    returnAddress,
+    returnCity,
+    returnPostalCode,
+    returnContactName,
+    returnPhoneNumber,
+    returnLandmark,
+    itemCategory,
+    itemDescription,
+    itemQuantity,
+    declaredValue,
+    approxWeightKg,
+    lengthCm,
+    widthCm,
+    heightCm,
+    itemCondition: itemCondition || 'NEW_UNUSED',
+    specialHandlingTags,
+    deliveryService: deliveryService || 'STANDARD',
+    scheduledDate,
+    scheduledTimeSlot,
+  };
+}
+
 export function validateReturnPickupRequest(input: unknown): CreateReturnPickupInput {
-  const parsed = createReturnPickupSchema.safeParse(input);
+  const normalized = normalizeReturnPickupInput(input);
+  const parsed = createReturnPickupSchema.safeParse(normalized);
   if (!parsed.success) {
     const message = parsed.error.issues.map((i) => i.message).join(', ');
     throw new AppError(400, message || 'Invalid return pickup booking payload.');

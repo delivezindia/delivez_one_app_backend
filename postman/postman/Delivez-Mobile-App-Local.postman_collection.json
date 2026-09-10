@@ -1256,6 +1256,415 @@
       ]
     },
     {
+      "name": "Screen Flow: Return Pickup (E-Commerce, Store & Service Center Returns)",
+      "description": "Complete 9-screen end-to-end Return Pickup mobile flow based on Flutter implementation (Pages 1 to 9). Covers Slider, Return Type, Pickup Location, Delivery Details, Destination Category, Item Details, Documents Upload, Scheduling, Booking, Tracking, and OTP Verification.",
+      "item": [
+        {
+          "name": "Page 1: Fetch Header Slider Images",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/services/return-pickup/sliders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "services",
+                "return-pickup",
+                "sliders"
+              ]
+            },
+            "description": "Page 1 (ReturnPickupHomePage): Fetches dynamic promotional slider images for the top Carousel PageView."
+          }
+        },
+        {
+          "name": "Page 2 & 5: Fetch Return Types & Destinations Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/return-pickup/options",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "return-pickup",
+                "options"
+              ]
+            },
+            "description": "Pages 2 & 5: Returns supported Return Types (Return an Item, Exchange Item, Repair/Service, Warranty, Rental, Send Back to Someone), Destination Types (Online Store, Local Store, Brand Store, Service Centre, Warehouse, Another Person), Item Categories, and Time Slots."
+          }
+        },
+        {
+          "name": "Page 6 & 9: Calculate Return Fare Quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deliveryService\": \"STANDARD\",\n  \"quantity\": 1,\n  \"itemValue\": 2499,\n  \"approxWeightKg\": 0.5,\n  \"shipmentProtection\": true,\n  \"couponCode\": \"DELIVEZ10\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/return-pickup/quote",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "return-pickup",
+                "quote"
+              ]
+            },
+            "description": "Calculates instant transparent pricing breakdown with GST, base charge, distance charge, protection cover, and applied discount coupons."
+          }
+        },
+        {
+          "name": "Page 7: Upload Return Document / Label (Multipart)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "documentType",
+                  "value": "INVOICE_ORDER_PROOF",
+                  "type": "text"
+                },
+                {
+                  "key": "title",
+                  "value": "Order Invoice or Return Label",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/return-pickup/documents/upload",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "return-pickup",
+                "documents",
+                "upload"
+              ]
+            },
+            "description": "Page 7 (ReturnDocumentsScreen): Upload invoice, barcode/QR label, repair receipt, or authorization documents (JPG, PNG, PDF up to 10MB)."
+          }
+        },
+        {
+          "name": "Pages 2-9: Create Return Pickup Booking (Mobile Payload)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData && jsonData.data && jsonData.data.booking) {",
+                  "    var b = jsonData.data.booking;",
+                  "    pm.environment.set(\"returnPickupBookingId\", b.id);",
+                  "    pm.environment.set(\"returnPickupBookingNumber\", b.bookingNumber);",
+                  "    if (b.pickupOtp) pm.environment.set(\"returnPickupOtp\", b.pickupOtp);",
+                  "    if (b.deliveryOtp) pm.environment.set(\"returnDeliveryOtp\", b.deliveryOtp);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "idemp-ret-{{$timestamp}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"returnType\": \"Return an Item\",\n  \"destinationType\": \"Online Store\",\n  \"destinationName\": \"Amazon India\",\n  \"storeName\": \"Croma Mega Store Indiranagar\",\n  \"address\": \"No. 45, 100ft Road, HAL 2nd Stage, Indiranagar\",\n  \"city\": \"Bengaluru\",\n  \"pincode\": \"560038\",\n  \"contactPersonName\": \"Ravi Kishan\",\n  \"contactPhone\": \"9876543210\",\n  \"referenceNumber\": \"RET-AMZ-2026-9988\",\n  \"deliveryOption\": \"My Home\",\n  \"deliveryAddress\": \"Flat 402, Green Glen Layout, Outer Ring Road, Bellandur\",\n  \"deliveryCity\": \"Bengaluru\",\n  \"deliveryPincode\": \"560103\",\n  \"deliveryContactName\": \"Ravi Kishan\",\n  \"deliveryPhoneNumber\": \"9876543210\",\n  \"landmark\": \"Behind Central Mall\",\n  \"itemCategory\": \"ELECTRONICS\",\n  \"itemDescription\": \"Wireless Noise Cancelling Headphones with accessories and retail box\",\n  \"quantity\": 1,\n  \"itemValue\": 2499,\n  \"weight\": 0.45,\n  \"dimensions\": {\n    \"length\": 18,\n    \"width\": 15,\n    \"height\": 8\n  },\n  \"itemCondition\": 0,\n  \"specialHandling\": [\n    \"Fragile\",\n    \"Handle with care\"\n  ],\n  \"returnDetailsMethod\": \"SCAN_LABEL\",\n  \"documents\": [\n    {\n      \"documentType\": \"INVOICE_ORDER_PROOF\",\n      \"title\": \"Amazon Return Invoice\",\n      \"fileUrl\": \"https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800\"\n    }\n  ],\n  \"pickupDate\": \"2026-09-12\",\n  \"timeSlot\": \"11:00 AM - 1:00 PM\",\n  \"deliveryService\": \"STANDARD\",\n  \"paymentMethod\": \"PAY_ON_PICKUP\",\n  \"couponCode\": \"DELIVEZ10\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/return-pickup/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "return-pickup",
+                "bookings"
+              ]
+            },
+            "description": "Submits the complete multi-step Return Pickup order. Accepts Flutter mobile aliases and normalizes return type, destination, item condition, and addresses."
+          }
+        },
+        {
+          "name": "Universal Tracking: Live Status & Tracking Timeline",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/return-pickup/track/{{returnPickupBookingNumber}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "return-pickup",
+                "track",
+                "{{returnPickupBookingNumber}}"
+              ]
+            },
+            "description": "Live universal tracking link by Booking Number (DRVZ-RET-...) without requiring auth login."
+          }
+        },
+        {
+          "name": "Verify Pickup OTP (Handover from Store / Location)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"PICKUP\",\n  \"otp\": \"{{returnPickupOtp}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/return-pickup/{{returnPickupBookingId}}/verify-otp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "return-pickup",
+                "{{returnPickupBookingId}}",
+                "verify-otp"
+              ]
+            },
+            "description": "Verifies 4-digit Pickup OTP when delivery executive picks up the item from the store/location."
+          }
+        },
+        {
+          "name": "Verify Delivery OTP (Completed Return Handover)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"DELIVERY\",\n  \"otp\": \"{{returnDeliveryOtp}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/return-pickup/{{returnPickupBookingId}}/verify-otp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "return-pickup",
+                "{{returnPickupBookingId}}",
+                "verify-otp"
+              ]
+            },
+            "description": "Verifies 4-digit Delivery OTP upon delivering the returned item to recipient or customer."
+          }
+        },
+        {
+          "name": "Reschedule Return Pickup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"scheduledDate\": \"2026-09-14\",\n  \"scheduledTimeSlot\": \"3:00 PM - 5:00 PM\",\n  \"pickupInstructions\": \"Store manager available after 3:30 PM\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/return-pickup/{{returnPickupBookingId}}/reschedule",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "return-pickup",
+                "{{returnPickupBookingId}}",
+                "reschedule"
+              ]
+            },
+            "description": "Reschedules the pickup date and time slot."
+          }
+        },
+        {
+          "name": "Download Return Receipt & Tax Invoice",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/return-pickup/{{returnPickupBookingId}}/invoice",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "return-pickup",
+                "{{returnPickupBookingId}}",
+                "invoice"
+              ]
+            },
+            "description": "Fetches detailed digital tax invoice and itemized proof of return pickup."
+          }
+        },
+        {
+          "name": "Cancel Return Pickup Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cancellationReason\": \"Seller approved on-site replacement directly\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/return-pickup/{{returnPickupBookingId}}/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "return-pickup",
+                "{{returnPickupBookingId}}",
+                "cancel"
+              ]
+            },
+            "description": "Cancels the return pickup booking before agent assignment or dispatch."
+          }
+        },
+        {
+          "name": "Submit Return Experience Feedback",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5,\n  \"feedbackText\": \"Super fast and hassle-free return pickup. Pickup partner verified items carefully.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/return-pickup/{{returnPickupBookingId}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "return-pickup",
+                "{{returnPickupBookingId}}",
+                "feedback"
+              ]
+            },
+            "description": "Submits star rating and review feedback after return completion."
+          }
+        }
+      ]
+    },
+    {
       "name": "Screen Flow 8: Universal Tracking & Orders History",
       "item": [
         {

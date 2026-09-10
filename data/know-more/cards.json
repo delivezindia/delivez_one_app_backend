@@ -1,87 +1,86 @@
 [
   {
     "id": "km-card-01",
+    "createdAt": "2026-09-10T05:46:49.858Z",
     "serviceSlug": "courier-delivery",
-    "heading": "Personal Courier & Parcel Express Guide",
-    "description": "Learn how our verified riders pick up packages in 15 minutes, inspect weight & dimensions, and deliver across city pin codes with end-to-end GPS telemetry.",
+    "heading": "Delivez One",
+    "description": "Single item fast pickup",
     "images": [
       "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1000&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=1000&auto=format&fit=crop&q=80"
     ],
-    "ctaText": "Explore Courier Guide",
+    "ctaText": "Explore",
     "ctaLink": "/services/courier-delivery",
     "badge": "Express Standard",
     "order": 1,
     "isActive": true,
-    "createdAt": "2026-09-10T05:46:49.858Z",
-    "updatedAt": "2026-09-10T05:46:49.858Z"
+    "updatedAt": "2026-09-10T07:26:51.216Z"
   },
   {
     "id": "km-card-02",
+    "createdAt": "2026-09-10T05:46:49.858Z",
     "serviceSlug": "luggage-delivery",
-    "heading": "Airport Luggage Transfer & Security Protocols",
-    "description": "Discover how TSA-compliant sealed security tags, dedicated vehicle escorts, and airport gate drop-offs keep your travel baggage 100% stress-free.",
+    "heading": "Delivez Pro",
+    "description": "Premium priority delivery",
     "images": [
       "https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?w=1000&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1581553680321-4fffae59fccd?w=1000&auto=format&fit=crop&q=80"
     ],
-    "ctaText": "Read Luggage Policy",
+    "ctaText": "know more",
     "ctaLink": "/services/luggage-delivery",
     "badge": "Airport Check-In",
     "order": 2,
     "isActive": true,
-    "createdAt": "2026-09-10T05:46:49.858Z",
-    "updatedAt": "2026-09-10T05:46:49.858Z"
+    "updatedAt": "2026-09-10T07:27:50.683Z"
   },
   {
     "id": "km-card-03",
+    "createdAt": "2026-09-10T05:46:49.858Z",
     "serviceSlug": "confidential-delivery",
-    "heading": "Vault Courier & Dual-OTP Chain of Custody",
-    "description": "Detailed insights on armed couriers, tamper-evident barcode envelopes, and real-time electronic signatures for high-value legal documents and jewelry.",
+    "heading": "Delivez Now",
+    "description": "Instant 15-min delivery",
     "images": [
       "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1000&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&auto=format&fit=crop&q=80"
     ],
-    "ctaText": "Inspect Vault Protocols",
+    "ctaText": "Know More",
     "ctaLink": "/services/confidential-delivery",
     "badge": "Zero Tamper",
     "order": 3,
     "isActive": true,
-    "createdAt": "2026-09-10T05:46:49.858Z",
-    "updatedAt": "2026-09-10T05:46:49.858Z"
+    "updatedAt": "2026-09-10T07:29:05.598Z"
   },
   {
     "id": "km-card-04",
+    "createdAt": "2026-09-10T05:46:49.858Z",
     "serviceSlug": "forgot-something",
-    "heading": "Lost & Forgotten Item Fast-Track Recovery",
-    "description": "How to summon an instant rescue courier when keys, office badges, or laptops are left behind. Includes verified identity confirmation and handover OTP.",
+    "heading": "Delivez Move",
+    "description": "Heavy & bulk shifting",
     "images": [
       "https://images.unsplash.com/photo-1582139329536-e7284fece509?w=1000&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1000&auto=format&fit=crop&q=80"
     ],
-    "ctaText": "Read Recovery Flow",
+    "ctaText": "Know More",
     "ctaLink": "/services/forgot-something",
     "badge": "Urgent Rescue",
     "order": 4,
     "isActive": true,
-    "createdAt": "2026-09-10T05:46:49.858Z",
-    "updatedAt": "2026-09-10T05:46:49.858Z"
+    "updatedAt": "2026-09-10T07:30:11.331Z"
   },
   {
-    "id": "km-card-05",
-    "serviceSlug": "return-pickup",
-    "heading": "E-Commerce Return Pickup & Service Center Handover",
-    "description": "Everything you need to know about doorstep barcode scanning, return package weight verification, and getting instant vendor handover acknowledgment.",
+    "id": "km-mtv7dmfo-alqv",
+    "serviceSlug": "courier-delivery",
+    "heading": "Database Persistence Test Card 1789025142204",
+    "description": "Verifying that this card saves directly into the PostgreSQL database services table.",
     "images": [
-      "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=1000&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1000&auto=format&fit=crop&q=80"
+      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1000"
     ],
-    "ctaText": "Understand Returns",
-    "ctaLink": "/services/return-pickup",
-    "badge": "Zero Hassle",
-    "order": 5,
+    "ctaText": "Test CTA",
+    "ctaLink": "/services/courier-delivery",
+    "badge": "DB-TEST",
+    "order": 99,
     "isActive": true,
-    "createdAt": "2026-09-10T05:46:49.858Z",
-    "updatedAt": "2026-09-10T05:46:49.858Z"
+    "createdAt": "2026-09-10T07:25:42.228Z",
+    "updatedAt": "2026-09-10T07:25:42.228Z"
   }
 ]
