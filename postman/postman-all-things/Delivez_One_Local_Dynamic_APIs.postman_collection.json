@@ -1,0 +1,1345 @@
+{
+  "info": {
+    "_postman_id": "f39a0e12-b2c3-4d4e-9f0a-1234567890bc",
+    "name": "Delivez One - Local Dynamic APIs",
+    "description": "Complete API collection for Delivez One Dynamic Frontend & Admin Operations.\nIncludes:\n- Auto-detecting & GPS Location APIs for Location Bar\n- Dynamic Hero text, AI Prompt & Mascot Image APIs (with Admin upload/management)\n- 4 Quick Actions (Ship Now, Track Shipment, Find Pincode, Help & Support)\n- Pincode Serviceability Availability Check\n- 24/7 Help & Support & Inquiry Submission\n- Universal Shipment Tracking\n- Admin Management Endpoints (Hero, Quick Actions, Pincodes, Banner, Chips, Support)\n\nBase URL: http://localhost:4000/api/v1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "adminMobile",
+      "value": "9999999999",
+      "type": "string"
+    },
+    {
+      "key": "adminPassword",
+      "value": "Admin@123456",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "latitude",
+      "value": "26.8373",
+      "type": "string"
+    },
+    {
+      "key": "longitude",
+      "value": "80.9165",
+      "type": "string"
+    },
+    {
+      "key": "pincode",
+      "value": "560001",
+      "type": "string"
+    },
+    {
+      "key": "trackingId",
+      "value": "DLVZ2505128947",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Location Bar & Geolocation",
+      "description": "Auto-detecting current location from user connection / IP, or reverse-geocoding live GPS coordinates.",
+      "item": [
+        {
+          "name": "Get Current Location (Auto-detected via User IP/Connection)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/location/current",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "location",
+                "current"
+              ]
+            },
+            "description": "Detects the user's real current city, state, address and postal code using connection IP and reverse geocoding."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current Location with GPS Coordinates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/location/current?lat={{latitude}}&lng={{longitude}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "location",
+                "current"
+              ],
+              "query": [
+                {
+                  "key": "lat",
+                  "value": "{{latitude}}"
+                },
+                {
+                  "key": "lng",
+                  "value": "{{longitude}}"
+                }
+              ]
+            },
+            "description": "Pass device latitude and longitude to get the exact street, neighbourhood, and postal code."
+          },
+          "response": []
+        },
+        {
+          "name": "Detect / Reverse-Geocode Coordinates (GET)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/location/detect?lat={{latitude}}&lng={{longitude}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "location",
+                "detect"
+              ],
+              "query": [
+                {
+                  "key": "lat",
+                  "value": "{{latitude}}"
+                },
+                {
+                  "key": "lng",
+                  "value": "{{longitude}}"
+                }
+              ]
+            },
+            "description": "Reverse geocode coordinates with serviceability check."
+          },
+          "response": []
+        },
+        {
+          "name": "Detect / Reverse-Geocode Coordinates (POST)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"latitude\": 26.8373,\n  \"longitude\": 80.9165\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/location/detect",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "location",
+                "detect"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Location Presets (Major Hubs & Metro Cities)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/location/presets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "location",
+                "presets"
+              ]
+            },
+            "description": "Returns preset delivery hubs (Bengaluru, Mumbai, Delhi, Hyderabad, etc.)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Dynamic Home & Hero Section",
+      "description": "Dynamic hero texts, highlighted word, prompt search bar, side image mascot, and promo banner.",
+      "item": [
+        {
+          "name": "Get Master Home Dynamic Bundle (/home/all)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/home/all",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "home",
+                "all"
+              ]
+            },
+            "description": "Returns all dynamic home data (Location, Hero, Quick Actions, Banner, Chips, Support) in a single fast call."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Hero Section Config",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/home/hero",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "home",
+                "hero"
+              ]
+            },
+            "description": "Returns headline, highlightWord, subtitle, greeting, and sideImageUrl."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Hero Side Image / Mascot (Image URL)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/home/hero/image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "home",
+                "hero",
+                "image"
+              ]
+            },
+            "description": "Serves the side image (custom image uploaded by admin or default golden robot mascot SVG)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Yellow Promo Banner",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/home/banner",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "home",
+                "banner"
+              ]
+            },
+            "description": "Returns the promo banner details: Priority. Protection. Performance."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Secondary Action Chips",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/home/chips",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "home",
+                "chips"
+              ]
+            },
+            "description": "Returns Price Calculator, Schedule Pickup, Delivez Money, Best Offers."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Quick Action Cards",
+      "description": "Ship Now, Track Shipment, Find Pincode, Help & Support cards.",
+      "item": [
+        {
+          "name": "Get All Quick Action Cards",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/home/quick-actions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "home",
+                "quick-actions"
+              ]
+            },
+            "description": "Lists the 4 cards: Ship Now, Track Shipment, Find Pincode, Help & Support."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Quick Action Card Custom Image",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/home/quick-actions/ship-now/image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "home",
+                "quick-actions",
+                "ship-now",
+                "image"
+              ]
+            },
+            "description": "Serves the custom uploaded icon/image for a quick action card."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Find Pincode Serviceability",
+      "description": "Verify 6-digit postal code coverage, turnaround times, and supported services.",
+      "item": [
+        {
+          "name": "Check Pincode (Param: 560001 - Bengaluru)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pincode/560001",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pincode",
+                "560001"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check Pincode (Query: 226004 - Lucknow)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pincode/check?pincode=226004",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pincode",
+                "check"
+              ],
+              "query": [
+                {
+                  "key": "pincode",
+                  "value": "226004"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check Pincode (Query: 110001 - Delhi NCR)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pincode/check?pincode=110001",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pincode",
+                "check"
+              ],
+              "query": [
+                {
+                  "key": "pincode",
+                  "value": "110001"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Live Shipment Tracking",
+      "description": "Universal tracker for Courier, Confidential Vault, Forgot Something, and Return Pickup shipments.",
+      "item": [
+        {
+          "name": "Universal Track Shipment by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/track/{{trackingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "track",
+                "{{trackingId}}"
+              ]
+            },
+            "description": "Tracks any shipment using tracking ID or vault ID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. 24/7 Help & Support",
+      "description": "Helpline, WhatsApp link, Email, Operating Hours, and inquiry submission.",
+      "item": [
+        {
+          "name": "Get Support Info & FAQs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/support/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "support",
+                "config"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Support Inquiry / Assistance Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Arjun Sharma\",\n  \"mobileNumber\": \"9876543210\",\n  \"email\": \"arjun@example.com\",\n  \"subject\": \"Urgent Delivery Inquiry\",\n  \"message\": \"I would like to check corporate courier rates for regular office pickups.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/support/inquiry",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "support",
+                "inquiry"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "7. Services Catalog",
+      "description": "Lists all 6 primary services with Know More as the 6th service.",
+      "item": [
+        {
+          "name": "List Services (Know More in 6th)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/services",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "services"
+              ]
+            },
+            "description": "Returns: 1. Courier, 2. Luggage, 3. Confidential, 4. Forgot Something, 5. Return Pickup, 6. Know More."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "8. Admin Management (Protected)",
+      "description": "Admin endpoints to manage Hero texts, image uploads, Quick Actions, Pincodes, Support, and Banner.",
+      "item": [
+        {
+          "name": "1. Admin Login (Auto-saves {{adminToken}})",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.data && (res.data.accessToken || res.data.token)) {",
+                  "  const token = res.data.accessToken || res.data.token;",
+                  "  pm.collectionVariables.set(\"adminToken\", token);",
+                  "  console.log(\"Admin token saved successfully!\");",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{adminMobile}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Admin - Get Hero Config",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/hero",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "hero"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Admin - Update Hero Headline & Subtitle",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"greetingPrefix\": \"Hi\",\n  \"defaultName\": \"Arjun\",\n  \"headline\": \"What do you need delivered today?\",\n  \"highlightWord\": \"delivered\",\n  \"subtitle\": \"AI will take care of the rest.\",\n  \"searchTitle\": \"Tell us in your own words... ?\",\n  \"searchPlaceholder\": \"Example: Pick up my laptop from office and deliver home by 8 PM.\",\n  \"micEnabled\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/hero",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "hero"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Admin - Upload Hero Custom Side Image (Multipart)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "",
+                  "description": "Select an image file (PNG, JPG, WEBP, or GIF)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/hero/image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "hero",
+                "image"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Admin - Delete Hero Custom Image (Reset to Robot Mascot)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/hero/image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "hero",
+                "image"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Admin - List All Quick Actions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/quick-actions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "quick-actions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7. Admin - Create New Quick Action Card",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"B2B Logistics\",\n  \"subtitle\": \"Bulk distribution & freight\",\n  \"icon\": \"truck\",\n  \"actionType\": \"ROUTE\",\n  \"actionTarget\": \"/services\",\n  \"badge\": \"Pro\",\n  \"displayOrder\": 5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/quick-actions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "quick-actions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8. Admin - Update Quick Action Card",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Ship Now\",\n  \"subtitle\": \"Book a new shipment instantly\",\n  \"badge\": \"Instant\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/quick-actions/ship-now",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "quick-actions",
+                "ship-now"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "9. Admin - Upload Quick Action Card Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "",
+                  "description": "Select an icon or thumbnail file"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/quick-actions/ship-now/image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "quick-actions",
+                "ship-now",
+                "image"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "10. Admin - List Serviceable Pincodes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/pincodes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "pincodes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "11. Admin - Add or Update Pincode Zone",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pincode\": \"226001\",\n  \"city\": \"Lucknow (Hazratganj)\",\n  \"state\": \"Uttar Pradesh\",\n  \"isServiceable\": true,\n  \"estimatedDelivery\": \"Same Day (2-4 Hours)\",\n  \"availableServices\": [\n    \"courier-delivery\",\n    \"luggage-delivery\",\n    \"confidential-delivery\",\n    \"forgot-something\",\n    \"return-pickup\",\n    \"know-more\"\n  ],\n  \"codAvailable\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/pincodes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "pincodes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "12. Admin - Update Promo Banner",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Priority. Protection. Performance.\",\n  \"subtitle\": \"Delivered the Delivez way.\",\n  \"buttonText\": \"Know More\",\n  \"buttonLink\": \"#services\",\n  \"backgroundColor\": \"#F59E0B\",\n  \"textColor\": \"#111827\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/banner",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "banner"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "13. Admin - Update Help & Support Config",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"helpline\": \"+91 1800-DELIVEZ-SOS (Toll Free)\",\n  \"whatsapp\": \"+91 98765 43210\",\n  \"email\": \"support@delivez.com\",\n  \"operatingHours\": \"24/7 Assistance • 365 Days\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/support",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "support"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "14. Admin - Update Location Bar Config & Presets",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current\": {\n    \"label\": \"Home\",\n    \"addressLine\": \"123, MG Road, Bengaluru, Karnataka\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560001\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/location",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "location"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "9. Prompt Examples (Try These Examples Modal)",
+      "description": "Dynamic AI Natural Language Prompt Examples matching mobile screen (Laptop, Luggage, Documents, Gift, Return, Keys) with custom image upload and admin control.",
+      "item": [
+        {
+          "name": "Public: Get Active Prompt Examples",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/home/prompt-examples",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "home",
+                "prompt-examples"
+              ]
+            },
+            "description": "Returns list of 6 dynamic prompt example cards (titles, short texts, promptText, icons, colors, displayOrder, and custom imageUrl if uploaded)."
+          }
+        },
+        {
+          "name": "Public: Get Active Prompt Examples (Singular Alias /prompt-example)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/home/prompt-example",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "home",
+                "prompt-example"
+              ]
+            },
+            "description": "Singular route alias for /home/prompt-examples or /prompt-example."
+          }
+        },
+        {
+          "name": "Public: Get Prompt Example Image",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/home/prompt-examples/laptop-office/image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "home",
+                "prompt-examples",
+                "laptop-office",
+                "image"
+              ]
+            },
+            "description": "Returns the custom uploaded image binary for a prompt example item."
+          }
+        },
+        {
+          "name": "Admin: List All Prompt Examples",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/prompt-examples",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "prompt-examples"
+              ]
+            },
+            "description": "Admin endpoint to view all prompt example cards including inactive ones and custom image metadata."
+          }
+        },
+        {
+          "name": "Admin: Create New Prompt Example",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Pick up medical report from hospital\",\n  \"shortText\": \"Pick up medical report from hosp...\",\n  \"promptText\": \"Pick up medical report from hospital and deliver home safely\",\n  \"serviceSlug\": \"confidential-delivery\",\n  \"icon\": \"file-text\",\n  \"iconColor\": \"#059669\",\n  \"displayOrder\": 7\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/prompt-examples",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "prompt-examples"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Update Prompt Example",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Pick up my laptop from office and deliver home by 8 PM\",\n  \"shortText\": \"Pick up my laptop from office and deliv...\",\n  \"promptText\": \"Pick up my work laptop from Tech Park and deliver home by 8 PM\",\n  \"serviceSlug\": \"courier-delivery\",\n  \"icon\": \"laptop\",\n  \"iconColor\": \"#d97706\",\n  \"displayOrder\": 1,\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/prompt-examples/laptop-office",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "prompt-examples",
+                "laptop-office"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Upload Prompt Example Image (Form-Data)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "description": "Select PNG, WEBP, or JPG image asset"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/prompt-examples/laptop-office/image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "prompt-examples",
+                "laptop-office",
+                "image"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Delete Prompt Example Image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/prompt-examples/laptop-office/image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "prompt-examples",
+                "laptop-office",
+                "image"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Delete Prompt Example",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/home/prompt-examples/laptop-office",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "home",
+                "prompt-examples",
+                "laptop-office"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -8,6 +8,29 @@ export const validateIdempotencyKey = (key?: string | null): string => {
   return key.trim();
 };
 
+
+export const RETURN_TYPE_CODES = [
+  'RETURN_ITEM',
+  'EXCHANGE_ITEM',
+  'REPAIR_SERVICE',
+  'WARRANTY_RETURN',
+  'RENTAL_RETURN',
+  'SEND_BACK_TO_SOMEONE',
+  'OTHER_RETURN',
+] as const;
+
+export type ForgotSomethingReturnType = (typeof RETURN_TYPE_CODES)[number];
+
+export const returnTypeSchema = z.enum(RETURN_TYPE_CODES, {
+  errorMap: () => ({
+    message: 'Invalid returnType. Must be one of: RETURN_ITEM, EXCHANGE_ITEM, REPAIR_SERVICE, WARRANTY_RETURN, RENTAL_RETURN, SEND_BACK_TO_SOMEONE, OTHER_RETURN',
+  }),
+});
+
+export const updateReturnTypeSchema = z.object({
+  returnType: returnTypeSchema,
+});
+
 const phoneRegex = /^[+]?[0-9\s-]{7,20}$/;
 
 export const pickupAddressSchema = z.object({
@@ -40,6 +63,7 @@ export const dropoffAddressSchema = z.object({
 });
 
 export const forgotSomethingBookingSchema = z.object({
+  returnType: returnTypeSchema.optional().nullable().default('RETURN_ITEM'),
   itemCategory: z.enum([
     'KEYS',
     'LAPTOP',
@@ -103,11 +127,82 @@ export const forgotSomethingBookingSchema = z.object({
 
 export type ForgotSomethingBookingInput = z.infer<typeof forgotSomethingBookingSchema>;
 
+export const normalizeForgotSomethingInput = (raw: any): any => {
+  if (!raw || typeof raw !== 'object') return raw;
+  const clone = { ...raw };
+
+  // Normalize pickup address fields
+  if (clone.pickup && typeof clone.pickup === 'object') {
+    const p = { ...clone.pickup };
+    if (!p.flatBuilding && p.addressLine1) {
+      p.flatBuilding = p.addressLine1;
+    } else if (!p.flatBuilding && p.address) {
+      p.flatBuilding = p.address;
+    }
+    if (!p.street) {
+      p.street = p.addressLine2 || p.area || p.flatBuilding || 'Main Road';
+    }
+    if (!p.contactName && p.recipientName) {
+      p.contactName = p.recipientName;
+    }
+    if (!p.phoneNumber && (p.phone || p.contactPhone)) {
+      p.phoneNumber = p.phone || p.contactPhone;
+    }
+    clone.pickup = p;
+  }
+
+  // Normalize dropoff address fields
+  if (clone.dropoff && typeof clone.dropoff === 'object') {
+    const d = { ...clone.dropoff };
+    if (!d.recipientName && (d.contactName || d.name)) {
+      d.recipientName = d.contactName || d.name;
+    }
+    if (!d.phoneNumber && (d.phone || d.contactPhone)) {
+      d.phoneNumber = d.phone || d.contactPhone;
+    }
+    if (!d.addressLine1 && d.address) {
+      d.addressLine1 = d.address;
+    }
+    clone.dropoff = d;
+  }
+
+  // Normalize handoverType
+  if (!clone.handoverType) {
+    if (clone.handoverPerson) {
+      const hp = String(clone.handoverPerson).toUpperCase();
+      if (hp.includes('RECEPTION')) clone.handoverType = 'RECEPTION';
+      else if (hp.includes('SECURITY') || hp.includes('GUARD')) clone.handoverType = 'SECURITY_GUARD';
+      else if (hp.includes('LOST') || hp.includes('FOUND')) clone.handoverType = 'LOST_AND_FOUND';
+      else if (hp.includes('COLLEAGUE') || hp.includes('STAFF')) clone.handoverType = 'COLLEAGUE_STAFF';
+      else clone.handoverType = 'SOMEONE_ELSE';
+      clone.handoverCustomName = clone.handoverCustomName || clone.handoverPerson;
+    } else {
+      clone.handoverType = 'RECEPTION';
+    }
+  } else {
+    const ht = String(clone.handoverType).toUpperCase();
+    const validHts = ['RECEPTION', 'SECURITY_GUARD', 'COLLEAGUE_STAFF', 'LOST_AND_FOUND', 'SOMEONE_ELSE', 'CUSTOM_CONTACT'];
+    if (validHts.includes(ht)) {
+      clone.handoverType = ht;
+    } else {
+      clone.handoverType = 'RECEPTION';
+    }
+  }
+
+  if (clone.handoverPhone && !clone.handoverCustomPhone) {
+    clone.handoverCustomPhone = clone.handoverPhone;
+  }
+
+  return clone;
+};
+
 export const validateForgotSomethingRequest = (body: unknown): ForgotSomethingBookingInput => {
-  const result = forgotSomethingBookingSchema.safeParse(body);
+  const normalized = normalizeForgotSomethingInput(body);
+  const result = forgotSomethingBookingSchema.safeParse(normalized);
   if (!result.success) {
     const issues = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join(', ');
     throw new AppError(400, `Validation failed: ${issues}`);
   }
   return result.data;
 };
+

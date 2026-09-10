@@ -10,6 +10,8 @@ import {
   listBookings,
   getOptions,
   getQuote,
+  getReturnTypes,
+  updateReturnType,
   trackBooking,
   verifyOtp,
 } from './forgot-something.controller.js';
@@ -17,6 +19,7 @@ import {
 export const forgotSomethingRouter = Router();
 
 // Public / Discovery endpoints
+forgotSomethingRouter.get('/return-types', getReturnTypes);
 forgotSomethingRouter.get('/options', getOptions);
 forgotSomethingRouter.post('/quote', getQuote);
 forgotSomethingRouter.get('/track/:identifier', trackBooking);
@@ -25,6 +28,9 @@ forgotSomethingRouter.patch('/track/:id/status', adminUpdateStatus);
 
 // User-Authenticated endpoints
 forgotSomethingRouter.post('/bookings', authenticate, requireUser, createBooking);
+forgotSomethingRouter.patch('/bookings/:id/return-type', authenticate, requireUser, updateReturnType);
+forgotSomethingRouter.put('/bookings/:id/return-type', authenticate, requireUser, updateReturnType);
+forgotSomethingRouter.post('/bookings/:id/return-type', authenticate, requireUser, updateReturnType);
 forgotSomethingRouter.get('/bookings', authenticate, requireUser, listBookings);
 forgotSomethingRouter.get('/bookings/:id', authenticate, requireUser, getBooking);
 forgotSomethingRouter.post('/bookings/:id/cancel', authenticate, requireUser, cancelBooking);

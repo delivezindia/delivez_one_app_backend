@@ -162,29 +162,8 @@
                   "pm.test(\"Authenticated successfully\", function() { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
                   "var json = pm.response.json();",
                   "if (json.data && json.data.accessToken) {",
-                  "    var rawTok = json.data.accessToken.replace(/^[\"']+|[\"']+$/g, '').trim();",
-                  "    while (/^bearer[\\s:]+/i.test(rawTok)) {",
-                  "        rawTok = rawTok.replace(/^bearer[\\s:]+/i, '').trim();",
-                  "    }",
-                  "    // 1. Save to Active Environment (if selected)",
-                  "    try {",
-                  "        pm.environment.set(\"accessToken\", rawTok);",
-                  "        pm.environment.set(\"userToken\", rawTok);",
-                  "        pm.environment.set(\"authToken\", rawTok);",
-                  "    } catch(e) {}",
-                  "    // 2. Save to Collection Variables (works even if \"No Environment\" is selected!)",
-                  "    try {",
-                  "        pm.collectionVariables.set(\"accessToken\", rawTok);",
-                  "        pm.collectionVariables.set(\"userToken\", rawTok);",
-                  "        pm.collectionVariables.set(\"authToken\", rawTok);",
-                  "    } catch(e) {}",
-                  "    // 3. Save to Global Variables",
-                  "    try {",
-                  "        pm.globals.set(\"accessToken\", rawTok);",
-                  "        pm.globals.set(\"userToken\", rawTok);",
-                  "        pm.globals.set(\"authToken\", rawTok);",
-                  "    } catch(e) {}",
-                  "    console.log(\"Access token saved to Environment, Collection, and Globals successfully!\");",
+                  "    pm.environment.set(\"accessToken\", json.data.accessToken);",
+                  "    console.log(\"accessToken saved to environment!\");",
                   "}"
                 ],
                 "type": "text/javascript"
@@ -1204,7 +1183,7 @@
             "description": "Dispatches runner for retrieval and saves {{forgotBookingId}}.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"returnType\": \"RETURN_ITEM\",\n  \"itemCategory\": \"LAPTOP\",\n  \"itemName\": \"MacBook Pro 16-inch Silver in Black Sleeve\",\n  \"itemDescription\": \"Left on desk 402 near cafeteria, with charging brick\",\n  \"itemBrandColor\": \"Apple Silver\",\n  \"itemQuantity\": 1,\n  \"declaredValue\": 150000,\n  \"locationType\": \"OFFICE\",\n  \"handoverType\": \"RECEPTION\",\n  \"handoverCustomName\": \"Sunil (Reception)\",\n  \"handoverCustomPhone\": \"+919876543230\",\n  \"pickup\": {\n    \"flatBuilding\": \"WeWork Galaxy, 4th Floor\",\n    \"street\": \"43 Residency Road\",\n    \"area\": \"Shanthala Nagar\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560025\",\n    \"contactName\": \"Sunil (Reception)\",\n    \"phoneNumber\": \"+919876543230\",\n    \"landmark\": \"Near Richmond Circle\"\n  },\n  \"dropoff\": {\n    \"addressType\": \"Home\",\n    \"addressLine1\": \"Villa 12, Indiranagar Defense Colony\",\n    \"addressLine2\": \"100 Feet Road\",\n    \"area\": \"Indiranagar\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560038\",\n    \"recipientName\": \"Aakash Mehta\",\n    \"phoneNumber\": \"+919876543231\",\n    \"landmark\": \"Opposite Defense Park\"\n  },\n  \"speed\": \"INSTANT\",\n  \"pickupOtpRequired\": true,\n  \"deliveryOtpRequired\": true,\n  \"tamperProofPackaging\": true,\n  \"photoAtDelivery\": true,\n  \"paymentMethod\": \"UPI\"\n}",
+              "raw": "{\n  \"pickup\": {\n    \"contactName\": \"Sunil (Reception)\",\n    \"phoneNumber\": \"+919876543230\",\n    \"addressLine1\": \"WeWork Galaxy, 43 Residency Road\",\n    \"addressLine2\": \"Front Desk 4th Floor\",\n    \"city\": \"Bengaluru\",\n    \"postalCode\": \"560025\"\n  },\n  \"dropoff\": {\n    \"contactName\": \"Aakash Mehta\",\n    \"phoneNumber\": \"+919876543231\",\n    \"addressLine1\": \"Villa 12, Indiranagar Defense Colony\",\n    \"city\": \"Bengaluru\",\n    \"postalCode\": \"560038\"\n  },\n  \"itemCategory\": \"LAPTOP\",\n  \"itemName\": \"MacBook Pro 16-inch Silver in Black Sleeve\",\n  \"itemDescription\": \"Left on desk 402 near cafeteria, with charging brick\",\n  \"locationType\": \"OFFICE\",\n  \"handoverPerson\": \"Sunil (Reception)\",\n  \"handoverPhone\": \"+919876543230\",\n  \"speed\": \"INSTANT\",\n  \"tamperProofPackaging\": true,\n  \"pickupOtpRequired\": true,\n  \"deliveryOtpRequired\": true,\n  \"paymentMethod\": \"UPI\",\n  \"returnType\": \"RETURN_ITEM\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2387,7 +2366,7 @@
     },
     {
       "key": "accessToken",
-      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3ODkwNDQ3MjEsImV4cCI6MTc5MTYzNjcyMSwic3ViIjoiOGQ2ODA0YjAtNDRkYi00ZjE3LWIwMzItYzdkZGFhZWIzY2YxIn0.2lcJ-bUqtk_HwVyXtLIMvx-L8qhwZXqk20w9Jj48kxI",
+      "value": "",
       "type": "string"
     },
     {
@@ -2413,26 +2392,6 @@
     {
       "key": "forgotBookingId",
       "value": "",
-      "type": "string"
-    },
-    {
-      "key": "userToken",
-      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3ODkwNDQ3MjEsImV4cCI6MTc5MTYzNjcyMSwic3ViIjoiOGQ2ODA0YjAtNDRkYi00ZjE3LWIwMzItYzdkZGFhZWIzY2YxIn0.2lcJ-bUqtk_HwVyXtLIMvx-L8qhwZXqk20w9Jj48kxI",
-      "type": "string"
-    },
-    {
-      "key": "authToken",
-      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3ODkwNDQ3MjEsImV4cCI6MTc5MTYzNjcyMSwic3ViIjoiOGQ2ODA0YjAtNDRkYi00ZjE3LWIwMzItYzdkZGFhZWIzY2YxIn0.2lcJ-bUqtk_HwVyXtLIMvx-L8qhwZXqk20w9Jj48kxI",
-      "type": "string"
-    },
-    {
-      "key": "adminToken",
-      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3ODkwNDQ3MjEsImV4cCI6MTc5MTYzNjcyMSwic3ViIjoiMDAxN2UxZjMtOTQyNy00NTYxLTllM2YtN2M5ZTc3MTEwNmFiIn0.kcv_Vy02qmlot-JAnkOKM7CAb2G2I9ozcoiEj_Pu_oc",
-      "type": "string"
-    },
-    {
-      "key": "adminAccessToken",
-      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3ODkwNDQ3MjEsImV4cCI6MTc5MTYzNjcyMSwic3ViIjoiMDAxN2UxZjMtOTQyNy00NTYxLTllM2YtN2M5ZTc3MTEwNmFiIn0.kcv_Vy02qmlot-JAnkOKM7CAb2G2I9ozcoiEj_Pu_oc",
       "type": "string"
     }
   ]

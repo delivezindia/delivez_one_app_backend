@@ -1,5 +1,1012 @@
 [
   {
+    "id": "aud-1789050641911-5259",
+    "timestamp": "2026-09-10T14:30:41.911Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1789050070529-1260",
+    "timestamp": "2026-09-10T14:21:10.530Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1789049805755-2278",
+    "timestamp": "2026-09-10T14:16:45.755Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 400 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "aud-1789047082438-2682",
+    "timestamp": "2026-09-10T13:31:22.438Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 400 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "aud-1789046916362-4716",
+    "timestamp": "2026-09-10T13:28:36.362Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789046568832-9247",
+    "timestamp": "2026-09-10T13:22:48.832Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789046549530-7541",
+    "timestamp": "2026-09-10T13:22:29.530Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_VERIFY_OTP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/verify-otp executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-otp",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789046516338-1435",
+    "timestamp": "2026-09-10T13:21:56.339Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789046487616-5191",
+    "timestamp": "2026-09-10T13:21:27.616Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789045629347-2347",
+    "timestamp": "2026-09-10T13:07:09.347Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789044737083-4590",
+    "timestamp": "2026-09-10T12:52:17.083Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 400 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "aud-1789044729304-8605",
+    "timestamp": "2026-09-10T12:52:09.304Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 400 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "aud-1789044587518-1456",
+    "timestamp": "2026-09-10T12:49:47.518Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_VERIFY_OTP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/verify-otp executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-otp",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789044587501-7758",
+    "timestamp": "2026-09-10T12:49:47.501Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789044581015-2072",
+    "timestamp": "2026-09-10T12:49:41.015Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_VERIFY_OTP",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/verify-otp executed with status 400 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-otp",
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "aud-1789044580995-4765",
+    "timestamp": "2026-09-10T12:49:40.996Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789044566652-911",
+    "timestamp": "2026-09-10T12:49:26.652Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_MOBILE_OTP_SEND",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/mobile/otp/send executed with status 404 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/mobile/otp/send",
+      "statusCode": 404
+    }
+  },
+  {
+    "id": "aud-1789044479036-7387",
+    "timestamp": "2026-09-10T12:47:59.036Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789044455835-5948",
+    "timestamp": "2026-09-10T12:47:35.835Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789044423790-4244",
+    "timestamp": "2026-09-10T12:47:03.790Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_VERIFY_OTP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/verify-otp executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-otp",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789044356493-1228",
+    "timestamp": "2026-09-10T12:45:56.493Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789042516687-8804",
+    "timestamp": "2026-09-10T12:15:16.687Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789042478448-1895",
+    "timestamp": "2026-09-10T12:14:38.448Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_VERIFY_OTP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/verify-otp executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-otp",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789042449539-5608",
+    "timestamp": "2026-09-10T12:14:09.539Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_VERIFY_OTP",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/verify-otp executed with status 400 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-otp",
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "aud-1789042432389-9263",
+    "timestamp": "2026-09-10T12:13:52.389Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789042408821-1489",
+    "timestamp": "2026-09-10T12:13:28.821Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789042339462-8557",
+    "timestamp": "2026-09-10T12:12:19.462Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789042291810-7895",
+    "timestamp": "2026-09-10T12:11:31.810Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_VERIFY_OTP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/verify-otp executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-otp",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789042272132-2927",
+    "timestamp": "2026-09-10T12:11:12.132Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_VERIFY_OTP",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/verify-otp executed with status 400 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-otp",
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "aud-1789042237560-7953",
+    "timestamp": "2026-09-10T12:10:37.560Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_VERIFY_OTP",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/verify-otp executed with status 400 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-otp",
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "aud-1789042159791-6651",
+    "timestamp": "2026-09-10T12:09:19.791Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789042148718-6310",
+    "timestamp": "2026-09-10T12:09:08.718Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_LOGIN",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/login executed with status 404 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "statusCode": 404
+    }
+  },
+  {
+    "id": "aud-1789042008138-1256",
+    "timestamp": "2026-09-10T12:06:48.138Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789041966026-6757",
+    "timestamp": "2026-09-10T12:06:06.026Z",
+    "category": "ORDERS",
+    "action": "PATCH_FORGOT_SOMETHING_TRACK_DZ15135867_STATU",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/forgot-something/track/DZ15135867/status executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/forgot-something/track/DZ15135867/status",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789041963759-5963",
+    "timestamp": "2026-09-10T12:06:03.759Z",
+    "category": "ORDERS",
+    "action": "PATCH_FORGOT_SOMETHING_TRACK_DZ15135867_STATU",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/forgot-something/track/DZ15135867/status executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/forgot-something/track/DZ15135867/status",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789041960117-7694",
+    "timestamp": "2026-09-10T12:06:00.117Z",
+    "category": "ORDERS",
+    "action": "PATCH_FORGOT_SOMETHING_TRACK_DZ15135867_STATU",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/forgot-something/track/DZ15135867/status executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/forgot-something/track/DZ15135867/status",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789041946432-687",
+    "timestamp": "2026-09-10T12:05:46.432Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "SUCCESS",
+    "actorName": "Ravi Kishan",
+    "actorEmail": "customer@gmail.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1789041906481-3403",
+    "timestamp": "2026-09-10T12:05:06.481Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_QUOTE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/quote executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/quote",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789041864182-1464",
+    "timestamp": "2026-09-10T12:04:24.182Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_QUOTE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/quote executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/quote",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789041634179-9403",
+    "timestamp": "2026-09-10T12:00:34.179Z",
+    "category": "ORDERS",
+    "action": "POST_RETURN_PICKUP_QUOTE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/return-pickup/quote executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/return-pickup/quote",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789041621899-8637",
+    "timestamp": "2026-09-10T12:00:21.899Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789041514502-3147",
+    "timestamp": "2026-09-10T11:58:34.502Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_QUOTE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.1",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/quote executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/quote",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789039304510-7195",
+    "timestamp": "2026-09-10T11:21:44.510Z",
+    "category": "ORDERS",
+    "action": "PATCH_FORGOT_SOMETHING_BOOKINGS_E7CF6108_18B4",
+    "severity": "SUCCESS",
+    "actorName": "Test Return User",
+    "actorEmail": "return_99b979d9@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/forgot-something/bookings/e7cf6108-18b4-49b2-a9b1-95153e796967/return-type executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/forgot-something/bookings/e7cf6108-18b4-49b2-a9b1-95153e796967/return-type",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789039304464-8874",
+    "timestamp": "2026-09-10T11:21:44.464Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "SUCCESS",
+    "actorName": "Test Return User",
+    "actorEmail": "return_99b979d9@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1789039276980-912",
+    "timestamp": "2026-09-10T11:21:16.980Z",
+    "category": "ORDERS",
+    "action": "POST_FORGOT_SOMETHING_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/forgot-something/bookings executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/forgot-something/bookings",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789039276966-6079",
+    "timestamp": "2026-09-10T11:21:16.966Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_USER_LOGIN_OR_REGISTER",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/user/login-or-register executed with status 404 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/user/login-or-register",
+      "statusCode": 404
+    }
+  },
+  {
+    "id": "aud-1789038065348-805",
+    "timestamp": "2026-09-10T11:01:05.348Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789038050150-5079",
+    "timestamp": "2026-09-10T11:00:50.150Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_ADMIN_LOGIN",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/admin/login executed with status 404 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/admin/login",
+      "statusCode": 404
+    }
+  },
+  {
+    "id": "aud-1789037864020-9362",
+    "timestamp": "2026-09-10T10:57:44.020Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789037327950-1653",
+    "timestamp": "2026-09-10T10:48:47.950Z",
+    "category": "SYSTEM",
+    "action": "DELETE_ADMIN_MORE_SERVICES_APP_MTVEMSW6_1HUG",
+    "severity": "WARNING",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "DELETE /api/v1/admin/more-services/app-mtvemsw6-1hug executed with status 200 (WARNING)",
+    "metadata": {
+      "method": "DELETE",
+      "path": "/api/v1/admin/more-services/app-mtvemsw6-1hug",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789037327922-9642",
+    "timestamp": "2026-09-10T10:48:47.922Z",
+    "category": "SYSTEM",
+    "action": "POST_ADMIN_MORE_SERVICES_REORDER",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/admin/more-services/reorder executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/more-services/reorder",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789037327898-8327",
+    "timestamp": "2026-09-10T10:48:47.898Z",
+    "category": "SYSTEM",
+    "action": "PUT_ADMIN_MORE_SERVICES_APP_MTVEMSW6_1HUG",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "PUT /api/v1/admin/more-services/app-mtvemsw6-1hug executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PUT",
+      "path": "/api/v1/admin/more-services/app-mtvemsw6-1hug",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789037327859-965",
+    "timestamp": "2026-09-10T10:48:47.859Z",
+    "category": "SYSTEM",
+    "action": "POST_ADMIN_MORE_SERVICES",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/admin/more-services executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/more-services",
+      "statusCode": 201
+    }
+  },
+  {
     "id": "aud-1789028408373-176",
     "timestamp": "2026-09-10T08:20:08.373Z",
     "category": "SECURITY",

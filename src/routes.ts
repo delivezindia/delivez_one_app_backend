@@ -1,3 +1,4 @@
+import { publicMoreServicesRouter, adminMoreServicesRouter } from './modules/more-services/more-services.routes.js';
 import { publicServiceSlidersRouter, adminServiceSlidersRouter, getServiceSliderBySlugHandler } from './modules/service-sliders/service-sliders.routes.js';
 import { publicKnowMoreRouter, adminKnowMoreRouter } from './modules/know-more/know-more.routes.js';
 import { homeContentRouter, locationRouter, pincodeRouter, supportRouter, promptExamplesRouter } from './modules/home-content/home-content.routes.js';
@@ -63,6 +64,13 @@ apiRouter.use('/admin/services/sliders', adminServiceSlidersRouter);
 apiRouter.use('/know-more', publicKnowMoreRouter);
 apiRouter.use('/services/:serviceSlug/know-more', publicKnowMoreRouter);
 apiRouter.use('/admin/know-more', adminKnowMoreRouter);
+// More Services / Ecosystem Apps
+apiRouter.use('/more-services', publicMoreServicesRouter);
+apiRouter.use('/services/more-services', publicMoreServicesRouter);
+apiRouter.use('/more-apps', publicMoreServicesRouter);
+apiRouter.use('/admin/more-services', adminMoreServicesRouter);
+apiRouter.use('/admin/more-apps', adminMoreServicesRouter);
+
 
 apiRouter.use('/services', serviceRouter);
 apiRouter.use('/home', homeContentRouter);

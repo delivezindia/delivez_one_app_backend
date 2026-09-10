@@ -10,11 +10,12 @@ import {
   SANDBOX_PAYMENT_PROVIDER,
   validateSandboxPayment,
 } from '../../lib/sandbox-payment.js';
-import { getForgotSomethingOptions } from './forgot-something-config.js';
+import { getForgotSomethingOptions, RETURN_TYPES } from './forgot-something-config.js';
 import { calculateForgotSomethingQuote } from './forgot-something-pricing.js';
 import {
   validateForgotSomethingRequest,
   validateIdempotencyKey,
+  updateReturnTypeSchema,
 } from './forgot-something.validation.js';
 
 const fingerprint = (input: unknown): string =>
@@ -75,6 +76,47 @@ const serializeBooking = (booking: any) => ({
     rating: booking.partnerRating === null ? 4.9 : Number(booking.partnerRating),
   },
 });
+
+
+export const getReturnTypes: RequestHandler = (_req, res) => {
+  res.status(200).json({
+    status: 'success',
+    success: true,
+    count: RETURN_TYPES.length,
+    data: RETURN_TYPES,
+  });
+};
+
+export const updateReturnType: RequestHandler = async (req, res) => {
+  const id = String(req.params.id || '');
+  const { returnType } = updateReturnTypeSchema.parse(req.body);
+  const userId = req.user!.id;
+
+  const booking = await prisma.forgotSomethingBooking.findFirst({
+    where: {
+      OR: [{ id }, { bookingNumber: id }],
+      userId,
+    },
+  });
+
+  if (!booking) {
+    throw new AppError(404, 'Forgot Something booking not found or does not belong to you.');
+  }
+
+  const updated = await prisma.forgotSomethingBooking.update({
+    where: { id: booking.id },
+    data: { returnType },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    success: true,
+    message: 'Return type updated successfully.',
+    data: {
+      booking: serializeBooking(updated),
+    },
+  });
+};
 
 export const getOptions: RequestHandler = (_req, res) => {
   res.status(200).json({
@@ -145,6 +187,7 @@ export const createBooking: RequestHandler = async (req, res) => {
         idempotencyKey,
         requestFingerprint,
         status,
+        returnType: input.returnType || 'RETURN_ITEM',
         itemCategory: input.itemCategory,
         itemName: input.itemName,
         itemDescription: input.itemDescription || null,

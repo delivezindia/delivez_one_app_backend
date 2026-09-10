@@ -521,6 +521,9 @@ model ForgotSomethingBooking {
   handoverCustomName    String?                       @map("handover_custom_name")
   handoverCustomPhone   String?                       @map("handover_custom_phone")
 
+  // Return Type
+  returnType            String?                       @map("return_type")
+
   // Pickup Address
   pickupFlatBuilding    String                        @map("pickup_flat_building")
   pickupStreet          String                        @map("pickup_street")

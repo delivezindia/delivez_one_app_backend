@@ -1,3 +1,11 @@
+
+export interface ForgotSomethingReturnTypeConfig {
+  code: string;
+  title: string;
+  description: string;
+  icon: string;
+}
+
 export interface ForgotSomethingCategoryConfig {
   id: string;
   name: string;
@@ -37,6 +45,52 @@ export interface ForgotSomethingSecurityToggleConfig {
   defaultChecked: boolean;
   fee: number;
 }
+
+
+export const RETURN_TYPES: ForgotSomethingReturnTypeConfig[] = [
+  {
+    code: 'RETURN_ITEM',
+    title: 'Return an Item',
+    description: 'Send an item back to the seller or store.',
+    icon: 'RotateCcw'
+  },
+  {
+    code: 'EXCHANGE_ITEM',
+    title: 'Exchange Item',
+    description: 'Return the item and get an exchange.',
+    icon: 'RefreshCw'
+  },
+  {
+    code: 'REPAIR_SERVICE',
+    title: 'Repair / Service',
+    description: 'Send the product to a service centre for repair.',
+    icon: 'Wrench'
+  },
+  {
+    code: 'WARRANTY_RETURN',
+    title: 'Warranty Return',
+    description: 'Send the item for warranty inspection or replacement.',
+    icon: 'ShieldCheck'
+  },
+  {
+    code: 'RENTAL_RETURN',
+    title: 'Rental Return',
+    description: 'Return rented product(s) at the end of the rental period.',
+    icon: 'Clock'
+  },
+  {
+    code: 'SEND_BACK_TO_SOMEONE',
+    title: 'Send Back to Someone',
+    description: 'Send an item back to another person.',
+    icon: 'UserCheck'
+  },
+  {
+    code: 'OTHER_RETURN',
+    title: 'Other Return',
+    description: 'Other types of returns or requests.',
+    icon: 'HelpCircle'
+  }
+];
 
 export const ITEM_CATEGORIES: ForgotSomethingCategoryConfig[] = [
   { id: 'KEYS', name: 'Keys', description: 'House, car, or office keys', icon: 'Key' },
@@ -137,6 +191,7 @@ export const ITEM_TAGS: string[] = ['Fragile', 'High Value', 'Urgent', 'Small It
 
 export function getForgotSomethingOptions() {
   return {
+    returnTypes: RETURN_TYPES,
     itemCategories: ITEM_CATEGORIES,
     locationTypes: LOCATION_TYPES,
     handoverOptions: HANDOVER_OPTIONS,
