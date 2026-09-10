@@ -1,0 +1,540 @@
+{
+  "info": {
+    "_postman_id": "delivez-sliders-and-know-more-api-collection",
+    "name": "Delivez - Service Image Sliders & Know More Cards APIs",
+    "description": "Complete Postman Collection for:\n1. Service Image Sliders: Exactly 1 image slider per delivery service (Courier, Luggage, Confidential, Forgot Something, Return Pickup) holding multiple carousel images.\n2. Know More Cards: Multiple informational cards with heading, descriptions, multiple images, badge, order, and CTA link with full CRUD.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000/api/v1",
+      "type": "string",
+      "description": "Local dev: http://localhost:4000/api/v1 | Production: https://api.delivez.com/api/v1"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string",
+      "description": "Auto-captured on Admin Login"
+    },
+    {
+      "key": "knowMoreCardId",
+      "value": "km-card-01",
+      "type": "string",
+      "description": "ID of Know More card for single operations"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Admin Login (Auto-Captures Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.status === 'success' && jsonData.data && jsonData.data.accessToken) {",
+                  "    pm.collectionVariables.set('adminToken', jsonData.data.accessToken);",
+                  "    pm.environment.set('adminToken', jsonData.data.accessToken);",
+                  "    console.log('adminToken successfully set!');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@delevez.com\",\n  \"password\": \"Admin@123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Service Image Sliders (1 Slider per Service)",
+      "description": "Image sliders for the 5 services. Each service has exactly 1 slider containing an array of multiple images.",
+      "item": [
+        {
+          "name": "Public: Get All Service Image Sliders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/services/sliders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "services",
+                "sliders"
+              ]
+            },
+            "description": "Fetches all 5 service image sliders."
+          }
+        },
+        {
+          "name": "Public: Get Courier Delivery Image Slider",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/services/courier-delivery/slider",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "services",
+                "courier-delivery",
+                "slider"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Public: Get Luggage Delivery Image Slider",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/services/luggage-delivery/slider",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "services",
+                "luggage-delivery",
+                "slider"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Public: Get Confidential Delivery Image Slider",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/services/confidential-delivery/slider",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "services",
+                "confidential-delivery",
+                "slider"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Public: Get Forgot Something Image Slider",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/services/forgot-something/slider",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "services",
+                "forgot-something",
+                "slider"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Public: Get Return Pickup Image Slider",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/services/return-pickup/slider",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "services",
+                "return-pickup",
+                "slider"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: List All Service Sliders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/service-sliders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "service-sliders"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Update Service Slider Images",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"images\": [\n    \"https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200&auto=format&fit=crop&q=80\",\n    \"https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=1200&auto=format&fit=crop&q=80\",\n    \"https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=1200&auto=format&fit=crop&q=80\"\n  ],\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/service-sliders/courier-delivery",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "service-sliders",
+                "courier-delivery"
+              ]
+            },
+            "description": "Updates the images array and active status for a specific service's slider."
+          }
+        },
+        {
+          "name": "Admin: Upload Slider Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/service-sliders/upload-image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "service-sliders",
+                "upload-image"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Know More Cards (Multiple Cards with Heading, Images, Descriptions, CTA)",
+      "description": "Multiple informational cards for Know More. Each card has a heading, description, multiple images, and CTA link.",
+      "item": [
+        {
+          "name": "Public: Get All Active Know More Cards",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/know-more",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "know-more"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Public: Filter Know More by Service (Courier)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/know-more?service=courier-delivery",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "know-more"
+              ],
+              "query": [
+                {
+                  "key": "service",
+                  "value": "courier-delivery"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Public: Filter Know More by Service (Luggage)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/know-more?service=luggage-delivery",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "know-more"
+              ],
+              "query": [
+                {
+                  "key": "service",
+                  "value": "luggage-delivery"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Public: Get Single Know More Card by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/know-more/{{knowMoreCardId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "know-more",
+                "{{knowMoreCardId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: List All Know More Cards",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/know-more",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "know-more"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Create Know More Card (Multiple Images)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.status === 'success' && res.data && res.data.id) {",
+                  "    pm.collectionVariables.set('knowMoreCardId', res.data.id);",
+                  "    console.log('Created Know More Card ID:', res.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceSlug\": \"courier-delivery\",\n  \"heading\": \"How Live GPS Telemetry and OTP Handover Works\",\n  \"description\": \"Step-by-step breakdown of rider dispatch, geofence perimeter alerts, real-time map tracking, and secure 4-digit recipient verification.\",\n  \"images\": [\n    \"https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1000&auto=format&fit=crop&q=80\",\n    \"https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=1000&auto=format&fit=crop&q=80\"\n  ],\n  \"ctaText\": \"Read Telemetry Guide\",\n  \"ctaLink\": \"/services/courier-delivery\",\n  \"badge\": \"GPS Security\",\n  \"order\": 6,\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/know-more",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "know-more"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Update Know More Card",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"heading\": \"How Live GPS Telemetry and OTP Handover Works [Updated]\",\n  \"description\": \"Updated breakdown of rider dispatch and digital recipient signature verification.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/know-more/{{knowMoreCardId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "know-more",
+                "{{knowMoreCardId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Toggle Know More Card Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/know-more/{{knowMoreCardId}}/toggle",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "know-more",
+                "{{knowMoreCardId}}",
+                "toggle"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Upload Card Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/know-more/upload-image",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "know-more",
+                "upload-image"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Delete Know More Card",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/know-more/{{knowMoreCardId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "know-more",
+                "{{knowMoreCardId}}"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

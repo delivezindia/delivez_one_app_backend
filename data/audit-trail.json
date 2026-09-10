@@ -1,5 +1,442 @@
 [
   {
+    "id": "aud-1789019246115-2436",
+    "timestamp": "2026-09-10T05:47:26.115Z",
+    "category": "SYSTEM",
+    "action": "DELETE_ADMIN_KNOW_MORE_KM_MTV3V8XT_DXM9",
+    "severity": "WARNING",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "DELETE /api/v1/admin/know-more/km-mtv3v8xt-dxm9 executed with status 200 (WARNING)",
+    "metadata": {
+      "method": "DELETE",
+      "path": "/api/v1/admin/know-more/km-mtv3v8xt-dxm9",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789019246105-1115",
+    "timestamp": "2026-09-10T05:47:26.105Z",
+    "category": "SYSTEM",
+    "action": "PATCH_ADMIN_KNOW_MORE_KM_MTV3V8XT_DXM9_TOGGLE",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "PATCH /api/v1/admin/know-more/km-mtv3v8xt-dxm9/toggle executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/know-more/km-mtv3v8xt-dxm9/toggle",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789019246095-4323",
+    "timestamp": "2026-09-10T05:47:26.095Z",
+    "category": "SYSTEM",
+    "action": "PUT_ADMIN_KNOW_MORE_KM_MTV3V8XT_DXM9",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "PUT /api/v1/admin/know-more/km-mtv3v8xt-dxm9 executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PUT",
+      "path": "/api/v1/admin/know-more/km-mtv3v8xt-dxm9",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789019246083-5652",
+    "timestamp": "2026-09-10T05:47:26.083Z",
+    "category": "SYSTEM",
+    "action": "POST_ADMIN_KNOW_MORE",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/admin/know-more executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/know-more",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1789019246064-1836",
+    "timestamp": "2026-09-10T05:47:26.064Z",
+    "category": "ORDERS",
+    "action": "PUT_ADMIN_SERVICE_SLIDERS_COURIER_DELIVERY",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "PUT /api/v1/admin/service-sliders/courier-delivery executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PUT",
+      "path": "/api/v1/admin/service-sliders/courier-delivery",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789019246025-6276",
+    "timestamp": "2026-09-10T05:47:26.025Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789018376005-6443",
+    "timestamp": "2026-09-10T05:32:56.005Z",
+    "category": "SYSTEM",
+    "action": "POST_ADMIN_SERVICE_SLIDERS_UPLOAD_IMAGE",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/admin/service-sliders/upload-image executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/service-sliders/upload-image",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1789018375977-9985",
+    "timestamp": "2026-09-10T05:32:55.977Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789018364817-6042",
+    "timestamp": "2026-09-10T05:32:44.817Z",
+    "category": "SYSTEM",
+    "action": "DELETE_ADMIN_SERVICE_SLIDERS_SLIDE_MTV3CCXF_P",
+    "severity": "WARNING",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "DELETE /api/v1/admin/service-sliders/slide-mtv3ccxf-px5r executed with status 200 (WARNING)",
+    "metadata": {
+      "method": "DELETE",
+      "path": "/api/v1/admin/service-sliders/slide-mtv3ccxf-px5r",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789018364807-1438",
+    "timestamp": "2026-09-10T05:32:44.807Z",
+    "category": "SYSTEM",
+    "action": "PATCH_ADMIN_SERVICE_SLIDERS_SLIDE_MTV3CCXF_PX",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "PATCH /api/v1/admin/service-sliders/slide-mtv3ccxf-px5r/toggle executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/service-sliders/slide-mtv3ccxf-px5r/toggle",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789018364799-1207",
+    "timestamp": "2026-09-10T05:32:44.799Z",
+    "category": "SYSTEM",
+    "action": "PUT_ADMIN_SERVICE_SLIDERS_SLIDE_MTV3CCXF_PX5R",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "PUT /api/v1/admin/service-sliders/slide-mtv3ccxf-px5r executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PUT",
+      "path": "/api/v1/admin/service-sliders/slide-mtv3ccxf-px5r",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789018364789-5796",
+    "timestamp": "2026-09-10T05:32:44.789Z",
+    "category": "SYSTEM",
+    "action": "POST_ADMIN_SERVICE_SLIDERS",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/admin/service-sliders executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/service-sliders",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1789018364758-4443",
+    "timestamp": "2026-09-10T05:32:44.758Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789018350640-5734",
+    "timestamp": "2026-09-10T05:32:30.640Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789018323734-835",
+    "timestamp": "2026-09-10T05:32:03.734Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_ADMIN_LOGIN",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/admin/login executed with status 404 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/admin/login",
+      "statusCode": 404
+    }
+  },
+  {
+    "id": "aud-1788998470094-8281",
+    "timestamp": "2026-09-10T00:01:10.094Z",
+    "category": "SYSTEM",
+    "action": "DELETE_ADMIN_SERVICE_SLIDERS_UNDEFINED",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "DELETE /api/v1/admin/service-sliders/undefined executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "DELETE",
+      "path": "/api/v1/admin/service-sliders/undefined",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1788998470084-6938",
+    "timestamp": "2026-09-10T00:01:10.084Z",
+    "category": "SYSTEM",
+    "action": "PATCH_ADMIN_SERVICE_SLIDERS_UNDEFINED_TOGGLE",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "PATCH /api/v1/admin/service-sliders/undefined/toggle executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/service-sliders/undefined/toggle",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1788998470079-4789",
+    "timestamp": "2026-09-10T00:01:10.079Z",
+    "category": "SYSTEM",
+    "action": "PUT_ADMIN_SERVICE_SLIDERS_UNDEFINED",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "PUT /api/v1/admin/service-sliders/undefined executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PUT",
+      "path": "/api/v1/admin/service-sliders/undefined",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1788998470071-5868",
+    "timestamp": "2026-09-10T00:01:10.071Z",
+    "category": "SYSTEM",
+    "action": "POST_ADMIN_SERVICE_SLIDERS",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/admin/service-sliders executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/service-sliders",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1788998470043-3225",
+    "timestamp": "2026-09-10T00:01:10.043Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_ADMIN_LOGIN",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/admin/login executed with status 404 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/admin/login",
+      "statusCode": 404
+    }
+  },
+  {
+    "id": "aud-1788998387925-3840",
+    "timestamp": "2026-09-09T23:59:47.925Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1788961092984-2732",
+    "timestamp": "2026-09-09T13:38:12.984Z",
+    "category": "ORDERS",
+    "action": "POST_LUGGAGE_DELIVERY_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/luggage-delivery/bookings executed with status 400 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/luggage-delivery/bookings",
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "aud-1788961082638-22",
+    "timestamp": "2026-09-09T13:38:02.638Z",
+    "category": "ORDERS",
+    "action": "POST_LUGGAGE_DELIVERY_BOOKINGS",
+    "severity": "WARNING",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.5.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/luggage-delivery/bookings executed with status 400 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/luggage-delivery/bookings",
+      "statusCode": 400
+    }
+  },
+  {
     "id": "aud-1788959083823-6066",
     "timestamp": "2026-09-09T13:04:43.823Z",
     "category": "ORDERS",

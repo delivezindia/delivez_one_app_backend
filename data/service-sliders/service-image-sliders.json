@@ -1,0 +1,61 @@
+{
+  "courier-delivery": {
+    "serviceSlug": "courier-delivery",
+    "serviceName": "Courier Delivery",
+    "images": [
+      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200",
+      "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=1200",
+      "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=1200"
+    ],
+    "isActive": true,
+    "updatedAt": "2026-09-10T05:47:26.063Z"
+  },
+  "luggage-delivery": {
+    "serviceSlug": "luggage-delivery",
+    "serviceName": "Luggage Delivery",
+    "images": [
+      "https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?w=1200&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1581553680321-4fffae59fccd?w=1200&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=1200&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1200&auto=format&fit=crop&q=80"
+    ],
+    "isActive": true,
+    "updatedAt": "2026-09-10T05:46:49.856Z"
+  },
+  "confidential-delivery": {
+    "serviceSlug": "confidential-delivery",
+    "serviceName": "Confidential Delivery",
+    "images": [
+      "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1200&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1450133064473-71024230f91b?w=1200&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1200&auto=format&fit=crop&q=80"
+    ],
+    "isActive": true,
+    "updatedAt": "2026-09-10T05:46:49.856Z"
+  },
+  "forgot-something": {
+    "serviceSlug": "forgot-something",
+    "serviceName": "Forgot Something",
+    "images": [
+      "https://images.unsplash.com/photo-1582139329536-e7284fece509?w=1200&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1200&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?w=1200&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=1200&auto=format&fit=crop&q=80"
+    ],
+    "isActive": true,
+    "updatedAt": "2026-09-10T05:46:49.856Z"
+  },
+  "return-pickup": {
+    "serviceSlug": "return-pickup",
+    "serviceName": "Return Pickup",
+    "images": [
+      "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=1200&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1200&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=1200&auto=format&fit=crop&q=80"
+    ],
+    "isActive": true,
+    "updatedAt": "2026-09-10T05:46:49.856Z"
+  }
+}

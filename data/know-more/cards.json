@@ -1,0 +1,87 @@
+[
+  {
+    "id": "km-card-01",
+    "serviceSlug": "courier-delivery",
+    "heading": "Personal Courier & Parcel Express Guide",
+    "description": "Learn how our verified riders pick up packages in 15 minutes, inspect weight & dimensions, and deliver across city pin codes with end-to-end GPS telemetry.",
+    "images": [
+      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1000&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=1000&auto=format&fit=crop&q=80"
+    ],
+    "ctaText": "Explore Courier Guide",
+    "ctaLink": "/services/courier-delivery",
+    "badge": "Express Standard",
+    "order": 1,
+    "isActive": true,
+    "createdAt": "2026-09-10T05:46:49.858Z",
+    "updatedAt": "2026-09-10T05:46:49.858Z"
+  },
+  {
+    "id": "km-card-02",
+    "serviceSlug": "luggage-delivery",
+    "heading": "Airport Luggage Transfer & Security Protocols",
+    "description": "Discover how TSA-compliant sealed security tags, dedicated vehicle escorts, and airport gate drop-offs keep your travel baggage 100% stress-free.",
+    "images": [
+      "https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?w=1000&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1581553680321-4fffae59fccd?w=1000&auto=format&fit=crop&q=80"
+    ],
+    "ctaText": "Read Luggage Policy",
+    "ctaLink": "/services/luggage-delivery",
+    "badge": "Airport Check-In",
+    "order": 2,
+    "isActive": true,
+    "createdAt": "2026-09-10T05:46:49.858Z",
+    "updatedAt": "2026-09-10T05:46:49.858Z"
+  },
+  {
+    "id": "km-card-03",
+    "serviceSlug": "confidential-delivery",
+    "heading": "Vault Courier & Dual-OTP Chain of Custody",
+    "description": "Detailed insights on armed couriers, tamper-evident barcode envelopes, and real-time electronic signatures for high-value legal documents and jewelry.",
+    "images": [
+      "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1000&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&auto=format&fit=crop&q=80"
+    ],
+    "ctaText": "Inspect Vault Protocols",
+    "ctaLink": "/services/confidential-delivery",
+    "badge": "Zero Tamper",
+    "order": 3,
+    "isActive": true,
+    "createdAt": "2026-09-10T05:46:49.858Z",
+    "updatedAt": "2026-09-10T05:46:49.858Z"
+  },
+  {
+    "id": "km-card-04",
+    "serviceSlug": "forgot-something",
+    "heading": "Lost & Forgotten Item Fast-Track Recovery",
+    "description": "How to summon an instant rescue courier when keys, office badges, or laptops are left behind. Includes verified identity confirmation and handover OTP.",
+    "images": [
+      "https://images.unsplash.com/photo-1582139329536-e7284fece509?w=1000&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1000&auto=format&fit=crop&q=80"
+    ],
+    "ctaText": "Read Recovery Flow",
+    "ctaLink": "/services/forgot-something",
+    "badge": "Urgent Rescue",
+    "order": 4,
+    "isActive": true,
+    "createdAt": "2026-09-10T05:46:49.858Z",
+    "updatedAt": "2026-09-10T05:46:49.858Z"
+  },
+  {
+    "id": "km-card-05",
+    "serviceSlug": "return-pickup",
+    "heading": "E-Commerce Return Pickup & Service Center Handover",
+    "description": "Everything you need to know about doorstep barcode scanning, return package weight verification, and getting instant vendor handover acknowledgment.",
+    "images": [
+      "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=1000&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1000&auto=format&fit=crop&q=80"
+    ],
+    "ctaText": "Understand Returns",
+    "ctaLink": "/services/return-pickup",
+    "badge": "Zero Hassle",
+    "order": 5,
+    "isActive": true,
+    "createdAt": "2026-09-10T05:46:49.858Z",
+    "updatedAt": "2026-09-10T05:46:49.858Z"
+  }
+]

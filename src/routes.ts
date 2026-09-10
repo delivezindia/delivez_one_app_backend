@@ -1,3 +1,5 @@
+import { publicServiceSlidersRouter, adminServiceSlidersRouter, getServiceSliderBySlugHandler } from './modules/service-sliders/service-sliders.routes.js';
+import { publicKnowMoreRouter, adminKnowMoreRouter } from './modules/know-more/know-more.routes.js';
 import { homeContentRouter, locationRouter, pincodeRouter, supportRouter, promptExamplesRouter } from './modules/home-content/home-content.routes.js';
 import { homeContentAdminRouter } from './modules/home-content/home-content-admin.routes.js';
 import { getActivePublicBroadcasts } from './modules/admin/admin-broadcast.controller.js';
@@ -49,6 +51,18 @@ apiRouter.use('/returns', returnPickupRouter);
 apiRouter.use('/gift-delivery', giftDeliveryRouter);
 apiRouter.use('/gifts', giftDeliveryRouter);
 apiRouter.use('/health', systemRouter);
+// Service Image Sliders (1 slider per service, multiple images)
+apiRouter.use('/services/sliders', publicServiceSlidersRouter);
+apiRouter.use('/services/image-sliders', publicServiceSlidersRouter);
+apiRouter.get('/services/:serviceSlug/slider', getServiceSliderBySlugHandler);
+apiRouter.use('/admin/service-sliders', adminServiceSlidersRouter);
+apiRouter.use('/admin/services/sliders', adminServiceSlidersRouter);
+
+// Know More Cards (Multiple cards with heading, descriptions, multiple images, CTA link)
+apiRouter.use('/know-more', publicKnowMoreRouter);
+apiRouter.use('/services/:serviceSlug/know-more', publicKnowMoreRouter);
+apiRouter.use('/admin/know-more', adminKnowMoreRouter);
+
 apiRouter.use('/services', serviceRouter);
 apiRouter.use('/home', homeContentRouter);
 apiRouter.use('/location', locationRouter);

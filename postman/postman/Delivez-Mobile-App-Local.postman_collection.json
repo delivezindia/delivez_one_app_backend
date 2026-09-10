@@ -1501,6 +1501,155 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Screen Component 11: Know More Cards & Service Guides",
+      "description": "Informational multi-image cards explaining key policies, GPS tracking, security seals, and SLA guarantees for each delivery service.",
+      "item": [
+        {
+          "name": "Get All Active Know More Cards",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/know-more",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "know-more"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Know More Cards - Courier Delivery",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/know-more?service=courier-delivery",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "know-more"
+              ],
+              "query": [
+                {
+                  "key": "service",
+                  "value": "courier-delivery"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Know More Cards - Luggage Delivery",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/know-more?service=luggage-delivery",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "know-more"
+              ],
+              "query": [
+                {
+                  "key": "service",
+                  "value": "luggage-delivery"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Know More Cards - Confidential Delivery",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/know-more?service=confidential-delivery",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "know-more"
+              ],
+              "query": [
+                {
+                  "key": "service",
+                  "value": "confidential-delivery"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Know More Cards - Forgot Something",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/know-more?service=forgot-something",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "know-more"
+              ],
+              "query": [
+                {
+                  "key": "service",
+                  "value": "forgot-something"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Know More Cards - Return Pickup",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/know-more?service=return-pickup",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "know-more"
+              ],
+              "query": [
+                {
+                  "key": "service",
+                  "value": "return-pickup"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Know More Card Details by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/know-more/km-card-01",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "know-more",
+                "km-card-01"
+              ]
+            }
+          }
+        }
+      ]
     }
   ],
   "variable": [
