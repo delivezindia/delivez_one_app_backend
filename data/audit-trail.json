@@ -1,5 +1,328 @@
 [
   {
+    "id": "aud-1789197570422-2611",
+    "timestamp": "2026-09-12T07:19:30.422Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_GIFT_DELIVERY_ORDERS_DLVZ25051289",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/gift-delivery/orders/DLVZ2505128947/status executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/gift-delivery/orders/DLVZ2505128947/status",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789197570416-620",
+    "timestamp": "2026-09-12T07:19:30.416Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_RETURN_BOOKINGS_DLVZ2505128947_ST",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/return/bookings/DLVZ2505128947/status executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/return/bookings/DLVZ2505128947/status",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789197570413-8719",
+    "timestamp": "2026-09-12T07:19:30.413Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_FORGOT_BOOKINGS_DLVZ2505128947_ST",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/forgot/bookings/DLVZ2505128947/status executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/forgot/bookings/DLVZ2505128947/status",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789197570408-7207",
+    "timestamp": "2026-09-12T07:19:30.408Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_CONFIDENTIAL_BOOKINGS_DLVZ2505128",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/confidential/bookings/DLVZ2505128947/status executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/confidential/bookings/DLVZ2505128947/status",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789197570404-6965",
+    "timestamp": "2026-09-12T07:19:30.404Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_ORDERS_COURIER_DLVZ2505128947_STA",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/orders/courier/DLVZ2505128947/status executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/orders/courier/DLVZ2505128947/status",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789197570401-5442",
+    "timestamp": "2026-09-12T07:19:30.401Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_COURIER_BOOKINGS_DLVZ2505128947_S",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/courier/bookings/DLVZ2505128947/status executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/courier/bookings/DLVZ2505128947/status",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789197570396-8488",
+    "timestamp": "2026-09-12T07:19:30.396Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_ORDERS_DLVZ2505128947_STATUS",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/orders/DLVZ2505128947/status executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/orders/DLVZ2505128947/status",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789197570385-4166",
+    "timestamp": "2026-09-12T07:19:30.385Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789197520407-3431",
+    "timestamp": "2026-09-12T07:18:40.407Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_GIFT_DELIVERY_ORDERS_DLVZ25051289",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/gift-delivery/orders/DLVZ2505128947/status executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/gift-delivery/orders/DLVZ2505128947/status",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789197520402-5053",
+    "timestamp": "2026-09-12T07:18:40.402Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_RETURN_BOOKINGS_DLVZ2505128947_ST",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/return/bookings/DLVZ2505128947/status executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/return/bookings/DLVZ2505128947/status",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789197520399-6247",
+    "timestamp": "2026-09-12T07:18:40.399Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_FORGOT_BOOKINGS_DLVZ2505128947_ST",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/forgot/bookings/DLVZ2505128947/status executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/forgot/bookings/DLVZ2505128947/status",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789197520395-5431",
+    "timestamp": "2026-09-12T07:18:40.395Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_CONFIDENTIAL_BOOKINGS_DLVZ2505128",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/confidential/bookings/DLVZ2505128947/status executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/confidential/bookings/DLVZ2505128947/status",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789197520392-6012",
+    "timestamp": "2026-09-12T07:18:40.392Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_ORDERS_COURIER_DLVZ2505128947_STA",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/orders/courier/DLVZ2505128947/status executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/orders/courier/DLVZ2505128947/status",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789197520389-8252",
+    "timestamp": "2026-09-12T07:18:40.389Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_COURIER_BOOKINGS_DLVZ2505128947_S",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/courier/bookings/DLVZ2505128947/status executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/courier/bookings/DLVZ2505128947/status",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789197520382-163",
+    "timestamp": "2026-09-12T07:18:40.382Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_ORDERS_DLVZ2505128947_STATUS",
+    "severity": "WARNING",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/orders/DLVZ2505128947/status executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/orders/DLVZ2505128947/status",
+      "statusCode": 401
+    }
+  },
+  {
+    "id": "aud-1789191118796-4510",
+    "timestamp": "2026-09-12T05:31:58.796Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789191032791-3844",
+    "timestamp": "2026-09-12T05:30:32.791Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
     "id": "aud-1789050641911-5259",
     "timestamp": "2026-09-10T14:30:41.911Z",
     "category": "ORDERS",
