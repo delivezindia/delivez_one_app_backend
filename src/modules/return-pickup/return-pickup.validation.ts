@@ -109,7 +109,7 @@ export const createReturnPickupSchema = z.object({
   pickupLatitude: coerceOptionalNumber(-90, 90),
   pickupLongitude: coerceOptionalNumber(-180, 180),
 
-  returnAddressType: z.string().trim().max(40).default('My Home'),
+  returnAddressType: z.string().trim().max(40).default('Store'),
   returnAddress: z.string().trim().min(3, 'Delivery address is required.').max(250),
   returnCity: z.string().trim().min(2, 'Delivery city is required.').max(60),
   returnState: z.string().trim().max(60).default('Karnataka'),
@@ -234,7 +234,38 @@ export function normalizeReturnPickupInput(raw: any): any {
   const pickupReferenceNumber = raw.pickupReferenceNumber || raw.referenceNumber || raw.orderNumber || raw.jobNumber || raw.orderId || null;
 
   // 6. Return / Delivery Location Aliases
-  const returnAddressType = raw.returnAddressType || raw.deliveryOption || raw.deliveryType || 'My Home';
+  let returnAddressType = raw.returnAddressType || raw.deliveryOption || raw.deliveryType || raw.storeType || raw.dropoffType;
+  if (!returnAddressType || returnAddressType === 'My Home') {
+    const rawDest = String(raw.destinationType || raw.destinationName || '').toLowerCase();
+    if (rawDest.includes('service') || rawDest.includes('repair')) {
+      returnAddressType = 'Service Center';
+    } else if (rawDest.includes('warehouse') || rawDest.includes('seller')) {
+      returnAddressType = 'Seller / Warehouse';
+    } else if (rawDest.includes('shop')) {
+      returnAddressType = 'Shop';
+    } else if (rawDest.includes('store') || destinationType === 'LOCAL_STORE') {
+      returnAddressType = 'Store';
+    } else {
+      returnAddressType = returnAddressType || 'Store';
+    }
+  } else {
+    const rLower = String(returnAddressType).trim().toLowerCase();
+    if (rLower === 'store' || rLower.includes('store') || rLower === 'local_store') {
+      returnAddressType = 'Store';
+      if (!destinationType || destinationType === 'ONLINE_STORE') destinationType = 'LOCAL_STORE';
+    } else if (rLower === 'shop' || rLower.includes('shop')) {
+      returnAddressType = 'Shop';
+      if (!destinationType || destinationType === 'ONLINE_STORE') destinationType = 'LOCAL_STORE';
+    } else if (rLower.includes('service') || rLower.includes('repair') || rLower.includes('centre') || rLower.includes('center')) {
+      returnAddressType = 'Service Center';
+      if (!destinationType || destinationType === 'ONLINE_STORE') destinationType = 'SERVICE_CENTRE';
+    } else if (rLower.includes('seller') || rLower.includes('warehouse')) {
+      returnAddressType = 'Seller / Warehouse';
+      if (!destinationType || destinationType === 'ONLINE_STORE') destinationType = 'WAREHOUSE';
+    }
+  }
+
+  const destinationName = raw.destinationName || raw.storeName || raw.shopName || raw.serviceCenterName || (returnAddressType !== 'My Home' ? returnAddressType : 'Store');
   const returnAddress = raw.returnAddress || raw.deliveryAddress || raw.destinationAddress || raw.returnStreet || (raw.deliveryHouseBuilding ? [raw.deliveryHouseBuilding, raw.deliveryStreet, raw.deliveryArea].filter(Boolean).join(', ') : '') || pickupAddress;
   const returnCity = raw.returnCity || raw.deliveryCity || raw.destinationCity || pickupCity;
   const returnPostalCode = String(raw.returnPostalCode || raw.deliveryPostalCode || raw.deliveryPincode || raw.destinationPostalCode || pickupPostalCode);
@@ -264,7 +295,8 @@ export function normalizeReturnPickupInput(raw: any): any {
   return {
     ...raw,
     returnType: returnType || 'RETURN_ITEM',
-    destinationType: destinationType || 'ONLINE_STORE',
+    destinationType: destinationType || (returnAddressType === 'Service Center' ? 'SERVICE_CENTRE' : returnAddressType === 'Seller / Warehouse' ? 'WAREHOUSE' : 'LOCAL_STORE'),
+    destinationName,
     pickupStoreName,
     pickupAddress,
     pickupCity,

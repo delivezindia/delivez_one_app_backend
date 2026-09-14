@@ -76,9 +76,13 @@ const normalizeDocuments = (req: Request, rawDocs: any): any[] => {
 
 const serializeBooking = (req: Request, booking: any) => {
   const documents = normalizeDocuments(req, booking.documents);
+  const effectiveReturnAddressType = booking.returnAddressType || 'Store';
+  const effectiveDestinationName = booking.destinationName || effectiveReturnAddressType;
 
   return {
     ...booking,
+    returnAddressType: effectiveReturnAddressType,
+    destinationName: effectiveDestinationName,
     estimatedRefundAmount:
       booking.estimatedRefundAmount === null ? null : Number(booking.estimatedRefundAmount),
     declaredValue: booking.declaredValue === null ? null : Number(booking.declaredValue),
@@ -117,7 +121,10 @@ const serializeBooking = (req: Request, booking: any) => {
       longitude: booking.pickupLongitude === null ? null : Number(booking.pickupLongitude),
     },
     delivery: {
-      addressType: booking.returnAddressType,
+      addressType: effectiveReturnAddressType,
+      destination: effectiveDestinationName,
+      destinationName: effectiveDestinationName,
+      destinationType: booking.destinationType,
       address: booking.returnAddress,
       city: booking.returnCity,
       state: booking.returnState,
@@ -332,7 +339,7 @@ export const createBooking: RequestHandler = async (req, res) => {
 
         returnType: input.returnType,
         destinationType: input.destinationType,
-        destinationName: input.destinationName || null,
+        destinationName: input.destinationName || input.returnAddressType || 'Store',
         orderId: input.orderId || null,
         returnId: input.returnId || null,
         returnBeforeDate: input.returnBeforeDate || null,
@@ -358,7 +365,7 @@ export const createBooking: RequestHandler = async (req, res) => {
             ? new Prisma.Decimal(input.pickupLongitude)
             : null,
 
-        returnAddressType: input.returnAddressType || 'My Home',
+        returnAddressType: input.returnAddressType || 'Store',
         returnAddress: input.returnAddress,
         returnCity: input.returnCity,
         returnState: input.returnState || 'Karnataka',
@@ -1047,7 +1054,7 @@ export const trackBooking: RequestHandler = async (req, res) => {
           longitude: baseLng,
         },
         destinationLocation: {
-          name: booking.destinationName || booking.returnAddressType,
+          name: booking.destinationName || booking.returnAddressType || 'Store',
           address: booking.returnAddress,
           city: booking.returnCity,
           postalCode: booking.returnPostalCode,

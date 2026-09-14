@@ -68,10 +68,11 @@ export const validateCourierAddress = (value: unknown, field = 'address') => {
 
   const countryCode = text(data.countryCode ?? '+91', `${field}.countryCode`, { max: 5, optional: true }) || '+91';
 
-  let phoneNumber = (data.phoneNumber ?? data.mobileNumber ?? data.phone ?? '9876543210').toString().trim().replace(/[s()-]/g, '');
+  let phoneNumber = (data.phoneNumber ?? data.mobileNumber ?? data.phone ?? '9876543210').toString().trim().replace(/[\\s()-]/g, '');
   if (!phoneNumber) phoneNumber = '9876543210';
 
-  const addressLine1 = text(data.addressLine1 ?? data.address ?? data.fullAddress, `${field}.addressLine1`, {
+  const rawAddressLine1 = data.addressLine1 ?? data.addressLine ?? data.address ?? data.fullAddress ?? data.streetAddress ?? data.line1 ?? data.title;
+  const addressLine1 = text(rawAddressLine1, `${field}.addressLine1`, {
     min: 3,
     max: 200,
   })!;
