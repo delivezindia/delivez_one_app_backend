@@ -82,7 +82,7 @@ export const defaultPod = {
   sealPhotoUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=600&q=80',
   sealNumber: 'DLV-SEAL-88492',
   deliveredAt: '12 May 2025, 05:45 PM',
-  notes: 'Luggage received intact with tamper-evident seal unbroken. Front desk verified guest name Rahul Sharma, Room 402.',
+  notes: 'Courier received intact with tamper-evident seal unbroken. Front desk verified guest name Rahul Sharma, Room 402.',
 };
 
 export const generateJourneyTimeline = (status: string, meta: any = {}) => {
@@ -97,10 +97,10 @@ export const generateJourneyTimeline = (status: string, meta: any = {}) => {
     AGENT_ASSIGNED: 2,
     PICKUP_ASSIGNED: 2,
     PICKUP_IN_PROGRESS: 3,
-    LUGGAGE_INSPECTED: 4,
+    COURIER_INSPECTED: 4,
     SECURITY_SEAL_APPLIED: 5,
     PICKED_UP: 6,
-    LUGGAGE_PICKED: 6,
+    COURIER_PICKED: 6,
     IN_TRANSIT: 7,
     REACHED_DESTINATION_CITY: 8,
     OUT_FOR_DELIVERY: 9,
@@ -141,8 +141,8 @@ export const generateJourneyTimeline = (status: string, meta: any = {}) => {
     {
       id: 4,
       weight: 4,
-      stage: 'LUGGAGE_INSPECTED_WEIGHED',
-      title: 'Luggage Inspected & Weighed',
+      stage: 'COURIER_INSPECTED_WEIGHED',
+      title: 'Courier Inspected & Weighed',
       location: pickupCity,
       description: `Bags inspected and weighed. Total verified weight: ${meta.totalWeightKg || 28} Kg.`,
       timestamp: '10 May 2025, 10:25 AM',
@@ -160,10 +160,10 @@ export const generateJourneyTimeline = (status: string, meta: any = {}) => {
     {
       id: 6,
       weight: 6,
-      stage: 'LUGGAGE_PICKED',
-      title: 'Luggage Picked Up',
+      stage: 'COURIER_PICKED',
+      title: 'Courier Picked Up',
       location: pickupCity,
-      description: 'Luggage safely handed over to courier agent with digital receipt.',
+      description: 'Courier safely handed over to courier agent with digital receipt.',
       timestamp: '10 May 2025, 10:35 AM',
     },
     {
@@ -197,9 +197,9 @@ export const generateJourneyTimeline = (status: string, meta: any = {}) => {
       id: 10,
       weight: 10,
       stage: 'DELIVERED',
-      title: 'Luggage Delivered Safely',
+      title: 'Courier Delivered Safely',
       location: meta.deliveryDetails?.hotelName ? `${meta.deliveryDetails.hotelName} Front Desk` : dropoffCity,
-      description: 'Luggage delivered safely with OTP verification and tamper seal intact.',
+      description: 'Courier delivered safely with OTP verification and tamper seal intact.',
       timestamp: '12 May 2025, 05:45 PM',
     },
   ];
