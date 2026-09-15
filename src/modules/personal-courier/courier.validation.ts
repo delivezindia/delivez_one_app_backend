@@ -60,7 +60,7 @@ const boolean = (value: unknown, field: string, fallback = false): boolean => {
 
 export const validateCourierAddress = (value: unknown, field = 'address') => {
   const data = object(value, field);
-  const contactName = text(data.contactName ?? data.placeName ?? data.hotelName, `${field}.contactName`, {
+  const contactName = text(data.contactName ?? data.contactPerson ?? data.recipientName ?? data.placeName ?? data.hotelName, `${field}.contactName`, {
     min: 2,
     max: 120,
     optional: true,
@@ -85,7 +85,7 @@ export const validateCourierAddress = (value: unknown, field = 'address') => {
   })!;
 
   return {
-    label: data.label || (field.includes('dropoff') || field.includes('delivery') ? 'Delivery Location' : 'Pickup Location'),
+    label: data.label ?? data.title ?? data.tag ?? data.addressType ?? (field.includes('dropoff') || field.includes('delivery') ? 'Delivery Location' : 'Pickup Location'),
     contactName,
     countryCode,
     phoneNumber,
@@ -199,10 +199,96 @@ export const validateIdempotencyKey = (key: unknown): string => {
 
 export const validateAddress = validateCourierAddress;
 export const validateSavedAddress = (body: unknown) => {
-  const addr = validateCourierAddress(body, 'address');
-  const raw = body && typeof body === 'object' ? (body as any) : {};
+  const data = object(body, 'address');
+
+  const label =
+    text(data.label ?? data.title ?? data.tag ?? data.addressType, 'address.label', {
+      min: 1,
+      max: 80,
+      optional: true,
+    }) || 'Home';
+
+  const contactName =
+    text(
+      data.contactName ??
+        data.contactPerson ??
+        data.recipientName ??
+        data.fullName ??
+        data.name ??
+        data.placeName ??
+        data.hotelName,
+      'address.contactName',
+      {
+        min: 2,
+        max: 120,
+        optional: true,
+      },
+    ) || 'Contact Person';
+
+  const countryCode =
+    text(data.countryCode ?? '+91', 'address.countryCode', { max: 5, optional: true }) || '+91';
+
+  const rawPhone =
+    data.phoneNumber ?? data.phone ?? data.mobileNumber ?? data.mobile ?? '9876543210';
+  let phoneNumber = String(rawPhone).trim().replace(/[\s()-]/g, '');
+  if (!phoneNumber) phoneNumber = '9876543210';
+
+  const rawAddressLine1 =
+    data.addressLine1 ??
+    data.addressLine ??
+    data.address ??
+    data.fullAddress ??
+    data.streetAddress ??
+    data.line1 ??
+    (data.title && !data.addressLine ? data.title : null);
+
+  const addressLine1 = text(rawAddressLine1, 'address.addressLine1', {
+    min: 3,
+    max: 250,
+  })!;
+
+  const addressLine2 = data.addressLine2
+    ? String(data.addressLine2).trim()
+    : data.line2
+      ? String(data.line2).trim()
+      : null;
+
+  const landmark = data.landmark ? String(data.landmark).trim() : null;
+  const city = text(data.city ?? 'New Delhi', 'address.city', { min: 2, max: 60 })!;
+  const state = text(data.state ?? 'Delhi', 'address.state', { min: 2, max: 60 })!;
+  const postalCode = text(
+    (data.postalCode ?? data.pincode ?? data.zipCode ?? data.pin ?? '110001').toString(),
+    'address.postalCode',
+    {
+      min: 4,
+      max: 10,
+    },
+  )!;
+
+  const country = data.country ? String(data.country).trim() : 'India';
+  const latitude =
+    data.latitude !== undefined && data.latitude !== null && data.latitude !== ''
+      ? Number(data.latitude)
+      : null;
+  const longitude =
+    data.longitude !== undefined && data.longitude !== null && data.longitude !== ''
+      ? Number(data.longitude)
+      : null;
+
   return {
-    ...addr,
-    isDefault: Boolean(raw.isDefault),
+    label,
+    contactName,
+    countryCode,
+    phoneNumber,
+    addressLine1,
+    addressLine2,
+    landmark,
+    city,
+    state,
+    postalCode,
+    country,
+    latitude: Number.isFinite(latitude) ? latitude : null,
+    longitude: Number.isFinite(longitude) ? longitude : null,
+    isDefault: Boolean(data.isDefault),
   };
 };

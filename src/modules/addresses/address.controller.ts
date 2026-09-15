@@ -42,7 +42,19 @@ export const createAddress: RequestHandler = async (req, res) => {
 
     return transaction.userAddress.create({
       data: {
-        ...input,
+        label: input.label,
+        contactName: input.contactName,
+        countryCode: input.countryCode,
+        phoneNumber: input.phoneNumber,
+        addressLine1: input.addressLine1,
+        addressLine2: input.addressLine2,
+        landmark: input.landmark,
+        city: input.city,
+        state: input.state,
+        postalCode: input.postalCode,
+        country: input.country,
+        latitude: input.latitude,
+        longitude: input.longitude,
         isDefault,
         userId,
       },
@@ -79,7 +91,19 @@ export const updateAddress: RequestHandler = async (req, res) => {
     return transaction.userAddress.update({
       where: { id: existing.id },
       data: {
-        ...input,
+        label: input.label,
+        contactName: input.contactName,
+        countryCode: input.countryCode,
+        phoneNumber: input.phoneNumber,
+        addressLine1: input.addressLine1,
+        addressLine2: input.addressLine2,
+        landmark: input.landmark,
+        city: input.city,
+        state: input.state,
+        postalCode: input.postalCode,
+        country: input.country,
+        latitude: input.latitude,
+        longitude: input.longitude,
         isDefault: existing.isDefault || input.isDefault,
       },
     });
