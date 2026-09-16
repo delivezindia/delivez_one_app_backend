@@ -337,8 +337,22 @@ export const listAllUnifiedOrders: RequestHandler = async (req, res) => {
   });
 
   courierOrders.forEach((o: any) => {
-    const pickupAddr = o.addresses?.find((a: any) => a.type === 'PICKUP') || o.addresses?.[0];
-    const dropoffAddr = o.addresses?.find((a: any) => a.type === 'DROPOFF') || o.addresses?.[1];
+    const pickupAddr = o.addresses?.find((a: any) => a.kind === 'PICKUP') || o.addresses?.[0];
+    const dropoffAddr = o.addresses?.find((a: any) => a.kind === 'DROPOFF') || o.addresses?.[1];
+
+    let meta: any = {};
+    if (o.package?.contentDescription) {
+      try { meta = JSON.parse(o.package.contentDescription); } catch {}
+    }
+
+    const cat = meta.packageDetails?.category || meta.category || catHumanMapAdmin[o.package?.contentCategory] || 'Personal Courier';
+    const wt = o.package?.actualWeightKg ? `${Number(o.package.actualWeightKg)} kg` : '';
+    const dims = (o.package?.lengthCm && o.package?.widthCm && o.package?.heightCm)
+      ? `${o.package.lengthCm}×${o.package.widthCm}×${o.package.heightCm}cm`
+      : '';
+    const pkgName = pkgHumanMapAdmin[o.package?.packagingType] || o.package?.packagingType?.replace(/_/g, ' ') || '';
+    const itemParts = [cat, wt, pkgName, dims].filter(Boolean);
+    const itemSummary = itemParts.length > 0 ? itemParts.join(' • ') : 'Personal Courier Consignment';
 
     unified.push({
       id: o.id,
@@ -348,14 +362,19 @@ export const listAllUnifiedOrders: RequestHandler = async (req, res) => {
       customerName: o.user?.fullName || pickupAddr?.contactName || 'Customer',
       customerPhone: o.user?.mobileNumber || pickupAddr?.phoneNumber || '',
       recipientName: dropoffAddr?.contactName || 'Recipient',
-      destination: dropoffAddr ? (dropoffAddr.city ? `${dropoffAddr.city} (${dropoffAddr.postalCode || ''})` : dropoffAddr.addressLine1) : (o.serviceType || 'Destination'),
-      itemSummary: o.package ? `${o.package.category || 'Parcel'}${o.package.weightKg ? ' (' + o.package.weightKg + ' kg)' : ''}` : (o.serviceType || 'Standard Parcel'),
+      destination: dropoffAddr ? (dropoffAddr.city ? `${dropoffAddr.city} (${dropoffAddr.postalCode || ''})` : dropoffAddr.addressLine1) : 'Destination',
+      itemSummary,
+      category: cat,
+      packagingName: pkgName,
+      dimensions: { lengthCm: o.package?.lengthCm, widthCm: o.package?.widthCm, heightCm: o.package?.heightCm },
+      actualWeightKg: o.package?.actualWeightKg,
+      chargeableWeightKg: o.package?.chargeableWeightKg,
       amount: Number(o.totalAmount || 0),
-      paymentMethod: o.paymentMethod,
-      paymentStatus: o.paymentStatus,
+      paymentMethod: o.paymentMethod || 'ONLINE',
+      paymentStatus: o.paymentStatus || 'PAID',
       status: o.status,
-      assignedPartner: 'Assigned Courier',
-      partnerPhone: '',
+      assignedPartner: meta.agent?.name || 'Unassigned',
+      partnerPhone: meta.agent?.phone || '',
       createdAt: o.createdAt,
     });
   });
@@ -1068,6 +1087,33 @@ const generateAdminTimeline = (status: string, meta: any = {}) => {
   }));
 };
 
+const catHumanMapAdmin: Record<string, string> = {
+  DOCUMENTS: 'Documents & Letters',
+  ELECTRONICS: 'Electronics',
+  CLOTHING_ACCESSORIES: 'Clothing & Apparel',
+  GIFTS_TOYS: 'Personal Items & Gifts',
+  HEALTH_MEDICAL: 'Health & Medicine',
+  HOUSEHOLD_ITEMS: 'Household Items & Kitchenware',
+  COMMERCIAL: 'Commercial Goods',
+  OTHERS: 'Others',
+};
+
+const pkgHumanMapAdmin: Record<string, string> = {
+  STANDARD: 'Delivez Standard Packaging',
+  EXTRA_SECURE: 'Extra Secure Packaging (+Bubble Wrap)',
+  WOODEN_CRATE: 'Reinforced Heavy-Duty Wooden Crate',
+  CUSTOM_BOX: 'Custom Engineered Box',
+  OWN_PACKAGING: 'Customer Own Packaging',
+};
+
+const serviceHumanMapAdmin: Record<string, string> = {
+  BIKE_PRIORITY: 'Bike Priority Delivery',
+  SURFACE_EXPRESS: 'Surface Standard',
+  SAME_DAY: 'Same Day Delivery',
+  HYBRID_DRONE: 'Hybrid Drone Delivery',
+  NEXT_DAY: 'Next Day Air',
+};
+
 const serializeAdminCourierBooking = (booking: any) => {
   let meta: any = {};
   if (booking.package?.contentDescription) {
@@ -1078,21 +1124,110 @@ const serializeAdminCourierBooking = (booking: any) => {
     }
   }
 
-  const pickupAddr = booking.addresses?.find((a: any) => a.kind === 'PICKUP');
-  const dropoffAddr = booking.addresses?.find((a: any) => a.kind === 'DROPOFF');
+  const pickupAddr = booking.addresses?.find((a: any) => a.kind === 'PICKUP') || booking.addresses?.[0];
+  const dropoffAddr = booking.addresses?.find((a: any) => a.kind === 'DROPOFF') || booking.addresses?.[1];
 
   const status = meta.status || booking.status || 'CONFIRMED';
-  const serviceType = meta.serviceType || booking.serviceType || 'AIRPORT_TO_HOTEL';
   const sealNumber = meta.sealNumber || 'DLV-SEAL-88492';
   const agent = meta.agent || defaultAdminAgent;
   const pod = meta.pod || defaultAdminPod;
   const timeline = meta.timeline || generateAdminTimeline(status, { ...meta, sealNumber, bookingNumber: booking.bookingNumber });
 
+  const rawCat = String(booking.package?.contentCategory || meta.packageDetails?.contentCategory || meta.contentCategory || 'DOCUMENTS');
+  const storedCategory = meta.packageDetails?.category || meta.category;
+  const isEnumName = storedCategory && catHumanMapAdmin[String(storedCategory).toUpperCase()];
+  const categoryHuman = (storedCategory && !isEnumName)
+    ? storedCategory
+    : (catHumanMapAdmin[rawCat] || storedCategory || rawCat);
+
+  const rawPkgType = String(booking.package?.packagingType || meta.packageDetails?.packagingType || 'STANDARD');
+  const packagingHuman = pkgHumanMapAdmin[rawPkgType] || rawPkgType;
+
+  const rawServiceType = String(meta.serviceType || booking.serviceType || 'BIKE_PRIORITY');
+  const serviceHuman = serviceHumanMapAdmin[rawServiceType] || meta.serviceName || rawServiceType.replace(/_/g, ' ');
+
+  const selfServiceOpt = meta.selfServiceOption || booking.selfServiceOption || 'NONE';
+  const selfServiceMap: Record<string, string> = {
+    NONE: 'Standard Doorstep Delivery',
+    SELF_PICKUP: 'Self Pickup at Nearest Hub (-₹50 Applied)',
+    SELF_DROPOFF: 'Self Dropoff at Hub (-₹50 Applied)',
+    BOTH: 'Full Self-Service (-₹100 Applied)',
+  };
+  const selfServiceHuman = selfServiceMap[selfServiceOpt] || selfServiceOpt;
+
+  const lengthCm = Number(booking.package?.lengthCm || meta.packageDetails?.lengthCm || meta.packageDetails?.dimensions?.lengthCm || 30);
+  const widthCm = Number(booking.package?.widthCm || meta.packageDetails?.widthCm || meta.packageDetails?.dimensions?.widthCm || 20);
+  const heightCm = Number(booking.package?.heightCm || meta.packageDetails?.heightCm || meta.packageDetails?.dimensions?.heightCm || 10);
+  const actualWeightKg = Number(booking.package?.actualWeightKg || meta.packageDetails?.actualWeightKg || meta.totalWeightKg || 2.5);
+  const chargeableWeightKg = Number(booking.package?.chargeableWeightKg || meta.packageDetails?.chargeableWeightKg || actualWeightKg);
+  const volumetricWeightKg = Math.round(((lengthCm * widthCm * heightCm) / 5000) * 100) / 100;
+  const parcelSize = meta.packageDetails?.parcelSize || booking.package?.parcelSize || 'MEDIUM';
+
+  const boxSize = meta.packageDetails?.boxSize || meta.boxSize || (booking.package?.needsBox ? 'Small Box (10 Kg)' : 'No Box Needed');
+  const weightCapacity = meta.packageDetails?.weightCapacity || meta.weightCapacity || '10 Kg';
+  const isCustomBox = Boolean(meta.packageDetails?.isCustomBox);
+  const customBoxDetails = meta.packageDetails?.customBoxDetails || null;
+
+  const fragile = Boolean(booking.package?.fragile || meta.packageDetails?.fragile || meta.packageDetails?.isFragile);
+  const secureHandling = Boolean(booking.package?.secureHandling || meta.packageDetails?.secureHandling || meta.packageDetails?.isSecure);
+  const specialHandling = Boolean(booking.package?.specialHandling || fragile || secureHandling);
+
+  const declaredValue = Number(booking.package?.declaredValue || meta.packageDetails?.declaredValue || 0);
+  const insuranceType = booking.package?.insuranceType || meta.packageDetails?.insuranceType || 'FULL';
+
+  const contentDescription = meta.packageDetails?.contentDescription || meta.description || (typeof booking.package?.contentDescription === 'string' && !booking.package.contentDescription.startsWith('{') ? booking.package.contentDescription : '') || categoryHuman;
+
+  const realPickup = {
+    name: pickupAddr?.contactName || booking.user?.fullName || 'Sender',
+    phone: pickupAddr?.phoneNumber || booking.user?.mobileNumber || '—',
+    address: [pickupAddr?.addressLine1, pickupAddr?.addressLine2, pickupAddr?.landmark, pickupAddr?.city, pickupAddr?.state, pickupAddr?.postalCode].filter(Boolean).join(', ') || pickupAddr?.addressLine1 || 'Pickup Location',
+    city: pickupAddr?.city || '—',
+    state: pickupAddr?.state || '—',
+    pincode: pickupAddr?.postalCode || '—',
+    instructions: pickupAddr?.instructions || meta.pickupDetails?.instructions || '',
+  };
+
+  const realDelivery = {
+    name: dropoffAddr?.contactName || 'Recipient',
+    phone: dropoffAddr?.phoneNumber || '—',
+    address: [dropoffAddr?.addressLine1, dropoffAddr?.addressLine2, dropoffAddr?.landmark, dropoffAddr?.city, dropoffAddr?.state, dropoffAddr?.postalCode].filter(Boolean).join(', ') || dropoffAddr?.addressLine1 || 'Delivery Location',
+    city: dropoffAddr?.city || '—',
+    state: dropoffAddr?.state || '—',
+    pincode: dropoffAddr?.postalCode || '—',
+    instructions: dropoffAddr?.instructions || meta.deliveryDetails?.instructions || '',
+  };
+
   return {
     ...booking,
     bookingNumber: booking.bookingNumber,
     status,
-    serviceType,
+    serviceType: rawServiceType,
+    serviceName: serviceHuman,
+    selfServiceOption: selfServiceOpt,
+    selfServiceLabel: selfServiceHuman,
+    contentCategory: rawCat,
+    category: categoryHuman,
+    itemCategory: categoryHuman,
+    packagingType: rawPkgType,
+    packagingName: packagingHuman,
+    parcelSize,
+    actualWeightKg,
+    chargeableWeightKg,
+    volumetricWeightKg,
+    dimensions: { lengthCm, widthCm, heightCm },
+    boxSize,
+    boxCapacity: weightCapacity,
+    weightCapacity,
+    isCustomBox,
+    customBoxDetails,
+    fragile,
+    secureHandling,
+    specialHandling,
+    declaredValue,
+    insuranceType,
+    contentDescription,
+    itemDescription: contentDescription,
+    itemSummary: `${categoryHuman} (${actualWeightKg} kg • ${packagingHuman} • ${lengthCm}×${widthCm}×${heightCm} cm)`,
     sealNumber,
     distanceKm: booking.distanceKm === null ? null : Number(booking.distanceKm),
     baseCharge: Number(booking.baseCharge),
@@ -1102,6 +1237,8 @@ const serializeAdminCourierBooking = (booking: any) => {
     insurancePremium: Number(booking.insurancePremium),
     taxAmount: Number(booking.taxAmount),
     totalAmount: Number(booking.totalAmount),
+    pickupDetails: realPickup,
+    deliveryDetails: realDelivery,
     addresses: Array.isArray(booking.addresses)
       ? booking.addresses.map((addr: any) => ({
           ...addr,
@@ -1112,75 +1249,31 @@ const serializeAdminCourierBooking = (booking: any) => {
     package: booking.package
       ? {
           ...booking.package,
-          actualWeightKg: Number(booking.package.actualWeightKg),
-          chargeableWeightKg: Number(booking.package.chargeableWeightKg),
-          lengthCm: Number(booking.package.lengthCm),
-          widthCm: Number(booking.package.widthCm),
-          heightCm: Number(booking.package.heightCm),
-          declaredValue:
-            booking.package.declaredValue === null
-              ? null
-              : Number(booking.package.declaredValue),
-          boxCapacity: meta.boxCapacity || (booking.package.needsBox ? '10 Kg' : null),
-          boxSizeName: meta.boxSizeName || (booking.package.needsBox ? 'Small Box (10 Kg)' : null),
-          pickupReadiness: meta.pickupReadiness || 'Today',
-          contentDescription: meta.description ?? booking.package.contentDescription,
+          actualWeightKg,
+          chargeableWeightKg,
+          volumetricWeightKg,
+          lengthCm,
+          widthCm,
+          heightCm,
+          dimensions: { lengthCm, widthCm, heightCm },
+          declaredValue,
+          category: categoryHuman,
+          itemCategory: categoryHuman,
+          contentCategory: rawCat,
+          packagingType: rawPkgType,
+          packagingName: packagingHuman,
+          boxSize,
+          boxCapacity: weightCapacity,
+          weightCapacity,
+          isCustomBox,
+          customBoxDetails,
+          fragile,
+          secureHandling,
+          specialHandling,
+          contentDescription,
+          description: contentDescription,
         }
       : null,
-    pickupDetails: meta.pickupDetails || {
-      terminal: 'Terminal 3',
-      flightNumber: 'AI 102',
-      pnr: 'AB12CD',
-      luggageBelt: '04',
-      pickupOption: 'luggage_belt',
-      flightArrivalDate: '10 May 2025',
-      timeSlot: '09:00 AM - 11:00 AM',
-      name: pickupAddr?.contactName || 'Rahul Sharma',
-      phone: pickupAddr?.phoneNumber || '+91 98765 43210',
-      address: pickupAddr?.addressLine1 || 'Indira Gandhi International Airport, Terminal 3',
-      city: pickupAddr?.city || 'New Delhi',
-      state: pickupAddr?.state || 'Delhi',
-      pincode: pickupAddr?.postalCode || '110037',
-    },
-    deliveryDetails: meta.deliveryDetails || {
-      hotelName: 'Taj City Centre',
-      roomNumber: '402',
-      guestName: dropoffAddr?.contactName || 'Rahul Sharma',
-      deliveryOption: 'hotel_reception',
-      name: dropoffAddr?.contactName || 'Rahul Sharma',
-      phone: dropoffAddr?.phoneNumber || '+91 98765 43210',
-      address: dropoffAddr?.addressLine1 || 'Taj City Centre, Sector 44',
-      city: dropoffAddr?.city || 'Gurugram',
-      state: dropoffAddr?.state || 'Haryana',
-      pincode: dropoffAddr?.postalCode || '122004',
-    },
-    luggage: meta.luggage || [
-      { id: 1, type: 'Check-in Bag', size: 'Large', weight: 15, tag: 'AI-48291' },
-      { id: 2, type: 'Cabin Bag', size: 'Medium', weight: 13, tag: 'AI-48292' },
-    ],
-    totalBags: meta.totalBags || 2,
-    totalWeightKg: meta.totalWeightKg || (booking.package ? Number(booking.package.actualWeightKg) : 28),
-    addons: meta.addons || ['AIRPORT_ASSIST', 'SEAL_WRAP', 'SANITISED_VAN'],
-    luggageProtection: meta.luggageProtection || ['THEFT_COVER', 'DAMAGE_COVER'],
-    airportAssistance: meta.airportAssistance || ['BELT_PICKUP', 'PORTER_HELP'],
-    schedule: meta.schedule || {
-      pickupDate: '10 May 2025',
-      pickupSlot: '10:00 AM - 12:00 PM',
-      deliverySpeed: 'EXPRESS',
-      estimatedDelivery: '12 May 2025 by 06:00 PM',
-    },
-    fareBreakdown: meta.fareBreakdown || {
-      baseCharge: 1200,
-      distanceCharge: 360,
-      luggageCharge: 160,
-      airportCharge: 150,
-      addonsCharge: 250,
-      deliverySpeedCharge: 100,
-      gst: 370.8,
-      discount: 235,
-      totalAmount: Number(booking.totalAmount) || 2395.8,
-      promoCode: meta.promoCode || 'DELIVEZ10',
-    },
     agent,
     timeline,
     journey: timeline,

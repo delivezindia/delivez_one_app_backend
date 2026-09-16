@@ -115,43 +115,151 @@ export const validateCourierAddress = (value: unknown, field = 'address') => {
   };
 };
 
+
+export const parseServiceType = (val: unknown): string => {
+  if (!val) return 'BIKE_PRIORITY';
+  const str = String(val).trim().toUpperCase().replace(/[\s-]+/g, '_');
+  if (str.includes('BIKE')) return 'BIKE_PRIORITY';
+  if (str.includes('SAME_DAY')) return 'SAME_DAY';
+  if (str.includes('DRONE') || str.includes('HYBRID')) return 'HYBRID_DRONE';
+  if (str.includes('NEXT_DAY')) return 'NEXT_DAY';
+  if (str.includes('SURFACE') || str.includes('STANDARD') || str.includes('LOCAL') || str.includes('INTERCITY')) return 'SURFACE_EXPRESS';
+  if (['HOME_TO_AIRPORT', 'AIRPORT_TO_HOME', 'HOTEL_TO_AIRPORT', 'AIRPORT_TO_HOTEL', 'HOTEL_TO_HOME', 'HOME_TO_HOTEL', 'MULTI_STOP'].includes(str)) {
+    return str;
+  }
+  return 'BIKE_PRIORITY';
+};
+
+export const parseParcelSize = (val: unknown, lengthCm = 30, weightKg = 2): 'SMALL' | 'MEDIUM' | 'LARGE' | 'CUSTOM' => {
+  if (!val) {
+    if (weightKg <= 2) return 'SMALL';
+    if (weightKg <= 10) return 'MEDIUM';
+    return 'LARGE';
+  }
+  const str = String(val).trim().toUpperCase();
+  if (str.includes('CUSTOM')) return 'CUSTOM';
+  if (str.includes('SMALL')) return 'SMALL';
+  if (str.includes('MED')) return 'MEDIUM';
+  if (str.includes('LARGE') || str.includes('XL')) return 'LARGE';
+  return 'SMALL';
+};
+
+export const parsePackagingType = (val: unknown, needsBox = true): 'STANDARD' | 'EXTRA_SECURE' | 'WOODEN_CRATE' | 'OWN_PACKAGING' => {
+  if (!val) return needsBox ? 'STANDARD' : 'OWN_PACKAGING';
+  const str = String(val).trim().toUpperCase().replace(/[\s-]+/g, '_');
+  if (str.includes('WOOD')) return 'WOODEN_CRATE';
+  if (str.includes('EXTRA') || str.includes('SECURE')) return 'EXTRA_SECURE';
+  if (str.includes('OWN') || str.includes('NO_BOX') || str.includes('MY_OWN')) return 'OWN_PACKAGING';
+  return 'STANDARD';
+};
+
+export const parseContentCategory = (val: unknown): 'DOCUMENTS' | 'ELECTRONICS' | 'CLOTHING_ACCESSORIES' | 'GIFTS_TOYS' | 'HEALTH_MEDICAL' | 'HOUSEHOLD_ITEMS' | 'COMMERCIAL' | 'OTHERS' => {
+  if (!val) return 'DOCUMENTS';
+  const str = String(val).trim().toUpperCase().replace(/[\s&-]+/g, '_');
+  if (str.includes('DOC')) return 'DOCUMENTS';
+  if (str.includes('ELECT')) return 'ELECTRONICS';
+  if (str.includes('CLOTH') || str.includes('APPAREL') || str.includes('FASHION')) return 'CLOTHING_ACCESSORIES';
+  if (str.includes('GIFT') || str.includes('TOY')) return 'GIFTS_TOYS';
+  if (str.includes('HEALTH') || str.includes('MEDIC')) return 'HEALTH_MEDICAL';
+  if (str.includes('HOUSE') || str.includes('HOME')) return 'HOUSEHOLD_ITEMS';
+  if (str.includes('COMMERCIAL') || str.includes('GOODS') || str.includes('SAMPLE')) return 'COMMERCIAL';
+  return 'OTHERS';
+};
+
+export const parseInsuranceType = (val: unknown, optionNum?: unknown): 'FULL' | 'BASIC' | 'NONE' => {
+  if (optionNum === 0 || optionNum === '0') return 'FULL';
+  if (optionNum === 1 || optionNum === '1') return 'BASIC';
+  if (optionNum === 2 || optionNum === '2') return 'NONE';
+  if (!val) return 'FULL';
+  const str = String(val).trim().toUpperCase();
+  if (str.includes('NONE') || str.includes('NO')) return 'NONE';
+  if (str.includes('BASIC') || str.includes('CARRIER')) return 'BASIC';
+  return 'FULL';
+};
+
 export const validateCourierRequest = (body: unknown) => {
   const data = object(body, 'requestBody');
 
   const pickup = validateCourierAddress(data.pickup ?? {}, 'pickup');
   const dropoff = validateCourierAddress(data.dropoff ?? data.delivery ?? {}, 'dropoff');
 
-  const pkg = object(data.package ?? {}, 'package');
+  const rawPkg = (data.package && typeof data.package === 'object') ? (data.package as Record<string, unknown>) : {};
+  const pkg: Record<string, unknown> = { ...data, ...rawPkg };
   const pieceCount = number(pkg.pieceCount ?? pkg.pieces ?? 1, 'package.pieceCount', { min: 1, max: 50 })!;
-  const actualWeightKg = number(pkg.totalWeightKg ?? pkg.actualWeightKg ?? 15, 'package.actualWeightKg', { min: 0.1, max: 150 })!;
-  const luggageType = String(pkg.luggageType || 'SUITCASE_TROLLEY');
-  const luggageSize = String(pkg.luggageSize || 'SMALL');
-  const luggageDescription = pkg.description ?? pkg.luggageDescription ?? 'Luggage consignment';
+  const actualWeightKg = number(pkg.actualWeightKg ?? pkg.totalWeightKg ?? pkg.weight ?? 2.5, 'package.actualWeightKg', { min: 0.1, max: 150 })!;
+  
+  // Dimensions
+  const dims = (pkg.dimensions || {}) as Record<string, unknown>;
+  const lengthCm = Number(pkg.lengthCm ?? dims.length ?? pkg.length ?? (pkg.parcelSize === 'LARGE' ? 60 : pkg.parcelSize === 'MEDIUM' ? 45 : 30)) || 30;
+  const widthCm = Number(pkg.widthCm ?? dims.width ?? pkg.width ?? (pkg.parcelSize === 'LARGE' ? 45 : pkg.parcelSize === 'MEDIUM' ? 35 : 20)) || 20;
+  const heightCm = Number(pkg.heightCm ?? dims.height ?? pkg.height ?? (pkg.parcelSize === 'LARGE' ? 45 : pkg.parcelSize === 'MEDIUM' ? 30 : 10)) || 10;
+  
+  // Chargeable weight calculation: higher of actual weight or volumetric weight (L*W*H / 5000)
+  const volumetricKg = Math.round(((lengthCm * widthCm * heightCm) / 5000) * 100) / 100;
+  const chargeableWeightKg = Math.max(actualWeightKg, volumetricKg, Number(pkg.chargeableWeightKg) || 0);
 
-  const specialHandling = pkg.specialHandling || {};
-  const fragile = boolean(specialHandling.fragile ?? pkg.fragile, 'fragile', false);
-  const keepDry = boolean(specialHandling.keepDry, 'keepDry', false);
-  const temperatureSensitive = boolean(specialHandling.temperatureSensitive, 'temperatureSensitive', false);
+  const rawBoxReq = pkg.packageBoxRequired ?? pkg.boxRequired ?? pkg.needsBox;
+  const needsBox = rawBoxReq !== undefined ? (rawBoxReq === true || rawBoxReq === 'yes') : true;
+
+  const parcelSize = parseParcelSize(pkg.parcelSize ?? pkg.selectedParcelType, lengthCm, actualWeightKg);
+  const packagingType = parsePackagingType(pkg.packagingType ?? pkg.selectedPackagingType, needsBox);
+  const rawCategoryString = String(pkg.category ?? pkg.packageCategory ?? (data as any).category ?? (data as any).packageCategory ?? '').trim();
+  const contentCategory = parseContentCategory(pkg.contentCategory ?? rawCategoryString ?? (data as any).contentCategory);
+  const insuranceType = parseInsuranceType(pkg.insuranceType, pkg.insuranceOption ?? data.insuranceOption);
+
+  const rawSpecial = pkg.specialHandling ?? (data as any).specialHandling;
+  const isSpecialArray = Array.isArray(rawSpecial);
+  const specialObj = (typeof rawSpecial === 'object' && !isSpecialArray && rawSpecial !== null) ? (rawSpecial as Record<string, unknown>) : {};
+  const isFragileArray = isSpecialArray && (rawSpecial.includes('FRAGILE') || rawSpecial.includes('fragile'));
+  const isSecureArray = isSpecialArray && (rawSpecial.includes('EXTRA_SECURITY') || rawSpecial.includes('secure') || rawSpecial.includes('secureHandling'));
+  const fragile = boolean(specialObj.fragile ?? pkg.fragile ?? pkg.isFragile ?? (data as any).fragile ?? (data as any).isFragile ?? isFragileArray, 'fragile', false);
+  const secureHandling = boolean(specialObj.secureHandling ?? pkg.secureHandling ?? pkg.isSecure ?? (data as any).secureHandling ?? (data as any).isSecure ?? isSecureArray, 'secureHandling', false);
+  const keepDry = boolean(specialObj.keepDry, 'keepDry', false);
+  const temperatureSensitive = boolean(specialObj.temperatureSensitive, 'temperatureSensitive', false);
+
+  const luggageType = String(pkg.luggageType || 'SUITCASE_TROLLEY');
+  const luggageSize = String(pkg.luggageSize || parcelSize);
+  const luggageDescription = pkg.contentDescription ?? pkg.description ?? pkg.packageDescription ?? 'Personal courier shipment';
 
   const addons = Array.isArray(data.addons) ? data.addons.map(String) : [];
-  const serviceType = String(data.selectedServiceId ?? data.serviceType ?? 'HOME_TO_AIRPORT');
-  const deliverySpeed = String(data.deliverySpeed ?? 'STANDARD').toUpperCase();
+  const rawServiceType = data.selectedServiceId ?? data.serviceType ?? data.deliverySpeed ?? 'BIKE_PRIORITY';
+  const serviceType = parseServiceType(rawServiceType);
+  const deliverySpeed = String(data.deliverySpeed ?? rawServiceType).toUpperCase();
+
+  let selfServiceOption: 'SELF_PICKUP' | 'SELF_DROP' | null = null;
+  const rawSelf = data.selfServiceOption || pkg.selfServiceOption;
+  if (rawSelf) {
+    const s = String(rawSelf).toUpperCase().replace(/[\s-]+/g, '_');
+    if (s.includes('PICKUP')) selfServiceOption = 'SELF_PICKUP';
+    else if (s.includes('DROP') || s.includes('COLLECT')) selfServiceOption = 'SELF_DROP';
+  }
 
   const schedule = data.schedule || {};
-  const pickupDate = schedule.pickupDate || data.pickupDate || '12 May 2025';
-  const pickupTimeSlot = schedule.pickupTimeSlot || data.pickupTimeSlot || '10:00 - 12:00 PM';
+  const pickupDate = schedule.pickupDate || data.pickupDate || 'Today';
+  const pickupTimeSlot = schedule.pickupTimeSlot || data.pickupTimeSlot || 'ASAP';
   const deliveryDeadline = schedule.deliveryDeadline || data.deliveryDeadline || 'Before 6:00 PM';
   const exactDeliveryTime = schedule.exactDeliveryTime || data.exactDeliveryTime || null;
-  const flightBasedUrgency = boolean(schedule.flightBasedUrgency ?? data.flightBasedUrgency, 'flightBasedUrgency', true);
+  const flightBasedUrgency = boolean(schedule.flightBasedUrgency ?? data.flightBasedUrgency, 'flightBasedUrgency', false);
   const flightInfo = data.flightInfo || schedule.flightInfo || null;
 
-  const paymentMethod = String(data.paymentMethod ?? 'DELIVEZ_WALLET');
+  const paymentMethod = String(data.paymentMethod ?? 'ONLINE');
   const promoCode = data.promoCode ? String(data.promoCode).trim() : 'DELIVEZ10';
 
   return {
     serviceType,
     selectedServiceId: serviceType,
     isRoundTrip: boolean(data.isRoundTrip, 'isRoundTrip', false),
+    selfServiceOption,
+    actualWeightKg,
+    chargeableWeightKg,
+    lengthCm,
+    widthCm,
+    heightCm,
+    parcelSize,
+    packagingType,
+    contentCategory,
+    category: contentCategory,
+    itemCategory: contentCategory,
     pickup,
     dropoff,
     package: {
@@ -160,20 +268,33 @@ export const validateCourierRequest = (body: unknown) => {
       pieceCount,
       totalWeightKg: actualWeightKg,
       actualWeightKg,
-      chargeableWeightKg: actualWeightKg,
-      lengthCm: Number(pkg.lengthCm) || 55,
-      widthCm: Number(pkg.widthCm) || 35,
-      heightCm: Number(pkg.heightCm) || 25,
-      parcelSize: luggageSize === 'LARGE' ? 'LARGE' : luggageSize === 'MEDIUM' ? 'MEDIUM' : 'SMALL',
-      packagingType: 'STANDARD',
-      contentCategory: 'CLOTHING_ACCESSORIES',
+      chargeableWeightKg,
+      dimensions: {
+        lengthCm,
+        widthCm,
+        heightCm,
+      },
+      lengthCm,
+      widthCm,
+      heightCm,
+      parcelSize,
+      needsBox,
+      boxSize: pkg.selectedBoxSize || pkg.boxSize || (needsBox ? 'Small Box (10 Kg)' : null),
+      weightCapacity: pkg.selectedWeightCapacity || pkg.weightCapacity || '10 Kg',
+      isCustomBox: Boolean(pkg.isCustomBox || pkg.customBoxDetails || String(pkg.selectedBoxSize).includes('Custom')),
+      customBoxDetails: pkg.customBoxDetails || null,
+      packagingType,
+      contentCategory,
+      category: rawCategoryString || contentCategory,
+      itemCategory: rawCategoryString || contentCategory,
       contentDescription: luggageDescription,
       fragile,
+      secureHandling,
       keepDry,
       temperatureSensitive,
-      specialHandling: { fragile, keepDry, temperatureSensitive },
+      specialHandling: { fragile, secureHandling, keepDry, temperatureSensitive },
       declaredValue: Number(pkg.declaredValue) || 25000,
-      insuranceType: 'FULL',
+      insuranceType,
     },
     addons,
     schedule: {

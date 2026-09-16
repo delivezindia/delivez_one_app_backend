@@ -18,8 +18,9 @@ import {
 
 export const personalCourierRouter = Router();
 
-// Public routes (options, universal tracking, public POD)
+// Public routes (options, universal tracking, public POD, public quote)
 personalCourierRouter.get('/options', getOptions);
+personalCourierRouter.post('/quote', courierMutationRateLimit, createQuote);
 personalCourierRouter.get('/bookings/:id/track', getBookingTracking);
 personalCourierRouter.get('/track/:id', getBookingTracking);
 personalCourierRouter.get('/:id/track', getBookingTracking);
@@ -28,7 +29,6 @@ personalCourierRouter.get('/bookings/:id/pod', getBookingPod);
 
 // Protected routes requiring authentication
 personalCourierRouter.use(authenticate, requireUser);
-personalCourierRouter.post('/quote', courierMutationRateLimit, createQuote);
 personalCourierRouter.post('/bookings', courierMutationRateLimit, createBooking);
 personalCourierRouter.post(
   '/bookings/:id/payments/sandbox',

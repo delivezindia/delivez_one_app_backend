@@ -226,17 +226,84 @@ export const serializeBooking = (booking: any) => {
   const dropoffAddr = booking.addresses?.find((a: any) => a.kind === 'DROPOFF');
 
   const status = meta.status || booking.status || 'CONFIRMED';
-  const serviceType = meta.serviceType || booking.serviceType || 'AIRPORT_TO_HOTEL';
+  const serviceType = meta.serviceType || booking.serviceType || 'BIKE_PRIORITY';
   const sealNumber = meta.sealNumber || 'DLV-SEAL-88492';
   const agent = meta.agent || defaultAgent;
   const pod = meta.pod || defaultPod;
   const timeline = meta.timeline || generateJourneyTimeline(status, { ...meta, sealNumber, bookingNumber: booking.bookingNumber });
+
+  const rawCat = String(booking.package?.contentCategory || meta.packageDetails?.contentCategory || meta.contentCategory || 'DOCUMENTS');
+  const catHumanMap: Record<string, string> = {
+    DOCUMENTS: 'Documents',
+    ELECTRONICS: 'Electronics',
+    CLOTHING_ACCESSORIES: 'Clothing & Apparel',
+    GIFTS_TOYS: 'Gifts & Toys',
+    HEALTH_MEDICAL: 'Health & Medicine',
+    HOUSEHOLD_ITEMS: 'Household Items',
+    COMMERCIAL: 'Commercial Goods',
+    OTHERS: 'Others',
+  };
+  const storedCategory = meta.packageDetails?.category || meta.category;
+  const isEnumName = storedCategory && catHumanMap[String(storedCategory).toUpperCase()];
+  const categoryHuman = (storedCategory && !isEnumName)
+    ? storedCategory
+    : (catHumanMap[rawCat] || storedCategory || rawCat);
+
+  const rawPkgType = String(booking.package?.packagingType || meta.packageDetails?.packagingType || 'STANDARD');
+  const pkgHumanMap: Record<string, string> = {
+    STANDARD: 'Delivez Standard Packaging',
+    EXTRA_SECURE: 'Extra Secure Packaging (+Bubble Wrap)',
+    WOODEN_CRATE: 'Reinforced Heavy-Duty Wooden Crate',
+    CUSTOM_BOX: 'Custom Engineered Box',
+    OWN_PACKAGING: 'Customer Own Packaging',
+  };
+  const packagingHuman = pkgHumanMap[rawPkgType] || rawPkgType;
+
+  const serviceHumanMap: Record<string, string> = {
+    BIKE_PRIORITY: 'Bike Priority Delivery',
+    SAME_DAY: 'Same Day Delivery',
+    HYBRID_DRONE: 'Hybrid Drone Delivery',
+    NEXT_DAY: 'Next Day Delivery',
+    SURFACE_EXPRESS: 'Surface Express',
+    AIR_CARGO: 'Air Cargo Delivery',
+  };
+  const serviceHuman = serviceHumanMap[serviceType] || meta.deliverySpeed || serviceType;
+
+  const selfServiceOpt = booking.selfServiceOption || meta.selfServiceOption || null;
+  const selfServiceHumanMap: Record<string, string> = {
+    SELF_PICKUP: 'Self Pickup at Nearest Hub (-₹50 Applied)',
+    SELF_DROP: 'Self Drop to Hub (-₹40 Applied)',
+  };
+  const selfServiceHuman = selfServiceOpt ? (selfServiceHumanMap[selfServiceOpt] || selfServiceOpt) : 'Full Doorstep Service';
+
+  const lengthCm = Number(booking.package?.lengthCm ?? meta.packageDetails?.dimensions?.lengthCm ?? meta.packageDetails?.lengthCm ?? 30);
+  const widthCm = Number(booking.package?.widthCm ?? meta.packageDetails?.dimensions?.widthCm ?? meta.packageDetails?.widthCm ?? 20);
+  const heightCm = Number(booking.package?.heightCm ?? meta.packageDetails?.dimensions?.heightCm ?? meta.packageDetails?.heightCm ?? 10);
+  const actualWeightKg = Number(booking.package?.actualWeightKg ?? meta.packageDetails?.actualWeightKg ?? 2.5);
+  const chargeableWeightKg = Number(booking.package?.chargeableWeightKg ?? meta.packageDetails?.chargeableWeightKg ?? actualWeightKg);
+  const volumetricWeightKg = Math.round(((lengthCm * widthCm * heightCm) / 5000) * 10) / 10;
+  const parcelSize = String(booking.package?.parcelSize || meta.packageDetails?.parcelSize || 'MEDIUM');
 
   return {
     ...booking,
     bookingNumber: booking.bookingNumber,
     status,
     serviceType,
+    serviceName: serviceHuman,
+    deliverySpeed: serviceHuman,
+    serviceSpeed: serviceHuman,
+    selfServiceOption: selfServiceOpt,
+    selfServiceLabel: selfServiceHuman,
+    contentCategory: rawCat,
+    category: categoryHuman,
+    itemCategory: categoryHuman,
+    packagingType: rawPkgType,
+    packagingName: packagingHuman,
+    parcelSize,
+    actualWeightKg,
+    chargeableWeightKg,
+    volumetricWeightKg,
+    dimensions: { lengthCm, widthCm, heightCm },
     sealNumber,
     distanceKm: booking.distanceKm === null ? null : Number(booking.distanceKm),
     baseCharge: Number(booking.baseCharge),
@@ -261,12 +328,46 @@ export const serializeBooking = (booking: any) => {
             booking.package.declaredValue === null
               ? null
               : Number(booking.package.declaredValue),
-          boxCapacity: meta.boxCapacity || (booking.package.needsBox ? '10 Kg' : null),
-          boxSizeName: meta.boxSizeName || (booking.package.needsBox ? 'Small Box (10 Kg)' : null),
+          boxCapacity: meta.packageDetails?.weightCapacity || meta.boxCapacity || (booking.package.needsBox ? '10 Kg' : null),
+          weightCapacity: meta.packageDetails?.weightCapacity || '10 Kg',
+          boxSizeName: meta.packageDetails?.boxSize || meta.boxSizeName || (booking.package.needsBox ? 'Small Box (10 Kg)' : null),
+          boxSize: meta.packageDetails?.boxSize || (booking.package.needsBox ? 'Small Box (10 Kg)' : null),
+          isCustomBox: Boolean(meta.packageDetails?.isCustomBox),
+          customBoxDetails: meta.packageDetails?.customBoxDetails || null,
+          packagingType: booking.package.packagingType,
+          contentCategory: booking.package.contentCategory,
           pickupReadiness: meta.pickupReadiness || 'Today',
-          contentDescription: meta.description ?? booking.package.contentDescription,
+          contentDescription: meta.packageDetails?.contentDescription ?? meta.description ?? booking.package.contentDescription,
         }
       : null,
+    packageDetails: {
+      contentCategory: rawCat,
+      category: categoryHuman,
+      itemCategory: categoryHuman,
+      packagingType: rawPkgType,
+      packagingName: packagingHuman,
+      parcelSize,
+      actualWeightKg,
+      chargeableWeightKg,
+      volumetricWeightKg,
+      dimensions: { lengthCm, widthCm, heightCm },
+      lengthCm,
+      widthCm,
+      heightCm,
+      needsBox: Boolean(booking.package?.needsBox ?? meta.packageDetails?.needsBox),
+      boxSize: meta.packageDetails?.boxSize || (booking.package?.needsBox ? 'Small Box (10 Kg)' : null),
+      weightCapacity: meta.packageDetails?.weightCapacity || '10 Kg',
+      isCustomBox: Boolean(meta.packageDetails?.isCustomBox),
+      customBoxDetails: meta.packageDetails?.customBoxDetails || null,
+      isFragile: Boolean(booking.package?.fragile || meta.packageDetails?.fragile || meta.packageDetails?.isFragile),
+      isSecure: Boolean(booking.package?.secureHandling || meta.packageDetails?.secureHandling || meta.packageDetails?.isSecure),
+      declaredValue: Number(booking.package?.declaredValue ?? meta.packageDetails?.declaredValue ?? 25000),
+      insuranceType: booking.package?.insuranceType ?? meta.packageDetails?.insuranceType ?? 'FULL',
+      specialHandling: [
+        ...(Boolean(booking.package?.fragile || meta.packageDetails?.fragile) ? ['FRAGILE'] : []),
+        ...(Boolean(booking.package?.secureHandling || meta.packageDetails?.secureHandling) ? ['EXTRA_SECURITY'] : []),
+      ],
+    },
     // APK Mobile Screen Specific Structures
     pickupDetails: meta.pickupDetails || {
       terminal: 'Terminal 3',
@@ -383,16 +484,71 @@ export const createBooking: RequestHandler = async (req, res) => {
   const paymentStatus = input.paymentMethod === 'PAY_ON_DELIVERY' ? 'NOT_REQUIRED' : 'PAID';
   const confirmedAt = new Date();
 
+  // Helper enum mappers
+  const mapPrismaServiceType = (st: string): any => {
+    if (['BIKE_PRIORITY', 'SAME_DAY', 'HYBRID_DRONE', 'SURFACE_EXPRESS', 'NEXT_DAY'].includes(st)) {
+      return st;
+    }
+    const clean = String(st).toUpperCase().replace(/[\s-]+/g, '_');
+    if (clean.includes('BIKE')) return 'BIKE_PRIORITY';
+    if (clean.includes('SAME_DAY')) return 'SAME_DAY';
+    if (clean.includes('DRONE') || clean.includes('HYBRID')) return 'HYBRID_DRONE';
+    if (clean.includes('NEXT_DAY')) return 'NEXT_DAY';
+    return 'SURFACE_EXPRESS';
+  };
+
+  const mapPrismaParcelSize = (sz: string): any => {
+    if (['SMALL', 'MEDIUM', 'LARGE', 'CUSTOM'].includes(sz)) return sz;
+    return 'SMALL';
+  };
+
+  const mapPrismaPackagingType = (pt: string): any => {
+    if (['STANDARD', 'EXTRA_SECURE', 'WOODEN_CRATE', 'OWN_PACKAGING'].includes(pt)) return pt;
+    return 'STANDARD';
+  };
+
+  const mapPrismaContentCategory = (cc: string): any => {
+    if (!cc) return 'DOCUMENTS';
+    const str = String(cc).trim().toUpperCase().replace(/[\s&-]+/g, '_');
+    if (str.includes('DOC') || str.includes('PAPER') || str.includes('FILE') || str.includes('BOOK')) return 'DOCUMENTS';
+    if (str.includes('ELECT') || str.includes('GADGET') || str.includes('MOBILE') || str.includes('LAPTOP')) return 'ELECTRONICS';
+    if (str.includes('CLOTH') || str.includes('APPAREL') || str.includes('FASHION') || str.includes('SHIRT') || str.includes('DRESS') || str.includes('WEAR')) return 'CLOTHING_ACCESSORIES';
+    if (str.includes('GIFT') || str.includes('TOY') || str.includes('DECOR')) return 'GIFTS_TOYS';
+    if (str.includes('HEALTH') || str.includes('MEDIC') || str.includes('PHARMA') || str.includes('SUPPLEMENT')) return 'HEALTH_MEDICAL';
+    if (str.includes('HOUSE') || str.includes('HOME') || str.includes('KITCHEN') || str.includes('DAILY')) return 'HOUSEHOLD_ITEMS';
+    if (str.includes('COMMERCIAL') || str.includes('GOODS') || str.includes('SAMPLE') || str.includes('RAW') || str.includes('PART')) return 'COMMERCIAL';
+    if (['DOCUMENTS', 'ELECTRONICS', 'CLOTHING_ACCESSORIES', 'GIFTS_TOYS', 'HEALTH_MEDICAL', 'HOUSEHOLD_ITEMS', 'COMMERCIAL', 'OTHERS'].includes(str)) return str;
+    return 'OTHERS';
+  };
+
+  const mapPrismaInsuranceType = (it: string): any => {
+    if (['FULL', 'BASIC', 'NONE'].includes(it)) return it;
+    return 'FULL';
+  };
+
   // Combine rich APK metadata into package.contentDescription
   const meta: any = {
     bookingNumber: bNumber,
     status,
     serviceType: input.serviceType,
+    deliverySpeed: input.deliverySpeed,
+    selfServiceOption: input.selfServiceOption,
     pickupDetails: (input as any).pickupDetails || {},
     deliveryDetails: (input as any).deliveryDetails || {},
+    packageDetails: {
+      ...input.package,
+      chargeableWeightKg: quote.chargeableWeightKg,
+      isFragile: Boolean(input.package.fragile),
+      isSecure: Boolean(input.package.secureHandling),
+      dimensions: {
+        lengthCm: input.package.lengthCm,
+        widthCm: input.package.widthCm,
+        heightCm: input.package.heightCm,
+      },
+    },
     luggage: (input as any).luggage || [],
     totalBags: (input as any).totalBags || 1,
-    totalWeightKg: (input as any).totalWeightKg || 10,
+    totalWeightKg: input.package.actualWeightKg || (input as any).totalWeightKg || 2.5,
     addons: input.addons || [],
     luggageProtection: (input as any).luggageProtection || [],
     airportAssistance: (input as any).airportAssistance || [],
@@ -406,11 +562,11 @@ export const createBooking: RequestHandler = async (req, res) => {
       baseCharge: quote.breakdown.baseCharge,
       distanceCharge: quote.breakdown.distanceCharge,
       luggageCharge: quote.breakdown.weightCharge,
-      airportCharge: 150,
+      airportCharge: (quote as any).airportHandlingFee || 0,
       addonsCharge: quote.breakdown.packagingCharge,
-      deliverySpeedCharge: 100,
+      deliverySpeedCharge: quote.breakdown.baseCharge,
       gst: quote.breakdown.taxAmount,
-      discount: 235,
+      discount: quote.breakdown.discountAmount || 0,
       totalAmount: quote.totalAmount,
       promoCode: input.promoCode || 'DELIVEZ10',
     },
@@ -431,7 +587,7 @@ export const createBooking: RequestHandler = async (req, res) => {
         idempotencyKey,
         requestFingerprint,
         status: 'CONFIRMED',
-        serviceType: 'SURFACE_EXPRESS',
+        serviceType: mapPrismaServiceType(input.serviceType),
         pickupScheduleType: input.schedule?.pickupDate ? 'SCHEDULED' : 'ASAP',
         scheduledPickupAt: null,
         distanceKm: quote.distanceKm,
@@ -461,11 +617,14 @@ export const createBooking: RequestHandler = async (req, res) => {
             widthCm: input.package.widthCm,
             heightCm: input.package.heightCm,
             declaredValue: input.package.declaredValue,
-            parcelSize: 'LARGE',
-            packagingType: 'STANDARD',
-            contentCategory: 'HOUSEHOLD_ITEMS',
-            insuranceType: 'FULL',
-            specialHandling: Boolean(input.package.fragile),
+            parcelSize: mapPrismaParcelSize(input.package.parcelSize),
+            needsBox: input.package.needsBox,
+            packagingType: mapPrismaPackagingType(input.package.packagingType),
+            contentCategory: mapPrismaContentCategory(input.package.contentCategory || input.contentCategory || (input as any).packageCategory),
+            insuranceType: mapPrismaInsuranceType(input.package.insuranceType),
+            specialHandling: Boolean(input.package.specialHandling || input.package.fragile || input.package.secureHandling),
+            fragile: Boolean(input.package.fragile),
+            secureHandling: Boolean(input.package.secureHandling),
             contentDescription: JSON.stringify(meta),
           },
         },
@@ -474,6 +633,7 @@ export const createBooking: RequestHandler = async (req, res) => {
     });
 
     res.status(201).json({
+
       status: 'success',
       data: { booking: serializeBooking(booking), idempotentReplay: false },
     });
@@ -786,6 +946,23 @@ export const getBookingTracking: RequestHandler = async (req, res) => {
         sealNumber: serialized.sealNumber,
         journey: serialized.timeline,
         timeline: serialized.timeline,
+        // DYNAMIC CONSIGNMENT & PACKAGE SPECS:
+        contentCategory: serialized.contentCategory,
+        category: serialized.category,
+        itemCategory: serialized.itemCategory,
+        packagingType: serialized.packagingType,
+        packagingName: serialized.packagingName,
+        serviceType: serialized.serviceType,
+        serviceName: serialized.serviceName,
+        selfServiceOption: serialized.selfServiceOption,
+        selfServiceLabel: serialized.selfServiceLabel,
+        parcelSize: serialized.parcelSize,
+        actualWeightKg: serialized.actualWeightKg,
+        chargeableWeightKg: serialized.chargeableWeightKg,
+        volumetricWeightKg: serialized.volumetricWeightKg,
+        dimensions: serialized.dimensions,
+        packageDetails: serialized.packageDetails,
+        package: serialized.package,
       },
     },
   });
