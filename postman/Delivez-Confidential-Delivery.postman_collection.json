@@ -639,7 +639,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"gateway\": \"SANDBOX_SIMULATOR\",\n  \"action\": \"SUCCESS\",\n  \"amount\": 99\n}"
+              "raw": "{\n  \"method\": \"UPI\",\n  \"outcome\": \"SUCCESS\",\n  \"amount\": 99,\n  \"gateway\": \"SANDBOX_SIMULATOR\",\n  \"action\": \"SUCCESS\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/confidential-delivery/bookings/{{bookingId}}/payments/sandbox",
@@ -655,7 +655,26 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Payment completed successfully\", function () {",
+                  "    pm.expect(jsonData.status).to.eql(\"success\");",
+                  "    pm.expect(jsonData.data.booking.paymentStatus).to.eql(\"PAID\");",
+                  "    pm.expect(jsonData.data.payment.outcome).to.eql(\"SUCCESS\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
         }
       ]
     },

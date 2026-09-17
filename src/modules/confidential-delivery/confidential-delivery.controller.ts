@@ -684,7 +684,7 @@ export const cancelBookingHandler: RequestHandler = async (req, res) => {
 };
 
 export const completeSandboxPaymentHandler: RequestHandler = async (req, res) => {
-  const id = String(req.params.id ?? '');
+  const id = String(req.params.id ?? req.params.vaultId ?? req.body?.bookingId ?? '');
   const { method, outcome } = validateSandboxPayment(req.body);
 
   const booking = await prisma.confidentialCourierBooking.findFirst({
@@ -699,6 +699,30 @@ export const completeSandboxPaymentHandler: RequestHandler = async (req, res) =>
     });
   }
 
+  const now = new Date();
+  const paymentReference = makeSandboxPaymentReference(outcome);
+
+  if (booking.paymentStatus === 'PAID') {
+    res.status(200).json({
+      status: 'success',
+      data: {
+        booking: {
+          ...booking,
+          vaultId: booking.bookingNumber,
+          totalAmount: Number(booking.totalAmount),
+        },
+        payment: {
+          provider: booking.paymentProvider || SANDBOX_PAYMENT_PROVIDER,
+          method,
+          outcome: 'SUCCESS',
+          paymentReference: booking.paymentReference || makeSandboxPaymentReference('SUCCESS'),
+        },
+        alreadyPaid: true,
+      },
+    });
+    return;
+  }
+
   const paymentStatus: ConfidentialPaymentStatus = outcome === 'SUCCESS' ? 'PAID' : 'FAILED';
   const status: ConfidentialBookingStatus = outcome === 'SUCCESS' ? 'CONFIRMED' : booking.status;
   const updated = await prisma.confidentialCourierBooking.update({
@@ -707,6 +731,9 @@ export const completeSandboxPaymentHandler: RequestHandler = async (req, res) =>
       paymentStatus,
       status,
       paymentMethod: 'ONLINE',
+      paymentProvider: SANDBOX_PAYMENT_PROVIDER,
+      paymentReference,
+      confirmedAt: outcome === 'SUCCESS' ? (booking.confirmedAt ?? now) : booking.confirmedAt,
     },
     include: { addresses: true },
   });
@@ -723,7 +750,7 @@ export const completeSandboxPaymentHandler: RequestHandler = async (req, res) =>
         provider: SANDBOX_PAYMENT_PROVIDER,
         method,
         outcome,
-        paymentReference: makeSandboxPaymentReference(updated.id),
+        paymentReference,
       },
     },
   });

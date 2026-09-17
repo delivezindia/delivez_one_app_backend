@@ -1,5 +1,252 @@
 [
   {
+    "id": "aud-1789639546764-9124",
+    "timestamp": "2026-09-17T10:05:46.764Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_BOOKINGS_41D81469_",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.6.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/bookings/41d81469-fbbf-448e-b7ab-da818cb1566f/payments/sandbox executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/bookings/41d81469-fbbf-448e-b7ab-da818cb1566f/payments/sandbox",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789635287193-2210",
+    "timestamp": "2026-09-17T08:54:47.193Z",
+    "category": "ORDERS",
+    "action": "PATCH_CONFIDENTIAL_DELIVERY_ADMIN_BOOKINGS_FB",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/confidential-delivery/admin/bookings/fbe5cd66-2c5e-4b49-acfd-58b4b84ff8a2/status executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/confidential-delivery/admin/bookings/fbe5cd66-2c5e-4b49-acfd-58b4b84ff8a2/status",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789635287093-4698",
+    "timestamp": "2026-09-17T08:54:47.093Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_BOOKINGS_FBE5CD66_",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/bookings/fbe5cd66-2c5e-4b49-acfd-58b4b84ff8a2/payments/sandbox executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/bookings/fbe5cd66-2c5e-4b49-acfd-58b4b84ff8a2/payments/sandbox",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789635286919-2148",
+    "timestamp": "2026-09-17T08:54:46.919Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_BOOKINGS",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/bookings executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/bookings",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1789635286895-1964",
+    "timestamp": "2026-09-17T08:54:46.895Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_QUOTE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/quote executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/quote",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789635159498-3857",
+    "timestamp": "2026-09-17T08:52:39.498Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_BOOKINGS_DV_260917",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/bookings/DV-260917-DA6C/payments/sandbox executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/bookings/DV-260917-DA6C/payments/sandbox",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789635159472-380",
+    "timestamp": "2026-09-17T08:52:39.472Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_BOOKINGS_C7618AFF_",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/bookings/c7618aff-b4af-4719-b57e-494ca3e3e133/payments/sandbox executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/bookings/c7618aff-b4af-4719-b57e-494ca3e3e133/payments/sandbox",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789635159440-2037",
+    "timestamp": "2026-09-17T08:52:39.440Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_BOOKINGS",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/bookings executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/bookings",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1789635012291-3829",
+    "timestamp": "2026-09-17T08:50:12.291Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_BOOKINGS_DV_260917",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/bookings/DV-260917-D3CD/payments/sandbox executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/bookings/DV-260917-D3CD/payments/sandbox",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789635012233-5030",
+    "timestamp": "2026-09-17T08:50:12.234Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_BOOKINGS_F881B9D3_",
+    "severity": "WARNING",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/bookings/f881b9d3-82aa-4bc4-ae19-9121ecf00485/payments/sandbox executed with status 400 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/bookings/f881b9d3-82aa-4bc4-ae19-9121ecf00485/payments/sandbox",
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "aud-1789635012200-2159",
+    "timestamp": "2026-09-17T08:50:12.200Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_BOOKINGS",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/bookings executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/bookings",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1789634005641-4088",
+    "timestamp": "2026-09-17T08:33:25.641Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_BOOKINGS_ANY_ID_PA",
+    "severity": "WARNING",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/bookings/any-id/payments/sandbox executed with status 400 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/bookings/any-id/payments/sandbox",
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "aud-1789632405264-8781",
+    "timestamp": "2026-09-17T08:06:45.265Z",
+    "category": "ORDERS",
+    "action": "POST_CONFIDENTIAL_DELIVERY_BOOKINGS",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.6.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/confidential-delivery/bookings executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/confidential-delivery/bookings",
+      "statusCode": 201
+    }
+  },
+  {
     "id": "aud-1789619202347-1704",
     "timestamp": "2026-09-17T04:26:42.347Z",
     "category": "ORDERS",

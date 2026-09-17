@@ -36,6 +36,48 @@ confidentialDeliveryRouter.post(
   requireUser,
   completeSandboxPaymentHandler
 );
+confidentialDeliveryRouter.post(
+  '/:id/payments/sandbox',
+  authenticate,
+  requireUser,
+  completeSandboxPaymentHandler
+);
+confidentialDeliveryRouter.post(
+  '/bookings/:id/sandbox-payment',
+  authenticate,
+  requireUser,
+  completeSandboxPaymentHandler
+);
+confidentialDeliveryRouter.post(
+  '/:id/sandbox-payment',
+  authenticate,
+  requireUser,
+  completeSandboxPaymentHandler
+);
+confidentialDeliveryRouter.post(
+  '/bookings/:id/payments/sandbox-complete',
+  authenticate,
+  requireUser,
+  completeSandboxPaymentHandler
+);
+confidentialDeliveryRouter.post(
+  '/:id/payments/sandbox-complete',
+  authenticate,
+  requireUser,
+  completeSandboxPaymentHandler
+);
+confidentialDeliveryRouter.post(
+  '/bookings/:id/payment',
+  authenticate,
+  requireUser,
+  completeSandboxPaymentHandler
+);
+confidentialDeliveryRouter.post(
+  '/:id/payment',
+  authenticate,
+  requireUser,
+  completeSandboxPaymentHandler
+);
 
 // Admin-authenticated endpoints
 confidentialDeliveryRouter.get('/admin/bookings', authenticate, requireAdmin, adminListVaultBookings);

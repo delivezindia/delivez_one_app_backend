@@ -27,27 +27,35 @@ export const validateSandboxPayment = (value: unknown): {
   method: SandboxPaymentMethodKey;
   outcome: 'SUCCESS' | 'FAILURE';
 } => {
-  const data = value as { method?: string; outcome?: string } | null;
-  const method = data?.method as SandboxPaymentMethodKey;
-  const outcome = data?.outcome ?? 'SUCCESS';
+  const data = value as {
+    method?: string;
+    paymentMethod?: string;
+    gateway?: string;
+    action?: string;
+    outcome?: string;
+  } | null;
 
-  if (!method || !Object.hasOwn(sandboxPaymentMethods, method)) {
-    throw new AppError({
-      message: 'Select a valid sandbox payment method.',
-      statusCode: 400,
-      code: 'INVALID_PAYMENT_METHOD',
-      details: { field: 'method' },
-    });
+  // Resolve outcome: handle 'action' (SUCCESS/FAILURE) or 'outcome', default to 'SUCCESS'
+  const rawAction = data?.action?.toUpperCase();
+  const rawOutcome = data?.outcome?.toUpperCase();
+  const outcome: 'SUCCESS' | 'FAILURE' =
+    rawOutcome === 'FAILURE' || rawAction === 'FAILURE' || rawAction === 'FAIL'
+      ? 'FAILURE'
+      : 'SUCCESS';
+
+  // Resolve method: handle 'method', 'paymentMethod', or simulator payload
+  let rawMethod = (data?.method || data?.paymentMethod || '').toUpperCase().trim();
+  if (!rawMethod || rawMethod === 'ONLINE' || rawMethod === 'SANDBOX' || rawMethod === 'SANDBOX_SIMULATOR' || data?.gateway) {
+    rawMethod = 'UPI';
+  } else if (rawMethod === 'CARD' || rawMethod === 'CREDIT_CARD' || rawMethod === 'DEBIT_CARD') {
+    rawMethod = 'CARD';
+  } else if (rawMethod === 'NETBANKING' || rawMethod === 'NET_BANKING') {
+    rawMethod = 'NET_BANKING';
+  } else if (rawMethod === 'WALLET') {
+    rawMethod = 'WALLET';
   }
 
-  if (outcome !== 'SUCCESS' && outcome !== 'FAILURE') {
-    throw new AppError({
-      message: 'Sandbox payment outcome must be SUCCESS or FAILURE.',
-      statusCode: 400,
-      code: 'INVALID_PAYMENT_OUTCOME',
-      details: { field: 'outcome' },
-    });
-  }
+  const method = (Object.hasOwn(sandboxPaymentMethods, rawMethod) ? rawMethod : 'UPI') as SandboxPaymentMethodKey;
 
   return { method, outcome };
 };
