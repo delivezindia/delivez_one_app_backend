@@ -209,6 +209,14 @@ export const vaultAccessRequirements = [
   'Visitor Pass',
   'Lift Access',
   'ID Proof',
+  'Parking',
+];
+
+export const vaultHandlingOptions = [
+  'Precise Delivery',
+  'Precise + Priority',
+  'Precise + Signature',
+  'Photo Proof',
 ];
 
 export const vaultItemHandlingOptions = [
@@ -283,6 +291,7 @@ export function getVaultOptions() {
     serviceTypes: vaultServiceTypes,
     accessRequirements: vaultAccessRequirements,
     itemHandlingOptions: vaultItemHandlingOptions,
+    handlingOptions: vaultHandlingOptions,
     verificationMethods: vaultVerificationMethods,
     timeSlots: vaultTimeSlots,
     additionalServices: vaultAdditionalServices,

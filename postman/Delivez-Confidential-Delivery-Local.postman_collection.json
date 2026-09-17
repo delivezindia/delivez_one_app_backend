@@ -1,0 +1,846 @@
+{
+  "info": {
+    "_postman_id": "e58b3f19-9821-4f12-9c31-confidential-local-v2",
+    "name": "Delivez - Confidential Delivery (Vault) - Local",
+    "description": "STANDALONE LOCAL POSTMAN COLLECTION for Delivez Confidential Delivery (Delivez Vault) strictly aligned with the Flutter/Dart specification.\n\nPre-configured for Local Development:\n- Base URL: http://localhost:4000/api/v1\n- Pre-loaded Tokens: Both user and admin access tokens are pre-filled\n- Auto-Variables: Login and booking endpoints automatically save tokens and IDs to collection variables\n- Includes 5 Folders:\n  1. Authentication (User & Admin login, Profile check)\n  2. Discovery & Pricing (Options, Quote calculation)\n  3. Bookings (All 9 Flutter Service Types with exact conditional payloads: Secure, Direct, Precise, Hand Carry, Return, Exchange, Critical, MultiPoint + List, Details, Sandbox Payment, Cancel)\n  4. Live Tracking & Milestones (4 Tabs: Timeline with 6 milestones, Details, Security, Documents, plus OTP Verification)\n  5. Admin Operations (List all bookings, Update status with location & note)\n\nYou can import ONLY this file into Postman and execute requests immediately without needing an environment file.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "userMobile",
+      "value": "9876543210",
+      "type": "string"
+    },
+    {
+      "key": "userPassword",
+      "value": "Customer@1234",
+      "type": "string"
+    },
+    {
+      "key": "adminEmail",
+      "value": "admin@delevez.com",
+      "type": "string"
+    },
+    {
+      "key": "adminPassword",
+      "value": "Admin@1234",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3ODkwNDQ3MjEsImV4cCI6MTc5MTYzNjcyMSwic3ViIjoiOGQ2ODA0YjAtNDRkYi00ZjE3LWIwMzItYzdkZGFhZWIzY2YxIn0.2lcJ-bUqtk_HwVyXtLIMvx-L8qhwZXqk20w9Jj48kxI",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3ODkwNDQ3MjEsImV4cCI6MTc5MTYzNjcyMSwic3ViIjoiOGQ2ODA0YjAtNDRkYi00ZjE3LWIwMzItYzdkZGFhZWIzY2YxIn0.2lcJ-bUqtk_HwVyXtLIMvx-L8qhwZXqk20w9Jj48kxI",
+      "type": "string"
+    },
+    {
+      "key": "adminAccessToken",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3ODkwNDQ3MjEsImV4cCI6MTc5MTYzNjcyMSwic3ViIjoiMDAxN2UxZjMtOTQyNy00NTYxLTllM2YtN2M5ZTc3MTEwNmFiIn0.kcv_Vy02qmlot-JAnkOKM7CAb2G2I9ozcoiEj_Pu_oc",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3ODkwNDQ3MjEsImV4cCI6MTc5MTYzNjcyMSwic3ViIjoiMDAxN2UxZjMtOTQyNy00NTYxLTllM2YtN2M5ZTc3MTEwNmFiIn0.kcv_Vy02qmlot-JAnkOKM7CAb2G2I9ozcoiEj_Pu_oc",
+      "type": "string"
+    },
+    {
+      "key": "bookingId",
+      "value": "DLVZ-VLT-99999",
+      "type": "string"
+    },
+    {
+      "key": "vaultId",
+      "value": "DLVZ-VLT-99999",
+      "type": "string"
+    },
+    {
+      "key": "confidentialBookingId",
+      "value": "DLVZ-VLT-99999",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "description": "Login requests to obtain customer and admin access tokens. Test scripts automatically store tokens to both collection and environment variables.",
+      "item": [
+        {
+          "name": "1.1 Customer User Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or 201\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "var token = json.data && (json.data.accessToken || json.data.token);",
+                  "if (token) {",
+                  "    pm.collectionVariables.set(\"token\", token);",
+                  "    pm.collectionVariables.set(\"accessToken\", token);",
+                  "    pm.environment.set(\"token\", token);",
+                  "    pm.environment.set(\"accessToken\", token);",
+                  "    console.log(\"Customer Token stored successfully\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"countryCode\": \"+91\",\n  \"mobileNumber\": \"{{userMobile}}\",\n  \"password\": \"{{userPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Authenticates customer user and automatically saves token into {{token}} and {{accessToken}} variables."
+          },
+          "response": []
+        },
+        {
+          "name": "1.2 Admin Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or 201\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "var json = pm.response.json();",
+                  "var token = json.data && (json.data.accessToken || json.data.token);",
+                  "if (token) {",
+                  "    pm.collectionVariables.set(\"adminAccessToken\", token);",
+                  "    pm.collectionVariables.set(\"adminToken\", token);",
+                  "    pm.environment.set(\"adminAccessToken\", token);",
+                  "    pm.environment.set(\"adminToken\", token);",
+                  "    console.log(\"Admin Token stored successfully\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Authenticates administrator and automatically saves token into {{adminAccessToken}} and {{adminToken}}."
+          },
+          "response": []
+        },
+        {
+          "name": "1.3 Get Current User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "profile"
+              ]
+            },
+            "description": "Verifies the active token and returns the current user profile."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Discovery & Pricing",
+      "item": [
+        {
+          "name": "Get Confidential Delivery Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/options",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "options"
+              ]
+            },
+            "description": "Fetches all available service types, security levels, packaging options, item types, verification methods, handling options, and access requirements."
+          },
+          "response": []
+        },
+        {
+          "name": "Calculate Vault Quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceType\": \"Vault Secure\",\n  \"securityLevel\": \"ENHANCED_SECURITY\",\n  \"packaging\": \"STANDARD_BOX\",\n  \"distanceKm\": 15\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/quote",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "quote"
+              ]
+            },
+            "description": "Calculates total pricing, base fare, security handling fee, add-on protections, and GST breakdown."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Bookings (All 9 Service Types & Lifecycles)",
+      "item": [
+        {
+          "name": "Create Booking - Vault Secure",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.booking) {",
+                  "    pm.environment.set('bookingId', jsonData.data.booking.id);",
+                  "    pm.environment.set('vaultId', jsonData.data.booking.vaultId || jsonData.data.booking.bookingNumber);",
+                  "    pm.environment.set('confidentialBookingId', jsonData.data.booking.id);",
+                  "    pm.collectionVariables.set('confidentialBookingId', jsonData.data.booking.id);",
+                  "    pm.collectionVariables.set('bookingId', jsonData.data.booking.id);",
+                  "    pm.collectionVariables.set('vaultId', jsonData.data.booking.vaultId || jsonData.data.booking.bookingNumber);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceType\": \"Vault Secure\",\n  \"itemType\": \"CONFIDENTIAL_DOCS\",\n  \"itemDescription\": \"Signed Corporate Contracts & Deeds\",\n  \"declaredValue\": 50000,\n  \"securityLevel\": \"ENHANCED_SECURITY\",\n  \"packaging\": \"STANDARD_BOX\",\n  \"verificationMethod\": \"OTP\",\n  \"timeSlot\": \"10:00 AM - 12:00 PM\",\n  \"pickupSchedule\": \"2026-09-18\",\n  \"pickup\": {\n    \"companyName\": \"Acme Legal Partners\",\n    \"contactName\": \"Vikram Malhotra\",\n    \"phoneNumber\": \"+919876543210\",\n    \"addressLine1\": \"Suite 402, Embassy Heights, MG Road\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560001\",\n    \"instructions\": \"Security check required at gate 2.\",\n    \"accessRequirements\": [\n      \"Security Check\",\n      \"Visitor Pass\",\n      \"Lift Access\",\n      \"ID Proof\",\n      \"Parking\"\n    ]\n  },\n  \"delivery\": {\n    \"companyName\": \"Apex Global Holdings\",\n    \"contactName\": \"Pooja Sharma\",\n    \"phoneNumber\": \"+919876543211\",\n    \"email\": \"pooja.sharma@apexglobal.com\",\n    \"designation\": \"Managing Director\",\n    \"addressLine1\": \"Tower B, Level 14, Manyata Tech Park\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560045\",\n    \"instructions\": \"Hand over strictly to Pooja Sharma.\",\n    \"accessRequirements\": [\n      \"Security Check\",\n      \"Visitor Pass\",\n      \"ID Proof\"\n    ]\n  },\n  \"paymentMethod\": \"PAY_ON_DELIVERY\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Booking - Vault Direct (Direct Delivery Setup)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceType\": \"Vault Direct\",\n  \"itemType\": \"FINANCIAL_DOCS\",\n  \"itemDescription\": \"Original Bank Guarantees & Share Certificates\",\n  \"declaredValue\": 150000,\n  \"securityLevel\": \"MAXIMUM_SECURITY\",\n  \"packaging\": \"TAMPER_PROOF_POUCH\",\n  \"verificationMethod\": \"OTP\",\n  \"timeSlot\": \"12:00 PM - 02:00 PM\",\n  \"pickupSchedule\": \"2026-09-18\",\n  \"pickup\": {\n    \"companyName\": \"First National Bank\",\n    \"contactName\": \"Ramesh Sen\",\n    \"phoneNumber\": \"+919876543210\",\n    \"addressLine1\": \"Branch 01, Brigade Road\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560025\",\n    \"accessRequirements\": [\n      \"Security Check\",\n      \"ID Proof\"\n    ]\n  },\n  \"delivery\": {\n    \"companyName\": \"Reserve Trust Chambers\",\n    \"contactName\": \"Kavita Rao\",\n    \"phoneNumber\": \"+919876543211\",\n    \"addressLine1\": \"Floor 3, Vittal Mallya Road\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560001\",\n    \"accessRequirements\": [\n      \"Security Check\",\n      \"Visitor Pass\"\n    ]\n  },\n  \"directDetails\": {\n    \"deliveryType\": \"Direct Delivery\",\n    \"singlePointHandling\": true,\n    \"avoidHubs\": true,\n    \"sealedSecure\": true,\n    \"deliveryAlerts\": true,\n    \"recipientInformed\": true,\n    \"instructions\": \"Zero hub transit directly from source to destination.\"\n  },\n  \"paymentMethod\": \"PAY_ON_DELIVERY\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Booking - Vault Precise (Precise Delivery Setup)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceType\": \"Vault Precise\",\n  \"itemType\": \"CONTRACTS\",\n  \"itemDescription\": \"Merger & Acquisition Binding Contracts\",\n  \"declaredValue\": 200000,\n  \"securityLevel\": \"MAXIMUM_SECURITY\",\n  \"packaging\": \"TAMPER_PROOF_POUCH\",\n  \"verificationMethod\": \"SIGNATURE\",\n  \"timeSlot\": \"02:00 PM - 04:00 PM\",\n  \"pickupSchedule\": \"2026-09-18\",\n  \"pickup\": {\n    \"companyName\": \"Horizon Partners\",\n    \"contactName\": \"Aditya Roy\",\n    \"phoneNumber\": \"+919876543210\",\n    \"addressLine1\": \"Prestige Meridian, MG Road\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560001\",\n    \"accessRequirements\": [\n      \"Security Check\",\n      \"Lift Access\"\n    ]\n  },\n  \"delivery\": {\n    \"companyName\": \"Vertex Ventures\",\n    \"contactName\": \"Sneha Reddy\",\n    \"phoneNumber\": \"+919876543211\",\n    \"addressLine1\": \"Delta Block, Sigma Tech Park, Whitefield\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560066\",\n    \"accessRequirements\": [\n      \"Security Check\",\n      \"Visitor Pass\",\n      \"ID Proof\",\n      \"Parking\"\n    ]\n  },\n  \"preciseDetails\": {\n    \"deliveryDate\": \"2026-09-18\",\n    \"timeWindow\": \"02:00 PM - 04:00 PM\",\n    \"timezone\": \"IST (GMT +05:30)\",\n    \"hardDeadline\": \"Hard Cut-off at Window End\",\n    \"earlyDeliveryNotAllowed\": true,\n    \"recipientMustBeAvailable\": true,\n    \"handlingOption\": \"Precise Delivery\",\n    \"tamperProofSealing\": true,\n    \"singlePointOfContact\": true,\n    \"secureStorageAtHubs\": true,\n    \"armedEscort\": false,\n    \"noUnattendedDelivery\": true,\n    \"photoProofAtEveryStage\": true,\n    \"instructions\": \"Deliver exactly within window. Board meeting scheduled at 02:30 PM.\"\n  },\n  \"paymentMethod\": \"PAY_ON_DELIVERY\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Booking - Vault Hand Carry (Hand Carry Setup)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceType\": \"Vault Hand Carry\",\n  \"itemType\": \"SEALED_ENVELOPE\",\n  \"itemDescription\": \"Confidential Board Resolution Dossier\",\n  \"declaredValue\": 250000,\n  \"securityLevel\": \"MAXIMUM_SECURITY\",\n  \"packaging\": \"HEAVY_DUTY_CRATE\",\n  \"verificationMethod\": \"ID_PROOF\",\n  \"timeSlot\": \"10:00 AM - 12:00 PM\",\n  \"pickupSchedule\": \"2026-09-18\",\n  \"pickup\": {\n    \"companyName\": \"OmniCorp Boardroom\",\n    \"contactName\": \"Rajeev Singhania\",\n    \"phoneNumber\": \"+919876543210\",\n    \"addressLine1\": \"UB City, Level 18, Vittal Mallya Rd\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560001\",\n    \"accessRequirements\": [\n      \"Security Check\",\n      \"Visitor Pass\",\n      \"Lift Access\",\n      \"ID Proof\"\n    ]\n  },\n  \"delivery\": {\n    \"companyName\": \"Global Capital Board\",\n    \"contactName\": \"Manish Kothari\",\n    \"phoneNumber\": \"+919876543211\",\n    \"addressLine1\": \"World Trade Center, Malleshwaram\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560055\",\n    \"accessRequirements\": [\n      \"Security Check\",\n      \"ID Proof\",\n      \"Parking\"\n    ]\n  },\n  \"handCarryDetails\": {\n    \"handCarryType\": \"Confidential Documents\",\n    \"executiveLevel\": \"Verified Executive\",\n    \"declaredValue\": \"2,50,000\",\n    \"handoverSlot\": \"Today, 02:00 PM - 04:00 PM\",\n    \"dedicatedExecutive\": true,\n    \"idCheckPickup\": true,\n    \"idCheckDelivery\": true,\n    \"signatureHandover\": true,\n    \"noUnattended\": true,\n    \"recipientPresent\": false,\n    \"realTimeTracking\": true,\n    \"chainOfCustody\": true,\n    \"photoProof\": true,\n    \"confidentialHandling\": true,\n    \"escalationContact\": true,\n    \"instructions\": \"Authorized executive custody handover only.\"\n  },\n  \"paymentMethod\": \"PAY_ON_DELIVERY\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Booking - Vault Return (Return Setup)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceType\": \"Vault Return\",\n  \"itemType\": \"CONTRACTS\",\n  \"itemDescription\": \"Vendor Agreements for Counter-Signature & Return\",\n  \"declaredValue\": 40000,\n  \"securityLevel\": \"ENHANCED_SECURITY\",\n  \"packaging\": \"DOCUMENT_SLEEVE\",\n  \"verificationMethod\": \"OTP\",\n  \"timeSlot\": \"10:00 AM - 12:00 PM\",\n  \"pickupSchedule\": \"2026-09-18\",\n  \"pickup\": {\n    \"contactName\": \"Sanjay Gupta\",\n    \"phoneNumber\": \"+919876543210\",\n    \"addressLine1\": \"Koramangala 4th Block\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560034\"\n  },\n  \"delivery\": {\n    \"contactName\": \"Deepak Verma\",\n    \"phoneNumber\": \"+919876543211\",\n    \"addressLine1\": \"HSR Layout Sector 2\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560102\"\n  },\n  \"returnDetails\": {\n    \"returnType\": \"Return to Sender\",\n    \"sameAsPickup\": true,\n    \"returnReason\": \"Document Counter-Signature & Stamp\",\n    \"rmaNumber\": \"RMA-BLR-2026-991\",\n    \"expectedReturnDate\": \"2026-09-20\",\n    \"collectionTimeWindow\": \"10:00 AM - 12:00 PM\",\n    \"instructions\": \"Collect counter-signed copies in security sleeve and return to sender.\"\n  },\n  \"paymentMethod\": \"PAY_ON_DELIVERY\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Booking - Vault Exchange (Exchange Setup)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceType\": \"Vault Exchange\",\n  \"itemType\": \"SECURE_PACKAGE\",\n  \"itemDescription\": \"Encrypted Hardware Token Exchange\",\n  \"declaredValue\": 75000,\n  \"securityLevel\": \"MAXIMUM_SECURITY\",\n  \"packaging\": \"TAMPER_PROOF_POUCH\",\n  \"verificationMethod\": \"OTP\",\n  \"timeSlot\": \"12:00 PM - 02:00 PM\",\n  \"pickupSchedule\": \"2026-09-18\",\n  \"pickup\": {\n    \"contactName\": \"IT Security Dept\",\n    \"phoneNumber\": \"+919876543210\",\n    \"addressLine1\": \"Cyber Park, Electronic City Phase 1\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560100\"\n  },\n  \"delivery\": {\n    \"contactName\": \"Regional Operations Head\",\n    \"phoneNumber\": \"+919876543211\",\n    \"addressLine1\": \"Indiranagar 100ft Road\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560038\"\n  },\n  \"exchangeDetails\": {\n    \"swapType\": \"Two-way Secure Exchange\",\n    \"returnAddress\": \"Cyber Park, Electronic City Phase 1, Bengaluru - 560100\",\n    \"itemsChecklist\": \"Check old token serial number matches S/N: HW-9981 before release.\",\n    \"swapTimeWindow\": \"12:00 PM - 02:00 PM\",\n    \"instructions\": \"Deliver new encrypted key and collect revoked key with signature confirmation.\"\n  },\n  \"paymentMethod\": \"PAY_ON_DELIVERY\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Booking - Vault Critical (Critical Setup)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceType\": \"Vault Critical\",\n  \"itemType\": \"OFFICIAL_DOCS\",\n  \"itemDescription\": \"High Stakes Tender Bidding Documents\",\n  \"declaredValue\": 500000,\n  \"securityLevel\": \"MAXIMUM_SECURITY\",\n  \"packaging\": \"HEAVY_DUTY_CRATE\",\n  \"verificationMethod\": \"PIN\",\n  \"deliveryPin\": \"948215\",\n  \"timeSlot\": \"10:00 AM - 12:00 PM\",\n  \"pickupSchedule\": \"2026-09-18\",\n  \"pickup\": {\n    \"contactName\": \"Tender Committee Secretariat\",\n    \"phoneNumber\": \"+919876543210\",\n    \"addressLine1\": \"Vidhana Soudha North Gate\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560001\"\n  },\n  \"delivery\": {\n    \"contactName\": \"Government Procurement Cell\",\n    \"phoneNumber\": \"+919876543211\",\n    \"addressLine1\": \"Infantry Road Chambers\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560001\"\n  },\n  \"criticalDetails\": {\n    \"shipmentType\": \"High Value\",\n    \"criticalLevel\": \"Level 1 - Highest\",\n    \"declaredValue\": \"5,00,000\",\n    \"slaCommitment\": \"Same Day Guaranteed by 12:00 PM\",\n    \"tamperProof\": true,\n    \"singlePointContact\": true,\n    \"secureStorage\": true,\n    \"armedEscort\": false,\n    \"noUnattended\": true,\n    \"photoProof\": true,\n    \"realTimeTracking\": true,\n    \"delayAlertThreshold\": \"15 minutes\",\n    \"instructions\": \"Armed transit protocol. Pre-shared PIN verification required.\"\n  },\n  \"paymentMethod\": \"PAY_ON_DELIVERY\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Booking - Vault MultiPoint (MultiPoint Setup)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceType\": \"Vault MultiPoint\",\n  \"itemType\": \"CONFIDENTIAL_DOCS\",\n  \"itemDescription\": \"Consolidated Multi-Office Executive Dossiers\",\n  \"declaredValue\": 120000,\n  \"securityLevel\": \"MAXIMUM_SECURITY\",\n  \"packaging\": \"STANDARD_BOX\",\n  \"verificationMethod\": \"OTP\",\n  \"timeSlot\": \"10:00 AM - 12:00 PM\",\n  \"pickupSchedule\": \"2026-09-18\",\n  \"pickup\": {\n    \"contactName\": \"Central Legal Registry\",\n    \"phoneNumber\": \"+919876543210\",\n    \"addressLine1\": \"Lavelle Road Corporate Office\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560001\"\n  },\n  \"delivery\": {\n    \"contactName\": \"Branch 1 Contact\",\n    \"phoneNumber\": \"+919876543211\",\n    \"addressLine1\": \"Stop 1: Indiranagar Branch\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560038\"\n  },\n  \"multipointDetails\": {\n    \"stops\": [\n      {\n        \"number\": 1,\n        \"address\": \"Indiranagar 100ft Rd\",\n        \"contactPerson\": \"Naveen K.\",\n        \"eta\": \"11:15 AM\",\n        \"instructions\": \"Drop Packet A\"\n      },\n      {\n        \"number\": 2,\n        \"address\": \"Whitefield ITPL Main Rd\",\n        \"contactPerson\": \"Ananya M.\",\n        \"eta\": \"01:30 PM\",\n        \"instructions\": \"Drop Packet B & collect acknowledgement\"\n      },\n      {\n        \"number\": 3,\n        \"address\": \"Electronic City Phase 1\",\n        \"contactPerson\": \"Kiran R.\",\n        \"eta\": \"03:45 PM\",\n        \"instructions\": \"Drop Packet C\"\n      }\n    ],\n    \"optimizeRoute\": true,\n    \"timeWindow\": false,\n    \"notifyRecipients\": true,\n    \"collectPod\": true,\n    \"returnOrigin\": false,\n    \"instructions\": \"Deliver in order of sequence with signed POD at each stop.\"\n  },\n  \"paymentMethod\": \"PAY_ON_DELIVERY\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Vault Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Vault Booking by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings/{{bookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings",
+                "{{bookingId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Vault Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Meeting rescheduled by recipient.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings/{{bookingId}}/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings",
+                "{{bookingId}}",
+                "cancel"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Complete Sandbox Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gateway\": \"SANDBOX_SIMULATOR\",\n  \"action\": \"SUCCESS\",\n  \"amount\": 99\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/bookings/{{bookingId}}/payments/sandbox",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "bookings",
+                "{{bookingId}}",
+                "payments",
+                "sandbox"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Live Tracking & Milestones (4 Tabs)",
+      "item": [
+        {
+          "name": "Track Vault Shipment (Timeline, Details, Security, Documents)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Response includes 6 exact milestones', function () {",
+                  "    pm.expect(jsonData.data.milestones.length).to.be.at.least(5);",
+                  "});",
+                  "pm.test('Response includes 4 tabs: timeline, details, security, documents', function () {",
+                  "    pm.expect(jsonData.data).to.have.property('timeline');",
+                  "    pm.expect(jsonData.data).to.have.property('details');",
+                  "    pm.expect(jsonData.data).to.have.property('security');",
+                  "    pm.expect(jsonData.data).to.have.property('documents');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/track/{{vaultId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "track",
+                "{{vaultId}}"
+              ]
+            },
+            "description": "Public real-time tracking endpoint returning the 6 milestones and complete payload for Timeline, Details, Security, and Documents tabs."
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Delivery OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"otp\": \"1234\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/track/{{vaultId}}/verify-otp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "track",
+                "{{vaultId}}",
+                "verify-otp"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Admin Operations",
+      "item": [
+        {
+          "name": "Admin List All Vault Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/admin/bookings?page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "admin",
+                "bookings"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Admin Update Vault Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"IN_TRANSIT\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/confidential-delivery/admin/bookings/{{bookingId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "confidential-delivery",
+                "admin",
+                "bookings",
+                "{{bookingId}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -241,6 +241,16 @@ export const createBooking: RequestHandler = async (req, res) => {
   const pickupDateDisplay = body.pickupDateDisplay || (body.pickupSchedule ? new Date(body.pickupSchedule).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Today, 10:00 AM - 12:00 PM');
   const secName = vaultSecurityLevels.find(s => s.id === body.securityLevel)?.name || 'Highly Confidential';
 
+  const serviceConfig = body.serviceConfiguration ||
+    body.returnDetails ||
+    body.exchangeDetails ||
+    body.multipointDetails ||
+    body.criticalDetails ||
+    body.handCarryDetails ||
+    body.preciseDetails ||
+    body.directDetails ||
+    null;
+
   res.status(201).json({
     status: 'success',
     data: {
@@ -279,6 +289,8 @@ export const createBooking: RequestHandler = async (req, res) => {
           'Photo Proof of Delivery',
           'Secure Handling Protocol',
         ],
+        serviceType: body.serviceType || 'Vault Secure',
+        serviceConfiguration: serviceConfig,
       },
     },
   });
@@ -398,8 +410,8 @@ export const trackVault: RequestHandler = async (req, res) => {
 
   const milestones = [
     {
-      id: 5,
-      title: 'Delivered Securely',
+      id: 6,
+      title: 'Shipment Delivered',
       time: isDelivered ? 'Today, 02:15 PM' : 'Expected today by 06:00 PM',
       description: isDelivered
         ? 'Handover completed with OTP & digital signature verification.'
@@ -411,7 +423,7 @@ export const trackVault: RequestHandler = async (req, res) => {
       icon: 'CheckCircle2',
     },
     {
-      id: 4,
+      id: 5,
       title: 'In Transit - Secure',
       time: isInTransit ? 'Today, 11:35 AM' : 'Pending pickup',
       description: 'Shipment is in high-security transit with direct routing.',
@@ -422,7 +434,7 @@ export const trackVault: RequestHandler = async (req, res) => {
       icon: 'Package',
     },
     {
-      id: 3,
+      id: 4,
       title: 'Picked Up',
       time: isPickedUp ? 'Today, 10:20 AM' : 'Scheduled today',
       description: 'Vault has been picked up & verified by our custody executive.',
@@ -433,18 +445,18 @@ export const trackVault: RequestHandler = async (req, res) => {
       icon: 'Truck',
     },
     {
-      id: 2,
+      id: 3,
       title: 'Vault Created',
       time: 'Today, 09:45 AM',
       description: 'Your confidential shipment is registered & secured in Delivez Vault.',
       location: pickupAddr ? `${pickupAddr.city}` : 'Bengaluru',
       facilityCode: 'VAULT-CORE',
       completed: true,
-      current: false,
+      current: currentStatus === 'CONFIRMED' || currentStatus === 'PAYMENT_PENDING',
       icon: 'Shield',
     },
     {
-      id: 1,
+      id: 2,
       title: 'Booking Confirmed',
       time: 'Today, 09:40 AM',
       description: 'Vault booking has been confirmed successfully.',
@@ -453,6 +465,17 @@ export const trackVault: RequestHandler = async (req, res) => {
       completed: true,
       current: false,
       icon: 'FileText',
+    },
+    {
+      id: 1,
+      title: 'Booking Initiated',
+      time: 'Today, 09:35 AM',
+      description: 'Service selected & delivery details verified.',
+      location: null,
+      facilityCode: null,
+      completed: true,
+      current: false,
+      icon: 'FileCheck',
     },
   ];
 
@@ -498,6 +521,79 @@ export const trackVault: RequestHandler = async (req, res) => {
     securityBanner: {
       title: 'Security First',
       message: 'Do not share your Vault ID or OTP with anyone except the authorized executive at handover.',
+    },
+    Timeline: {
+      milestones,
+      currentMilestone: milestones.find((m) => m.current) || milestones[0],
+    },
+    timeline: {
+      milestones,
+      currentMilestone: milestones.find((m) => m.current) || milestones[0],
+      liveTracking: {
+        lastUpdated: 'Just now',
+        location: isDelivered ? (dropoffAddr?.city || 'Recipient Location') : 'Near Hebbal Flyover, Bengaluru, Karnataka',
+        time: isDelivered ? '02:15 PM' : 'Today, 02:15 PM',
+        coordinates: { lat: 13.0358, lng: 77.597 },
+      },
+    },
+    details: {
+      vaultId: booking?.bookingNumber ?? vaultId,
+      status: currentStatus,
+      statusBadge,
+      serviceType: (booking as any)?.serviceType || 'Vault Secure',
+      pickupDate: 'Today, 10:00 AM - 12:00 PM',
+      expectedDelivery: isDelivered ? 'Delivered' : 'Today by 06:00 PM',
+      sender: {
+        name: pickupAddr?.contactName || 'Authorized Sender',
+        phone: pickupAddr?.phoneNumber || '+91 98765 43210',
+        address: pickupAddr ? `${pickupAddr.addressLine1}, ${pickupAddr.city}, ${pickupAddr.state} - ${pickupAddr.postalCode}` : 'MG Road, Bengaluru - 560001',
+      },
+      recipient: {
+        name: dropoffAddr?.contactName || 'Authorized Recipient',
+        phone: dropoffAddr?.phoneNumber || '+91 98765 43211',
+        address: dropoffAddr ? `${dropoffAddr.addressLine1}, ${dropoffAddr.city}, ${dropoffAddr.state} - ${dropoffAddr.postalCode}` : 'Indiranagar, Bengaluru - 560038',
+        designation: 'Authorized Signatory',
+        verificationMethod: 'OTP Verification',
+      },
+      item: {
+        type: 'Confidential Documents',
+        description: booking?.documentDescription || 'Confidential Shipment in Delivez Vault',
+        declaredValue: Number(booking?.declaredValue || 50000),
+      },
+      packaging: {
+        type: 'Tamper Proof Pouch',
+        sealNumber: 'SEAL-DLVZ-' + (booking?.bookingNumber?.slice(-6) || '78942'),
+      },
+    },
+    security: {
+      securityLevel: 'Maximum Security',
+      encryptionStandard: 'AES-256 End-to-End Encrypted',
+      securityBadge: 'Norton SECURED',
+      controls: [
+        { name: 'Tamper-Proof Sealing', active: true, description: 'Tamper-evident high security seal' },
+        { name: 'Single Point of Contact', active: true, description: 'Direct dedicated custody handover' },
+        { name: 'Secure Storage at Hubs', active: true, description: 'Biometrically locked vault storage' },
+        { name: 'Armed Escort (If Available)', active: false, description: 'Armed security personnel for critical consignments' },
+        { name: 'No Unattended Delivery', active: true, description: 'Never left unattended under any circumstance' },
+        { name: 'Photo Proof at Every Stage', active: true, description: 'Time-stamped photographic evidence captured' },
+        { name: 'Chain of Custody', active: true, description: 'Continuous digital custody audit log' },
+      ],
+      custodyLog: [
+        { checkpoint: 'Pickup Completed', executive: 'Vikram S. (EXEC-7729)', time: '10:20 AM', verified: true },
+        { checkpoint: 'Hub Secure Transfer', executive: 'Vault Team (VAULT-BLR)', time: '11:00 AM', verified: true },
+        { checkpoint: 'In Transit Security Seal Check', executive: 'Transit Supervisor', time: '11:35 AM', verified: true },
+      ],
+    },
+    documents: {
+      digitalWaybill: `WB-${booking?.bookingNumber ?? vaultId}`,
+      verificationProof: `VERIF-${booking?.bookingNumber ?? vaultId}`,
+      complianceCertificate: 'SEC-COMPLIANCE-AES256',
+      tamperSealNumber: 'SEAL-DLVZ-' + (booking?.bookingNumber?.slice(-6) || '78942'),
+      files: [
+        { name: 'Digital_Waybill.pdf', size: '245 KB', type: 'PDF' },
+        { name: 'Chain_Of_Custody_Report.pdf', size: '312 KB', type: 'PDF' },
+        { name: 'Compliance_Certificate.pdf', size: '180 KB', type: 'PDF' },
+      ],
     },
   };
 
