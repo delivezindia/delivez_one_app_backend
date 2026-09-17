@@ -24,6 +24,7 @@ import {
   updateAdminCourierStatus,
   recordAdminCourierPOD,
   listAdminConfidentialBookings,
+  getAdminConfidentialBooking,
   updateAdminConfidentialStatus,
   listAdminForgotBookings,
   updateAdminForgotStatus,
@@ -105,6 +106,7 @@ adminRouter.patch('/courier/bookings/:id/status', updateAdminCourierStatus);
 adminRouter.post('/courier/bookings/:id/pod', recordAdminCourierPOD);
 
 adminRouter.get('/confidential/bookings', listAdminConfidentialBookings);
+adminRouter.get('/confidential/bookings/:id', getAdminConfidentialBooking);
 adminRouter.patch('/confidential/bookings/:id/status', updateAdminConfidentialStatus);
 
 adminRouter.get('/forgot/bookings', listAdminForgotBookings);

@@ -175,6 +175,7 @@ model User {
   forgotSomethingBookings     ForgotSomethingBooking[]
   returnPickupBookings        ReturnPickupBooking[]
   giftDeliveryBookings        GiftDeliveryBooking[]
+  luggageDeliveryBookings     LuggageDeliveryBooking[]
 
   @@unique([countryCode, mobileNumber])
   @@index([mobileNumber])
@@ -1094,3 +1095,48 @@ model GiftDeliveryConfig {
 }
 
 
+
+
+model LuggageDeliveryBooking {
+  id                    String    @id @default(uuid())
+  bookingNumber         String    @unique @map("booking_number")
+  userId                String    @map("user_id")
+  serviceId             String    @map("service_id")
+  routeType             String    @default("single_trip") @map("route_type")
+  status                String    @default("BOOKING_CONFIRMED") @map("status")
+  idempotencyKey        String    @map("idempotency_key")
+  pickupDetails         Json      @map("pickup_details")
+  deliveryDetails       Json      @map("delivery_details")
+  hotelDetails          Json?     @map("hotel_details")
+  flightDetails         Json?     @map("flight_details")
+  multiStops            Json?     @map("multi_stops")
+  luggageItems          Json      @map("luggage_items")
+  protections           Json?     @map("protections")
+  addOns                Json?     @map("add_ons")
+  airportAssistance     Json?     @map("airport_assistance")
+  schedule              Json      @map("schedule")
+  gstInvoice            Json?     @map("gst_invoice")
+  pricingBreakdown      Json      @map("pricing_breakdown")
+  totalAmount           Decimal   @map("total_amount") @db.Decimal(12, 2)
+  paymentMethod         String    @default("WALLET") @map("payment_method")
+  paymentStatus         String    @default("PENDING") @map("payment_status")
+  paymentReference      String?   @map("payment_reference")
+  pickupOtp             String?   @map("pickup_otp")
+  deliveryOtp           String?   @map("delivery_otp")
+  currentMilestoneIndex Int       @default(0) @map("current_milestone_index")
+  milestones            Json      @map("milestones")
+  podData               Json?     @map("pod_data")
+  driverDetails         Json?     @map("driver_details")
+  cancellationReason    String?   @map("cancellation_reason")
+  cancelledAt           DateTime? @map("cancelled_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, idempotencyKey])
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@index([bookingNumber])
+  @@map("luggage_delivery_bookings")
+}

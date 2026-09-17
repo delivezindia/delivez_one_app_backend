@@ -1,3 +1,4 @@
+import { luggageDeliveryRouter } from './modules/luggage-delivery/luggage-delivery.routes.js';
 import { publicMoreServicesRouter, adminMoreServicesRouter } from './modules/more-services/more-services.routes.js';
 import { publicServiceSlidersRouter, adminServiceSlidersRouter, getServiceSliderBySlugHandler } from './modules/service-sliders/service-sliders.routes.js';
 import { publicKnowMoreRouter, adminKnowMoreRouter } from './modules/know-more/know-more.routes.js';
@@ -41,7 +42,8 @@ apiRouter.use('/auth', authRouter);
 apiRouter.use('/courier-delivery', personalCourierRouter);
 apiRouter.use('/courier', personalCourierRouter);
 apiRouter.use('/personal-courier', personalCourierRouter);
-apiRouter.use('/luggage-delivery', confidentialCourierRouter);
+apiRouter.use('/luggage-delivery', luggageDeliveryRouter);
+apiRouter.use('/airport-luggage', luggageDeliveryRouter);
 apiRouter.use('/confidential-courier', confidentialCourierRouter);
 apiRouter.use('/confidential-delivery', confidentialDeliveryRouter);
 apiRouter.use('/vault', confidentialDeliveryRouter);

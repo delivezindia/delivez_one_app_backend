@@ -380,26 +380,19 @@ export const listAllUnifiedOrders: RequestHandler = async (req, res) => {
   });
 
   confidentialOrders.forEach((o: any) => {
-    const pickupAddr = o.addresses?.find((a: any) => a.type === 'PICKUP') || o.addresses?.[0];
-    const dropoffAddr = o.addresses?.find((a: any) => a.type === 'DROPOFF') || o.addresses?.[1];
-
+    const s = serializeAdminConfidentialBooking(o);
     unified.push({
-      id: o.id,
-      bookingNumber: o.bookingNumber,
+      ...s,
       serviceKey: 'confidential-courier',
-      serviceName: 'Confidential Courier / Luggage',
-      customerName: o.user?.fullName || pickupAddr?.contactName || 'Customer',
-      customerPhone: o.user?.mobileNumber || pickupAddr?.phoneNumber || '',
-      recipientName: dropoffAddr?.contactName || 'Authorized Recipient',
-      destination: dropoffAddr ? `${dropoffAddr.city || ''} (${o.securityLevel} Vault)` : `${o.securityLevel} Security Vault`,
-      itemSummary: `${o.documentType} (${o.envelopeSize})`,
-      amount: Number(o.totalAmount || 0),
-      paymentMethod: o.paymentMethod,
-      paymentStatus: o.paymentStatus,
-      status: o.status,
+      serviceName: 'Delivez Vault (Confidential)',
+      customerName: s.user?.fullName || s.pickup?.contactName || 'Customer',
+      customerPhone: s.user?.mobileNumber || s.pickup?.phoneNumber || '',
+      recipientName: s.dropoff?.contactName || 'Authorized Recipient',
+      destination: s.dropoff ? `${s.dropoff.city || ''} (${s.securityTitle || s.securityLevel} Vault)` : `${s.securityTitle || s.securityLevel} Security Vault`,
+      itemSummary: `${s.categoryTitle || s.documentType} (${s.envelopeTitle || s.envelopeSize} • ${s.dimensionsFormatted})`,
+      amount: Number(s.totalAmount || 0),
       assignedPartner: 'Armored Vault Courier',
       partnerPhone: '',
-      createdAt: o.createdAt,
     });
   });
 
@@ -1624,11 +1617,188 @@ export const recordAdminCourierPOD: RequestHandler = async (req, res) => {
 };
 
 // --- CONFIDENTIAL COURIER ---
+
+const CONFIDENTIAL_ENVELOPE_SPECS: Record<string, { title: string; lengthCm: number; widthCm: number; heightCm: number; formatted: string; maxPages: number }> = {
+  A4: { title: 'A4 Secure Envelope', lengthCm: 29.7, widthCm: 21.0, heightCm: 1.5, formatted: '29.7 × 21.0 × 1.5 cm', maxPages: 100 },
+  LEGAL: { title: 'Legal Secure Envelope', lengthCm: 35.6, widthCm: 21.6, heightCm: 2.0, formatted: '35.6 × 21.6 × 2.0 cm', maxPages: 200 },
+  LARGE: { title: 'Large Document Pouch', lengthCm: 40.0, widthCm: 30.0, heightCm: 3.5, formatted: '40.0 × 30.0 × 3.5 cm', maxPages: 500 },
+};
+
+const CONFIDENTIAL_DOC_TITLES: Record<string, string> = {
+  // 9 Document Category Cards:
+  CONFIDENTIAL_DOCS: 'Confidential Documents',
+  LEGAL_DOCS: 'Legal Documents',
+  LEGAL: 'Legal Documents',
+  CONTRACTS: 'Contracts / Agreements',
+  BUSINESS: 'Business Documents',
+  FINANCIAL_DOCS: 'Financial Documents',
+  FINANCIAL: 'Financial Documents',
+  OFFICIAL_DOCS: 'Official Documents',
+  CERTIFICATES: 'Original Certificates',
+  IDENTITY: 'Identity Documents',
+  SEALED_ENVELOPE: 'Sealed Envelope',
+  SENSITIVE_RECORDS: 'Sensitive Records',
+  MEDICAL: 'Medical Records',
+  SECURE_PACKAGE: 'Secure Package',
+  OTHER: 'Other Confidential Documents',
+};
+
+export const CONFIDENTIAL_VAULT_SERVICES: Record<string, { title: string; tag: string; tagColor: string; time: string }> = {
+  VAULT_SECURE: { title: 'Vault Secure', tag: 'Recommended', tagColor: '#FFCC00', time: '1-2 Days' },
+  VAULT_PRIORITY: { title: 'Vault Priority', tag: 'Fastest', tagColor: '#D32F2F', time: 'Same / Next Day' },
+  VAULT_DIRECT: { title: 'Vault Direct', tag: '', tagColor: '', time: '1-2 Days' },
+  VAULT_PRECISE: { title: 'Vault Precise', tag: '', tagColor: '', time: 'Scheduled' },
+  VAULT_HAND_CARRY: { title: 'Vault Hand Carry', tag: '', tagColor: '', time: '1-2 Days' },
+  VAULT_RETURN: { title: 'Vault Return', tag: '', tagColor: '', time: '1-3 Days' },
+  VAULT_EXCHANGE: { title: 'Vault Exchange', tag: '', tagColor: '', time: '1-3 Days' },
+  VAULT_CRITICAL: { title: 'Vault Critical', tag: '', tagColor: '', time: 'Same Day' },
+  VAULT_MULTIPOINT: { title: 'Vault MultiPoint', tag: '', tagColor: '', time: '1-3 Days' },
+  STANDARD: { title: 'Vault Secure', tag: 'Recommended', tagColor: '#FFCC00', time: '1-2 Days' },
+  PRIORITY: { title: 'Vault Priority', tag: 'Fastest', tagColor: '#D32F2F', time: 'Same / Next Day' },
+  EXPRESS: { title: 'Vault Direct', tag: '', tagColor: '', time: '1-2 Days' },
+  EXACT_TIME: { title: 'Vault Precise', tag: '', tagColor: '', time: 'Scheduled' },
+};
+
+const CONFIDENTIAL_SECURITY_TITLES: Record<string, string> = {
+  SECURE_SEAL: 'Secure Seal',
+  TAMPER_EVIDENT: 'Tamper Evident',
+  CHAIN_OF_CUSTODY: 'Chain of Custody',
+};
+
+const CONFIDENTIAL_HANDOVER_TITLES: Record<string, string> = {
+  OTP: 'OTP Verification',
+  SIGNATURE: 'Recipient Signature',
+  OTP_AND_SIGNATURE: 'OTP + Signature',
+};
+
+const CONFIDENTIAL_SPEED_TITLES: Record<string, string> = {
+  STANDARD: 'Standard Secure',
+  PRIORITY: 'Priority Secure',
+  EXPRESS: 'Express Direct',
+  EXACT_TIME: 'Exact-Time Handover',
+};
+
+export function resolveVaultServiceKey(b: any): string {
+  const desc = String(b.documentDescription || '');
+  if (desc.includes('MultiPoint') || desc.includes('Multi-Office')) return 'VAULT_MULTIPOINT';
+  if (desc.includes('Critical') || desc.includes('Armed')) return 'VAULT_CRITICAL';
+  if (desc.includes('Exchange')) return 'VAULT_EXCHANGE';
+  if (desc.includes('Return') || b.requiresReturn) return 'VAULT_RETURN';
+  if (desc.includes('Hand Carry') || desc.includes('Luggage')) return 'VAULT_HAND_CARRY';
+  if (desc.includes('Precise') || b.scheduleType === 'SCHEDULED') return 'VAULT_PRECISE';
+  if (desc.includes('Direct')) return 'VAULT_DIRECT';
+  if (desc.includes('Priority')) return 'VAULT_PRIORITY';
+  if (desc.includes('Secure')) return 'VAULT_SECURE';
+
+  const speedKey = String(b.deliverySpeed || '').toUpperCase();
+  if (speedKey === 'EXACT_TIME') return 'VAULT_PRECISE';
+  if (speedKey === 'EXPRESS') return 'VAULT_DIRECT';
+  if (speedKey === 'PRIORITY') return 'VAULT_PRIORITY';
+  return 'VAULT_SECURE';
+}
+
+const serializeAdminConfidentialBooking = (booking: any) => {
+  const pickupAddr = booking.addresses?.find((a: any) => a.kind === 'PICKUP' || a.type === 'PICKUP') || booking.addresses?.[0];
+  const dropoffAddr = booking.addresses?.find((a: any) => a.kind === 'DROPOFF' || a.type === 'DROPOFF') || booking.addresses?.[1];
+
+  const envKey = String(booking.envelopeSize || 'A4').toUpperCase();
+  const envSpec = CONFIDENTIAL_ENVELOPE_SPECS[envKey] || {
+    title: envKey,
+    lengthCm: 29.7,
+    widthCm: 21.0,
+    heightCm: 1.5,
+    formatted: '29.7 × 21.0 × 1.5 cm',
+    maxPages: 100,
+  };
+
+  const docKey = String(booking.documentType || 'OTHER').toUpperCase();
+  const categoryTitle = CONFIDENTIAL_DOC_TITLES[docKey] || docKey.replace(/_/g, ' ');
+
+  const secKey = String(booking.securityLevel || 'TAMPER_EVIDENT').toUpperCase();
+  const securityTitle = CONFIDENTIAL_SECURITY_TITLES[secKey] || secKey.replace(/_/g, ' ');
+
+  const handKey = String(booking.handoverMethod || 'OTP_AND_SIGNATURE').toUpperCase();
+  const handoverTitle = CONFIDENTIAL_HANDOVER_TITLES[handKey] || handKey.replace(/_/g, ' ');
+
+  const speedKey = String(booking.deliverySpeed || 'PRIORITY').toUpperCase();
+  const speedTitle = CONFIDENTIAL_SPEED_TITLES[speedKey] || speedKey.replace(/_/g, ' ');
+  const srvKey = resolveVaultServiceKey(booking);
+  const vaultService = CONFIDENTIAL_VAULT_SERVICES[srvKey] || CONFIDENTIAL_VAULT_SERVICES['VAULT_SECURE'] || { title: 'Vault Secure', tag: 'Recommended', tagColor: '#FFCC00', time: '1-2 Days' };
+
+  return {
+    ...booking,
+    vaultId: booking.bookingNumber,
+    serviceType: vaultService.title,
+    vaultServiceKey: srvKey,
+    vaultServiceType: vaultService.title,
+    vaultServiceTag: vaultService.tag,
+    vaultServiceTime: vaultService.time,
+    categoryTitle,
+    documentClassification: categoryTitle,
+    envelopeTitle: envSpec.title,
+    envelopeDimensions: envSpec.formatted,
+    dimensions: {
+      lengthCm: envSpec.lengthCm,
+      widthCm: envSpec.widthCm,
+      heightCm: envSpec.heightCm,
+      formatted: envSpec.formatted,
+    },
+    dimensionsFormatted: envSpec.formatted,
+    maxPages: envSpec.maxPages,
+    securityTitle,
+    handoverTitle,
+    speedTitle,
+    declaredValue: booking.declaredValue != null ? Number(booking.declaredValue) : 0,
+    distanceKm: booking.distanceKm != null ? Number(booking.distanceKm) : null,
+    baseCharge: Number(booking.baseCharge ?? 0),
+    distanceCharge: Number(booking.distanceCharge ?? 0),
+    securityCharge: Number(booking.securityCharge ?? 0),
+    handoverCharge: Number(booking.handoverCharge ?? 0),
+    originalsCharge: Number(booking.originalsCharge ?? 0),
+    returnCharge: Number(booking.returnCharge ?? 0),
+    taxAmount: Number(booking.taxAmount ?? 0),
+    totalAmount: Number(booking.totalAmount ?? 0),
+    pickup: pickupAddr,
+    dropoff: dropoffAddr,
+    pickupDetails: pickupAddr ? {
+      name: pickupAddr.contactName,
+      phone: `${pickupAddr.countryCode || '+91'} ${pickupAddr.phoneNumber}`.trim(),
+      address: [pickupAddr.addressLine1, pickupAddr.addressLine2, pickupAddr.landmark, `${pickupAddr.city}, ${pickupAddr.state} - ${pickupAddr.postalCode}`, pickupAddr.country].filter(Boolean).join(', '),
+      addressLine1: pickupAddr.addressLine1,
+      addressLine2: pickupAddr.addressLine2,
+      city: pickupAddr.city,
+      state: pickupAddr.state,
+      postalCode: pickupAddr.postalCode,
+      landmark: pickupAddr.landmark,
+      country: pickupAddr.country,
+      latitude: pickupAddr.latitude != null ? Number(pickupAddr.latitude) : null,
+      longitude: pickupAddr.longitude != null ? Number(pickupAddr.longitude) : null,
+    } : null,
+    deliveryDetails: dropoffAddr ? {
+      name: dropoffAddr.contactName,
+      phone: `${dropoffAddr.countryCode || '+91'} ${dropoffAddr.phoneNumber}`.trim(),
+      address: [dropoffAddr.addressLine1, dropoffAddr.addressLine2, dropoffAddr.landmark, `${dropoffAddr.city}, ${dropoffAddr.state} - ${dropoffAddr.postalCode}`, dropoffAddr.country].filter(Boolean).join(', '),
+      addressLine1: dropoffAddr.addressLine1,
+      addressLine2: dropoffAddr.addressLine2,
+      city: dropoffAddr.city,
+      state: dropoffAddr.state,
+      postalCode: dropoffAddr.postalCode,
+      landmark: dropoffAddr.landmark,
+      country: dropoffAddr.country,
+      latitude: dropoffAddr.latitude != null ? Number(dropoffAddr.latitude) : null,
+      longitude: dropoffAddr.longitude != null ? Number(dropoffAddr.longitude) : null,
+    } : null,
+  };
+};
+
+
 export const listAdminConfidentialBookings: RequestHandler = async (req, res) => {
   const page = Math.max(1, parseInt(String(req.query.page || '1'), 10));
   const limit = Math.min(50, Math.max(1, parseInt(String(req.query.limit || '20'), 10)));
   const search = typeof req.query.search === 'string' ? req.query.search.trim().toLowerCase() : '';
   const status = typeof req.query.status === 'string' ? req.query.status : 'ALL';
+  const category = typeof req.query.category === 'string' ? req.query.category.trim() : 'ALL';
+  const serviceType = typeof req.query.serviceType === 'string' ? req.query.serviceType.trim() : 'ALL';
 
   const where: Prisma.ConfidentialCourierBookingWhereInput = {};
   if (status !== 'ALL') where.status = status as any;
@@ -1637,10 +1807,96 @@ export const listAdminConfidentialBookings: RequestHandler = async (req, res) =>
       { bookingNumber: { contains: search, mode: 'insensitive' } },
       { user: { fullName: { contains: search, mode: 'insensitive' } } },
       { user: { mobileNumber: { contains: search } } },
+      { documentDescription: { contains: search, mode: 'insensitive' } },
     ];
   }
 
-  const [total, bookings] = await Promise.all([
+  // 9 Document Category Cards filtering:
+  if (category !== 'ALL') {
+    const catUpper = category.toUpperCase();
+    if (catUpper === 'LEGAL_DOCS' || catUpper === 'LEGAL') {
+      where.documentType = 'LEGAL';
+    } else if (catUpper === 'FINANCIAL_DOCS' || catUpper === 'FINANCIAL') {
+      where.documentType = 'FINANCIAL';
+    } else if (catUpper === 'CONTRACTS' || catUpper === 'BUSINESS') {
+      where.documentType = 'BUSINESS';
+    } else if (catUpper === 'OFFICIAL_DOCS') {
+      where.OR = [
+        { documentType: 'BUSINESS' },
+        { documentDescription: { contains: 'Official', mode: 'insensitive' } }
+      ];
+    } else if (catUpper === 'CERTIFICATES' || catUpper === 'IDENTITY') {
+      where.documentType = 'IDENTITY';
+    } else if (catUpper === 'SENSITIVE_RECORDS' || catUpper === 'MEDICAL') {
+      where.documentType = 'MEDICAL';
+    } else if (catUpper === 'SEALED_ENVELOPE') {
+      where.OR = [
+        { documentDescription: { contains: 'Sealed Envelope', mode: 'insensitive' } },
+        { documentType: 'OTHER' }
+      ];
+    } else if (catUpper === 'SECURE_PACKAGE') {
+      where.OR = [
+        { documentDescription: { contains: 'Secure Package', mode: 'insensitive' } },
+        { documentType: 'OTHER' }
+      ];
+    } else if (catUpper === 'CONFIDENTIAL_DOCS') {
+      where.OR = [
+        { documentDescription: { contains: 'Confidential', mode: 'insensitive' } },
+        { documentType: 'OTHER' }
+      ];
+    } else if (['LEGAL', 'FINANCIAL', 'BUSINESS', 'IDENTITY', 'MEDICAL', 'OTHER'].includes(catUpper)) {
+      where.documentType = catUpper as any;
+    } else {
+      where.documentDescription = { contains: category, mode: 'insensitive' };
+    }
+  }
+
+  // 9 Vault Service Plans filtering:
+  if (serviceType !== 'ALL') {
+    const srv = serviceType.replace(/_/g, ' ').toLowerCase();
+    if (srv.includes('multipoint')) {
+      where.OR = [
+        { documentDescription: { contains: 'MultiPoint', mode: 'insensitive' } },
+        { documentDescription: { contains: 'Multi-Office', mode: 'insensitive' } },
+      ];
+    } else if (srv.includes('critical')) {
+      where.OR = [
+        { documentDescription: { contains: 'Critical', mode: 'insensitive' } },
+        { documentDescription: { contains: 'Armed', mode: 'insensitive' } },
+      ];
+    } else if (srv.includes('exchange')) {
+      where.documentDescription = { contains: 'Exchange', mode: 'insensitive' };
+    } else if (srv.includes('return')) {
+      where.OR = [
+        { requiresReturn: true },
+        { documentDescription: { contains: 'Return', mode: 'insensitive' } },
+      ];
+    } else if (srv.includes('hand carry')) {
+      where.OR = [
+        { documentDescription: { contains: 'Hand Carry', mode: 'insensitive' } },
+        { documentDescription: { contains: 'Luggage', mode: 'insensitive' } },
+      ];
+    } else if (srv.includes('precise')) {
+      where.OR = [
+        { scheduleType: 'SCHEDULED' },
+        { documentDescription: { contains: 'Precise', mode: 'insensitive' } },
+      ];
+    } else if (srv.includes('direct')) {
+      where.documentDescription = { contains: 'Direct', mode: 'insensitive' };
+    } else if (srv.includes('priority')) {
+      where.OR = [
+        { deliverySpeed: 'PRIORITY' },
+        { documentDescription: { contains: 'Priority', mode: 'insensitive' } },
+      ];
+    } else if (srv.includes('secure')) {
+      where.OR = [
+        { documentDescription: { contains: 'Secure', mode: 'insensitive' } },
+        { documentDescription: null },
+      ];
+    }
+  }
+
+  const [total, rawBookings, docGroups, speedGroups] = await Promise.all([
     prisma.confidentialCourierBooking.count({ where }),
     prisma.confidentialCourierBooking.findMany({
       where,
@@ -1652,20 +1908,96 @@ export const listAdminConfidentialBookings: RequestHandler = async (req, res) =>
         addresses: true,
       },
     }),
+    prisma.confidentialCourierBooking.groupBy({
+      by: ['documentType'],
+      _count: { _all: true },
+    }),
+    prisma.confidentialCourierBooking.groupBy({
+      by: ['deliverySpeed'],
+      _count: { _all: true },
+    }),
   ]);
+
+  const bookings = rawBookings.map((b: any) => serializeAdminConfidentialBooking(b));
+
+  // Build dynamic counts for the 9 document category cards
+  const docMap: Record<string, number> = {};
+  docGroups.forEach((g: any) => {
+    docMap[g.documentType] = g._count._all;
+  });
+
+  const categoryCounts: Record<string, number> = {
+    ALL: docGroups.reduce((acc: number, g: any) => acc + g._count._all, 0),
+    CONFIDENTIAL_DOCS: docMap['OTHER'] || 0,
+    LEGAL_DOCS: docMap['LEGAL'] || 0,
+    CONTRACTS: docMap['BUSINESS'] || 0,
+    FINANCIAL_DOCS: docMap['FINANCIAL'] || 0,
+    OFFICIAL_DOCS: docMap['BUSINESS'] || 0,
+    CERTIFICATES: docMap['IDENTITY'] || 0,
+    SEALED_ENVELOPE: docMap['OTHER'] || 0,
+    SENSITIVE_RECORDS: docMap['MEDICAL'] || 0,
+    SECURE_PACKAGE: docMap['OTHER'] || 0,
+  };
+
+  // Build dynamic counts for the 9 vault service cards
+  const allBookingsForCounts = await prisma.confidentialCourierBooking.findMany({
+    select: { documentDescription: true, requiresReturn: true, scheduleType: true, deliverySpeed: true }
+  });
+
+  const serviceCounts: Record<string, number> = {
+    ALL: allBookingsForCounts.length,
+    VAULT_SECURE: 0,
+    VAULT_PRIORITY: 0,
+    VAULT_DIRECT: 0,
+    VAULT_PRECISE: 0,
+    VAULT_HAND_CARRY: 0,
+    VAULT_RETURN: 0,
+    VAULT_EXCHANGE: 0,
+    VAULT_CRITICAL: 0,
+    VAULT_MULTIPOINT: 0,
+  };
+
+  allBookingsForCounts.forEach((b: any) => {
+    const k = resolveVaultServiceKey(b);
+    if (serviceCounts[k] !== undefined) {
+      serviceCounts[k] += 1;
+    }
+  });
 
   res.status(200).json({
     status: 'success',
     data: {
       bookings,
+      categoryCounts,
+      serviceCounts,
       pagination: { total, page, limit, totalPages: Math.ceil(total / limit) || 1 },
     },
   });
 };
 
+export const getAdminConfidentialBooking: RequestHandler = async (req, res) => {
+  const id = String(req.params.id);
+  const booking = await prisma.confidentialCourierBooking.findFirst({
+    where: { OR: [{ id }, { bookingNumber: id }] },
+    include: {
+      user: { select: publicUserSelect },
+      addresses: true,
+    },
+  });
+
+  if (!booking) {
+    throw new AppError(404, 'Confidential courier booking not found.');
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: { booking: serializeAdminConfidentialBooking(booking) },
+  });
+};
+
 export const updateAdminConfidentialStatus: RequestHandler = async (req, res) => {
   const id = String(req.params.id);
-  const { status } = req.body;
+  const { status, cancellationReason } = req.body;
 
   const existing = await prisma.confidentialCourierBooking.findFirst({
     where: { OR: [{ id }, { bookingNumber: id }] },
@@ -1674,13 +2006,21 @@ export const updateAdminConfidentialStatus: RequestHandler = async (req, res) =>
 
   const updated = await prisma.confidentialCourierBooking.update({
     where: { id: existing.id },
-    data: { status: status as any },
+    data: {
+      status: status as any,
+      ...(status === 'CONFIRMED' ? { confirmedAt: new Date() } : {}),
+      ...(status === 'CANCELLED' ? { cancelledAt: new Date(), cancellationReason: cancellationReason || 'Cancelled by Administrator' } : {}),
+    },
+    include: {
+      user: { select: publicUserSelect },
+      addresses: true,
+    },
   });
 
   res.status(200).json({
     status: 'success',
     message: `Status updated to ${status}`,
-    data: { booking: updated },
+    data: { booking: serializeAdminConfidentialBooking(updated) },
   });
 };
 
@@ -1839,26 +2179,7 @@ export const updateUnifiedOrderStatus: RequestHandler = async (req, res) => {
         ...(giftStatus === 'CANCELLED' ? { cancelledAt: new Date() } : {}),
       },
     });
-  } else if (serviceKey.includes('courier') || serviceKey.includes('personal')) {
-    const existing = await prisma.courierBooking.findFirst({
-      where: { OR: [{ id }, { bookingNumber: id }] },
-    });
-    if (!existing) throw new AppError(404, 'Courier booking not found.');
-
-    let courierStatus: any = status;
-    if (!['PAYMENT_PENDING', 'CONFIRMED', 'PICKUP_ASSIGNED', 'PICKED_UP', 'IN_TRANSIT', 'DELIVERED', 'CANCELLED'].includes(courierStatus)) {
-      courierStatus = 'CONFIRMED';
-    }
-
-    updatedOrder = await prisma.courierBooking.update({
-      where: { id: existing.id },
-      data: {
-        status: courierStatus,
-        ...(courierStatus === 'CONFIRMED' ? { confirmedAt: new Date() } : {}),
-        ...(courierStatus === 'CANCELLED' ? { cancelledAt: new Date() } : {}),
-      },
-    });
-  } else if (serviceKey.includes('confidential') || serviceKey.includes('luggage')) {
+  } else if (serviceKey.includes('confidential') || serviceKey.includes('vault')) {
     const existing = await prisma.confidentialCourierBooking.findFirst({
       where: { OR: [{ id }, { bookingNumber: id }] },
     });
@@ -1875,6 +2196,25 @@ export const updateUnifiedOrderStatus: RequestHandler = async (req, res) => {
         status: confStatus,
         ...(confStatus === 'CONFIRMED' ? { confirmedAt: new Date() } : {}),
         ...(confStatus === 'CANCELLED' ? { cancelledAt: new Date() } : {}),
+      },
+    });
+  } else if (serviceKey.includes('courier') || serviceKey.includes('personal') || serviceKey.includes('luggage')) {
+    const existing = await prisma.courierBooking.findFirst({
+      where: { OR: [{ id }, { bookingNumber: id }] },
+    });
+    if (!existing) throw new AppError(404, 'Courier booking not found.');
+
+    let courierStatus: any = status;
+    if (!['PAYMENT_PENDING', 'CONFIRMED', 'PICKUP_ASSIGNED', 'PICKED_UP', 'IN_TRANSIT', 'DELIVERED', 'CANCELLED'].includes(courierStatus)) {
+      courierStatus = 'CONFIRMED';
+    }
+
+    updatedOrder = await prisma.courierBooking.update({
+      where: { id: existing.id },
+      data: {
+        status: courierStatus,
+        ...(courierStatus === 'CONFIRMED' ? { confirmedAt: new Date() } : {}),
+        ...(courierStatus === 'CANCELLED' ? { cancelledAt: new Date() } : {}),
       },
     });
   } else if (serviceKey.includes('forgot')) {
@@ -2037,17 +2377,17 @@ export const cancelUnifiedOrder: RequestHandler = async (req, res) => {
       where: { id: existing.id },
       data: { status: 'CANCELLED', cancellationReason, cancelledAt: new Date() },
     });
-  } else if (serviceKey.includes('courier') || serviceKey.includes('personal')) {
-    const existing = await prisma.courierBooking.findFirst({ where: { OR: [{ id }, { bookingNumber: id }] } });
-    if (!existing) throw new AppError(404, 'Order not found.');
-    await prisma.courierBooking.update({
+  } else if (serviceKey.includes('confidential') || serviceKey.includes('vault')) {
+    const existing = await prisma.confidentialCourierBooking.findFirst({ where: { OR: [{ id }, { bookingNumber: id }] } });
+    if (!existing) throw new AppError(404, 'Confidential courier booking not found.');
+    await prisma.confidentialCourierBooking.update({
       where: { id: existing.id },
       data: { status: 'CANCELLED', cancellationReason, cancelledAt: new Date() },
     });
-  } else if (serviceKey.includes('confidential') || serviceKey.includes('luggage')) {
-    const existing = await prisma.confidentialCourierBooking.findFirst({ where: { OR: [{ id }, { bookingNumber: id }] } });
+  } else if (serviceKey.includes('courier') || serviceKey.includes('personal') || serviceKey.includes('luggage')) {
+    const existing = await prisma.courierBooking.findFirst({ where: { OR: [{ id }, { bookingNumber: id }] } });
     if (!existing) throw new AppError(404, 'Order not found.');
-    await prisma.confidentialCourierBooking.update({
+    await prisma.courierBooking.update({
       where: { id: existing.id },
       data: { status: 'CANCELLED', cancellationReason, cancelledAt: new Date() },
     });
