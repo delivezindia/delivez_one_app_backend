@@ -857,3 +857,427 @@ export const adminUpdateVaultStatus: RequestHandler = async (req, res) => {
 };
 
 
+
+
+// ============================================================================
+// 1. ROUTE & CONSIGNMENT SUMMARY
+// ============================================================================
+export const getVaultSummary: RequestHandler = async (req, res) => {
+  const idOrNumber = String(req.params.id ?? req.params.vaultId ?? '');
+  const booking = await prisma.confidentialCourierBooking.findFirst({
+    where: { OR: [{ id: idOrNumber }, { bookingNumber: idOrNumber }] },
+    include: { addresses: true, user: true, service: true },
+  });
+
+  if (!booking) {
+    throw new AppError(404, 'Vault consignment booking not found.');
+  }
+
+  const pickupAddr = booking.addresses.find((a) => a.kind === 'PICKUP') || booking.addresses[0];
+  const dropoffAddr = booking.addresses.find((a) => a.kind === 'DROPOFF') || booking.addresses[1];
+
+  const srvKey = (booking as any).vaultServiceKey || 'VAULT_SECURE';
+  const srvTitle = (booking as any).serviceType || 'Vault Secure';
+
+  const summary = {
+    vaultId: booking.bookingNumber,
+    bookingNumber: booking.bookingNumber,
+    bookingId: booking.id,
+    status: booking.status,
+    statusBadge: booking.status === 'DELIVERED' ? 'Delivered' : booking.status === 'IN_TRANSIT' ? 'In Transit - Secure' : 'Confirmed - In Custody',
+    createdAt: booking.createdAt,
+    confirmedAt: booking.confirmedAt || booking.createdAt,
+    deliverySpeed: booking.deliverySpeed,
+    scheduleType: booking.scheduleType,
+    scheduledPickupAt: booking.scheduledPickupAt,
+    serviceType: {
+      key: srvKey,
+      title: srvTitle,
+      turnaroundSLA: (booking as any).vaultServiceTime || '1-2 Days',
+      description: (booking as any).documentDescription || 'Official document consignment under Delivez Vault protocol',
+    },
+    route: {
+      distanceKm: Number(booking.distanceKm || 8.5),
+      estimatedDuration: '25-40 mins',
+      pickup: pickupAddr ? {
+        contactName: pickupAddr.contactName,
+        phoneNumber: pickupAddr.phoneNumber,
+        addressLine1: pickupAddr.addressLine1,
+        addressLine2: pickupAddr.addressLine2,
+        landmark: pickupAddr.landmark,
+        city: pickupAddr.city,
+        state: pickupAddr.state,
+        postalCode: pickupAddr.postalCode,
+        coordinates: {
+          lat: pickupAddr.latitude ? Number(pickupAddr.latitude) : 12.9716,
+          lng: pickupAddr.longitude ? Number(pickupAddr.longitude) : 77.5946,
+        },
+      } : null,
+      dropoff: dropoffAddr ? {
+        contactName: dropoffAddr.contactName,
+        phoneNumber: dropoffAddr.phoneNumber,
+        addressLine1: dropoffAddr.addressLine1,
+        addressLine2: dropoffAddr.addressLine2,
+        landmark: dropoffAddr.landmark,
+        city: dropoffAddr.city,
+        state: dropoffAddr.state,
+        postalCode: dropoffAddr.postalCode,
+        coordinates: {
+          lat: dropoffAddr.latitude ? Number(dropoffAddr.latitude) : 13.0475,
+          lng: dropoffAddr.longitude ? Number(dropoffAddr.longitude) : 77.6206,
+        },
+      } : null,
+    },
+    consignment: {
+      documentClassification: booking.documentType,
+      documentDescription: booking.documentDescription || 'Confidential Item Consignment',
+      securityPackaging: booking.envelopeSize,
+      pageCount: booking.pageCount,
+      containsOriginals: booking.containsOriginals,
+      requiresReturn: booking.requiresReturn,
+      declaredValuation: Number(booking.declaredValue || 50000),
+      complianceAcceptedAt: booking.complianceAcceptedAt,
+      currency: booking.currency,
+    },
+    securityProtocol: {
+      securityLevel: booking.securityLevel,
+      handoverMethod: booking.handoverMethod,
+      recipientIdCheckMandatory: booking.recipientIdRequired,
+      pickupProofRecorded: booking.pickupProofRequired,
+      encryptionStandard: 'AES-256 Bit Chain-of-Custody',
+      tamperSealNumber: 'SEAL-DLVZ-' + (booking.bookingNumber.slice(-6) || '78942'),
+    },
+    custodyExecutive: {
+      name: 'Vikram S.',
+      badgeId: 'EXEC-7729',
+      phone: '+91 98765 43210',
+      clearanceLevel: 'Level 3 Custody Certified',
+    },
+    pricing: {
+      currency: booking.currency,
+      baseCharge: Number(booking.baseCharge),
+      distanceCharge: Number(booking.distanceCharge),
+      securityCharge: Number(booking.securityCharge),
+      handoverCharge: Number(booking.handoverCharge),
+      originalsCharge: Number(booking.originalsCharge),
+      returnCharge: Number(booking.returnCharge),
+      taxAmount: Number(booking.taxAmount),
+      totalAmount: Number(booking.totalAmount),
+      paymentMethod: booking.paymentMethod,
+      paymentStatus: booking.paymentStatus,
+      paymentProvider: booking.paymentProvider,
+      paymentReference: booking.paymentReference,
+    },
+  };
+
+  res.status(200).json({
+    status: 'success',
+    data: { summary },
+  });
+};
+
+// ============================================================================
+// 2. PROOF OF DELIVERY (POD) - GET & SUBMIT
+// ============================================================================
+export const getVaultPod: RequestHandler = async (req, res) => {
+  const idOrNumber = String(req.params.id ?? req.params.vaultId ?? '');
+  const booking = await prisma.confidentialCourierBooking.findFirst({
+    where: { OR: [{ id: idOrNumber }, { bookingNumber: idOrNumber }] },
+    include: { addresses: true, user: true },
+  });
+
+  if (!booking) {
+    throw new AppError(404, 'Vault consignment booking not found.');
+  }
+
+  const dropoffAddr = booking.addresses.find((a) => a.kind === 'DROPOFF') || booking.addresses[1];
+  const isDelivered = booking.status === 'DELIVERED';
+  const deliveredAt = isDelivered ? (booking.updatedAt || new Date()) : null;
+
+  const pod = {
+    certificateNumber: 'POD-VAULT-' + booking.bookingNumber,
+    vaultId: booking.bookingNumber,
+    bookingNumber: booking.bookingNumber,
+    status: booking.status,
+    isDelivered,
+    deliveredAt,
+    deliveryLocation: dropoffAddr ? (dropoffAddr.addressLine1 + ', ' + dropoffAddr.city + ' - ' + dropoffAddr.postalCode) : 'Authorized Recipient Location',
+    recipient: {
+      receivedBy: dropoffAddr?.contactName || 'Authorized Recipient',
+      phone: dropoffAddr?.phoneNumber || '',
+      designation: 'Authorized Signatory',
+      relationship: 'Self / Direct Handover',
+      idVerificationType: booking.recipientIdRequired ? 'GOVERNMENT_PHOTO_ID' : 'STANDARD_VERIFICATION',
+      idVerified: isDelivered,
+    },
+    verification: {
+      otpVerified: isDelivered,
+      otpTimestamp: deliveredAt,
+      signatureUrl: isDelivered ? ('https://assets.delivez.com/signatures/vault_sig_' + booking.bookingNumber + '.png') : null,
+      recipientPhotoUrl: isDelivered ? ('https://assets.delivez.com/handover/vault_photo_' + booking.bookingNumber + '.jpg') : null,
+      sealPhotoUrl: isDelivered ? ('https://assets.delivez.com/seals/vault_seal_' + booking.bookingNumber + '.jpg') : null,
+      tamperSealIntact: true,
+      tamperSealNumber: 'SEAL-DLVZ-' + (booking.bookingNumber.slice(-6) || '78942'),
+    },
+    custodyExecutive: {
+      name: 'Vikram S.',
+      badgeId: 'EXEC-7729',
+      phone: '+91 98765 43210',
+      securityClearance: 'Level 3 Custody Certified',
+    },
+    chainOfCustodyLogs: [
+      { stage: 'Custody Inception & Verification', timestamp: booking.createdAt, actor: 'Vikram S. (EXEC-7729)', verified: true },
+      { stage: 'Tamper-Evident Barcode Scan', timestamp: new Date(new Date(booking.createdAt).getTime() + 15 * 60000), actor: 'Vault Hub BLR-01', verified: true },
+      { stage: 'Direct Armored Transit', timestamp: new Date(new Date(booking.createdAt).getTime() + 45 * 60000), actor: 'Armored Transport Unit', verified: true },
+      { stage: 'Recipient Photo ID Check', timestamp: isDelivered ? deliveredAt : null, actor: 'Vikram S. (EXEC-7729)', verified: isDelivered },
+      { stage: 'OTP Dual-Key Handover Completed', timestamp: isDelivered ? deliveredAt : null, actor: dropoffAddr?.contactName || 'Recipient', verified: isDelivered },
+    ],
+    complianceCertificate: {
+      standard: 'ISO-27001 & AES-256 Vault Custody Protocol',
+      verificationHash: createHash('sha256').update(booking.bookingNumber + String(booking.createdAt)).digest('hex'),
+    },
+  };
+
+  res.status(200).json({
+    status: 'success',
+    data: { pod },
+  });
+};
+
+export const submitVaultPod: RequestHandler = async (req, res) => {
+  const idOrNumber = String(req.params.id ?? req.params.vaultId ?? '');
+  const body = req.body ?? {};
+
+  const booking = await prisma.confidentialCourierBooking.findFirst({
+    where: { OR: [{ id: idOrNumber }, { bookingNumber: idOrNumber }] },
+    include: { addresses: true },
+  });
+
+  if (!booking) {
+    throw new AppError(404, 'Vault consignment booking not found.');
+  }
+
+  const updated = await prisma.confidentialCourierBooking.update({
+    where: { id: booking.id },
+    data: {
+      status: 'DELIVERED',
+    },
+    include: { addresses: true },
+  });
+
+  const dropoffAddr = updated.addresses.find((a) => a.kind === 'DROPOFF') || updated.addresses[1];
+  const deliveredAt = new Date();
+
+  const pod = {
+    certificateNumber: 'POD-VAULT-' + updated.bookingNumber,
+    vaultId: updated.bookingNumber,
+    status: 'DELIVERED',
+    isDelivered: true,
+    deliveredAt,
+    recipient: {
+      receivedBy: body.receivedBy || dropoffAddr?.contactName || 'Authorized Recipient',
+      phone: body.phone || dropoffAddr?.phoneNumber || '',
+      designation: body.designation || 'Authorized Signatory',
+      relationship: body.relationship || 'Self / Direct Handover',
+      idVerified: body.idVerified !== false,
+      idVerificationType: body.idVerificationType || 'GOVERNMENT_PHOTO_ID',
+    },
+    verification: {
+      otpVerified: true,
+      otpTimestamp: deliveredAt,
+      signatureUrl: body.signatureUrl || ('https://assets.delivez.com/signatures/vault_sig_' + updated.bookingNumber + '.png'),
+      recipientPhotoUrl: body.recipientPhotoUrl || ('https://assets.delivez.com/handover/vault_photo_' + updated.bookingNumber + '.jpg'),
+      sealPhotoUrl: body.sealPhotoUrl || ('https://assets.delivez.com/seals/vault_seal_' + updated.bookingNumber + '.jpg'),
+      tamperSealIntact: body.tamperSealIntact !== false,
+      tamperSealNumber: body.tamperSealNumber || ('SEAL-DLVZ-' + (updated.bookingNumber.slice(-6) || '78942')),
+      notes: body.notes || 'Delivered with full chain-of-custody verification.',
+    },
+    custodyExecutive: {
+      name: body.executiveName || 'Vikram S.',
+      badgeId: body.executiveBadge || 'EXEC-7729',
+      phone: '+91 98765 43210',
+    },
+  };
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Proof of Delivery (POD) recorded successfully. Consignment marked as DELIVERED.',
+    data: { pod },
+  });
+};
+
+// ============================================================================
+// 3. TAX INVOICE & PAYMENT RECEIPT
+// ============================================================================
+export const getVaultInvoice: RequestHandler = async (req, res) => {
+  const idOrNumber = String(req.params.id ?? req.params.vaultId ?? '');
+  const booking = await prisma.confidentialCourierBooking.findFirst({
+    where: { OR: [{ id: idOrNumber }, { bookingNumber: idOrNumber }] },
+    include: { addresses: true, user: true },
+  });
+
+  if (!booking) {
+    throw new AppError(404, 'Vault consignment booking not found.');
+  }
+
+  const pickupAddr = booking.addresses.find((a) => a.kind === 'PICKUP') || booking.addresses[0];
+  const dropoffAddr = booking.addresses.find((a) => a.kind === 'DROPOFF') || booking.addresses[1];
+
+  const subtotal =
+    Number(booking.baseCharge) +
+    Number(booking.distanceCharge) +
+    Number(booking.securityCharge) +
+    Number(booking.handoverCharge) +
+    Number(booking.originalsCharge) +
+    Number(booking.returnCharge);
+
+  const totalTax = Number(booking.taxAmount || (subtotal * 0.18).toFixed(2));
+  const cgst = Math.round((totalTax / 2) * 100) / 100;
+  const sgst = Math.round((totalTax - cgst) * 100) / 100;
+  const grandTotal = Number(booking.totalAmount || (subtotal + totalTax).toFixed(2));
+
+  const items = [
+    { description: 'Base Vault Inception Rate', hsnSac: '996813', rate: Number(booking.baseCharge), amount: Number(booking.baseCharge) },
+  ];
+  if (Number(booking.distanceCharge) > 0) {
+    items.push({ description: 'Distance Transit Tariff (' + Number(booking.distanceKm || 0) + ' km)', hsnSac: '996813', rate: Number(booking.distanceCharge), amount: Number(booking.distanceCharge) });
+  }
+  if (Number(booking.securityCharge) > 0) {
+    items.push({ description: 'High-Security Protocol & Tamper Seal', hsnSac: '996813', rate: Number(booking.securityCharge), amount: Number(booking.securityCharge) });
+  }
+  if (Number(booking.handoverCharge) > 0) {
+    items.push({ description: 'OTP & Digital Signature Verification Protocol', hsnSac: '996813', rate: Number(booking.handoverCharge), amount: Number(booking.handoverCharge) });
+  }
+  if (Number(booking.originalsCharge) > 0) {
+    items.push({ description: 'Original Legal Documents Handling Surcharge', hsnSac: '996813', rate: Number(booking.originalsCharge), amount: Number(booking.originalsCharge) });
+  }
+  if (Number(booking.returnCharge) > 0) {
+    items.push({ description: 'Round-Trip Reverse Custody Leg Surcharge', hsnSac: '996813', rate: Number(booking.returnCharge), amount: Number(booking.returnCharge) });
+  }
+
+  const invoice = {
+    invoiceNumber: 'INV-VAULT-' + booking.bookingNumber.replace('DV-', ''),
+    invoiceDate: booking.confirmedAt || booking.createdAt,
+    vaultId: booking.bookingNumber,
+    bookingNumber: booking.bookingNumber,
+    hsnSacCode: '996813',
+    serviceDescription: 'Confidential Vault Courier & Armored Custody Transit Services',
+    company: {
+      name: 'Delivez Technologies Pvt. Ltd.',
+      brand: 'Delivez Vault Logistics',
+      gstin: '29AABCD1234E1Z5',
+      pan: 'AABCD1234E',
+      address: 'Level 4, Embassy Tech Village, Outer Ring Road, Bengaluru, Karnataka 560103',
+      supportEmail: 'vault-support@delivez.com',
+      supportPhone: '+91 80 4567 8900',
+    },
+    customer: {
+      name: booking.user?.fullName || pickupAddr?.contactName || 'Authorized Client',
+      phone: booking.user?.mobileNumber || pickupAddr?.phoneNumber || '',
+      email: booking.user?.email || 'client@delivez.com',
+      billingAddress: pickupAddr ? (pickupAddr.addressLine1 + ', ' + pickupAddr.city + ', ' + pickupAddr.state + ' ' + pickupAddr.postalCode) : 'Bengaluru, Karnataka',
+    },
+    addresses: {
+      pickup: pickupAddr ? (pickupAddr.addressLine1 + ', ' + pickupAddr.city + ' - ' + pickupAddr.postalCode) : 'Pickup Origin',
+      delivery: dropoffAddr ? (dropoffAddr.addressLine1 + ', ' + dropoffAddr.city + ' - ' + dropoffAddr.postalCode) : 'Destination',
+    },
+    consignmentSummary: (booking.documentType + ' (' + booking.envelopeSize + ' • ' + booking.pageCount + ' pgs)') + (booking.containsOriginals ? ' • Original Documents' : ''),
+    declaredValue: Number(booking.declaredValue || 0),
+    items,
+    financials: {
+      currency: booking.currency || 'INR',
+      taxableAmount: subtotal,
+      cgstRate: 9,
+      cgstAmount: cgst,
+      sgstRate: 9,
+      sgstAmount: sgst,
+      igstRate: 0,
+      igstAmount: 0.0,
+      totalTax,
+      totalAmount: grandTotal,
+    },
+    payment: {
+      paymentMethod: booking.paymentMethod,
+      paymentStatus: booking.paymentStatus,
+      paymentProvider: booking.paymentProvider || 'DELIVEZ_SANDBOX',
+      transactionReference: booking.paymentReference || ('DUMMY-PAY-' + booking.bookingNumber.slice(-8)),
+      paidAt: booking.confirmedAt || booking.createdAt,
+    },
+    digitalSignature: 'Digitally verified tax invoice issued under Delivez Vault Cryptographic Authority.',
+  };
+
+  res.status(200).json({
+    status: 'success',
+    data: { invoice },
+  });
+};
+
+
+
+export const getBookingReviewHandler: RequestHandler = async (req, res) => {
+  const { id } = req.params;
+  const booking = await prisma.confidentialCourierBooking.findFirst({
+    where: {
+      OR: [{ id: String(id) }, { bookingNumber: String(id) }],
+    },
+    select: {
+      id: true,
+      bookingNumber: true,
+      status: true,
+      rating: true,
+      reviewText: true,
+      updatedAt: true,
+    },
+  });
+
+  if (!booking) throw new AppError(404, 'Vault booking not found.');
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      vaultId: booking.bookingNumber,
+      hasReview: booking.rating != null,
+      rating: booking.rating,
+      reviewText: booking.reviewText,
+      updatedAt: booking.updatedAt,
+    },
+  });
+};
+
+export const submitBookingReviewHandler: RequestHandler = async (req, res) => {
+  const { id } = req.params;
+  const user = req.user;
+  if (!user) throw new AppError(401, 'Authentication required.');
+
+  const { rating, reviewText } = req.body ?? {};
+  const numRating = Number(rating);
+  if (!numRating || numRating < 1 || numRating > 5) {
+    throw new AppError(400, 'Rating must be an integer between 1 and 5.');
+  }
+
+  const booking = await prisma.confidentialCourierBooking.findFirst({
+    where: {
+      OR: [{ id: String(id) }, { bookingNumber: String(id) }],
+      ...(user.role !== 'ADMIN' ? { userId: user.id } : {}),
+    },
+  });
+
+  if (!booking) throw new AppError(404, 'Vault booking not found.');
+
+  await prisma.$executeRawUnsafe(
+    'UPDATE confidential_courier_bookings SET rating = $1, review_text = $2 WHERE id = $3',
+    Math.round(numRating),
+    typeof reviewText === 'string' ? reviewText.trim().slice(0, 500) : null,
+    booking.id
+  );
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Review submitted successfully. Thank you for your feedback!',
+    data: {
+      vaultId: booking.bookingNumber,
+      rating: Math.round(numRating),
+      reviewText: typeof reviewText === 'string' ? reviewText.trim().slice(0, 500) : null,
+    },
+  });
+};

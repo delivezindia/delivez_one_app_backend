@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'vault_courier_models.dart';
+
+export 'vault_courier_models.dart';
 
 /// Delivez Mobile API Client (Flutter / Dart)
 /// Ready-to-use production client for mobile apps.
@@ -179,7 +182,7 @@ class DelivezApiClient {
   }
 
   // ==========================================
-  // 6. SERVICE 3: CONFIDENTIAL VAULT DELIVERY
+  // 6. SERVICE 3: CONFIDENTIAL VAULT DELIVERY (CANONICAL REST APIS)
   // ==========================================
   Future<Map<String, dynamic>> getVaultOptions() async {
     final res = await http.get(Uri.parse('$baseUrl/confidential-delivery/options'), headers: _buildHeaders());
@@ -195,13 +198,133 @@ class DelivezApiClient {
     return _handleResponse(res);
   }
 
-  Future<Map<String, dynamic>> createVaultBooking(Map<String, dynamic> bookingPayload) async {
+  Future<Map<String, dynamic>> createVaultBooking(dynamic booking) async {
+    final bodyData = booking is VaultBooking ? booking.toJson() : booking;
     final res = await http.post(
-      Uri.parse('$baseUrl/confidential-delivery/bookings'),
+      Uri.parse('$baseUrl/courier-delivery/bookings'),
       headers: _buildHeaders({'Idempotency-Key': 'idemp-${DateTime.now().millisecondsSinceEpoch}'}),
-      body: jsonEncode(bookingPayload),
+      body: jsonEncode(bodyData),
     );
     return _handleResponse(res);
+  }
+
+  Future<List<VaultBooking>> getVaultBookings({String? serviceType, String? status}) async {
+    String uri = '$baseUrl/courier-delivery/bookings';
+    final queryParams = <String>[];
+    if (serviceType != null) queryParams.add('service_type=${Uri.encodeComponent(serviceType)}');
+    if (status != null) queryParams.add('status=${Uri.encodeComponent(status)}');
+    if (queryParams.isNotEmpty) uri += '?${queryParams.join('&')}';
+
+    final res = await http.get(Uri.parse(uri), headers: _buildHeaders());
+    final data = _handleResponse(res);
+    final list = data['bookings'] as List<dynamic>? ?? [];
+    return list.map((e) => VaultBooking.fromJson(e)).toList();
+  }
+
+  Future<VaultBooking> getVaultBooking(String id) async {
+    final res = await http.get(Uri.parse('$baseUrl/courier-delivery/bookings/$id'), headers: _buildHeaders());
+    final data = _handleResponse(res);
+    return VaultBooking.fromJson(data['booking'] ?? data);
+  }
+
+  Future<VaultBooking> updateVaultBooking(String id, VaultBooking booking) async {
+    final res = await http.put(
+      Uri.parse('$baseUrl/courier-delivery/bookings/$id'),
+      headers: _buildHeaders(),
+      body: jsonEncode(booking.toJson()),
+    );
+    final data = _handleResponse(res);
+    return VaultBooking.fromJson(data['booking'] ?? data);
+  }
+
+  Future<VaultBooking> patchVaultBooking(String id, Map<String, dynamic> patch) async {
+    final res = await http.patch(
+      Uri.parse('$baseUrl/courier-delivery/bookings/$id'),
+      headers: _buildHeaders(),
+      body: jsonEncode(patch),
+    );
+    final data = _handleResponse(res);
+    return VaultBooking.fromJson(data['booking'] ?? data);
+  }
+
+  Future<Map<String, dynamic>> deleteVaultBooking(String id) async {
+    final res = await http.delete(Uri.parse('$baseUrl/courier-delivery/bookings/$id'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  // --- VAULT PAYMENTS ---
+  Future<VaultPayment> createVaultPayment({required String bookingId, String paymentMethod = 'ONLINE'}) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/courier-delivery/payments'),
+      headers: _buildHeaders(),
+      body: jsonEncode({'booking_id': bookingId, 'payment_method': paymentMethod}),
+    );
+    final data = _handleResponse(res);
+    return VaultPayment.fromJson(data);
+  }
+
+  Future<VaultPayment> getVaultPayment(String id) async {
+    final res = await http.get(Uri.parse('$baseUrl/courier-delivery/payments/$id'), headers: _buildHeaders());
+    final data = _handleResponse(res);
+    return VaultPayment.fromJson(data);
+  }
+
+  Future<VaultPayment?> getVaultBookingPayment(String bookingId) async {
+    final res = await http.get(Uri.parse('$baseUrl/courier-delivery/bookings/$bookingId/payment'), headers: _buildHeaders());
+    final data = _handleResponse(res);
+    return data != null ? VaultPayment.fromJson(data) : null;
+  }
+
+  Future<Map<String, dynamic>> verifyVaultPayment(String id, {String? gatewayPaymentId, String? gatewaySignature}) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/courier-delivery/payments/$id/verify'),
+      headers: _buildHeaders(),
+      body: jsonEncode({
+        'gateway_payment_id': gatewayPaymentId,
+        'gateway_signature': gatewaySignature,
+      }),
+    );
+    return _handleResponse(res);
+  }
+
+  Future<VaultPayment> refundVaultPayment(String id, {String? reason}) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/courier-delivery/payments/$id/refund'),
+      headers: _buildHeaders(),
+      body: jsonEncode({'reason': reason}),
+    );
+    final data = _handleResponse(res);
+    return VaultPayment.fromJson(data);
+  }
+
+  // --- VAULT RECEIPTS ---
+  Future<VaultReceipt> createVaultReceipt({required String bookingId, String? paymentId}) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/courier-delivery/receipts'),
+      headers: _buildHeaders(),
+      body: jsonEncode({'booking_id': bookingId, 'payment_id': paymentId}),
+    );
+    final data = _handleResponse(res);
+    return VaultReceipt.fromJson(data);
+  }
+
+  Future<List<VaultReceipt>> getVaultReceipts() async {
+    final res = await http.get(Uri.parse('$baseUrl/courier-delivery/receipts'), headers: _buildHeaders());
+    final data = _handleResponse(res);
+    final list = data is List ? data : (data['receipts'] as List<dynamic>? ?? []);
+    return list.map((e) => VaultReceipt.fromJson(e)).toList();
+  }
+
+  Future<VaultReceipt> getVaultReceipt(String id) async {
+    final res = await http.get(Uri.parse('$baseUrl/courier-delivery/receipts/$id'), headers: _buildHeaders());
+    final data = _handleResponse(res);
+    return VaultReceipt.fromJson(data);
+  }
+
+  Future<VaultReceipt?> getVaultBookingReceipt(String bookingId) async {
+    final res = await http.get(Uri.parse('$baseUrl/courier-delivery/bookings/$bookingId/receipt'), headers: _buildHeaders());
+    final data = _handleResponse(res);
+    return data != null ? VaultReceipt.fromJson(data) : null;
   }
 
   Future<Map<String, dynamic>> trackVaultShipment(String vaultId) async {

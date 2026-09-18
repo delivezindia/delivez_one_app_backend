@@ -242,6 +242,38 @@ export class DelivezApiClient {
       body: JSON.stringify(payload),
     });
   }
+
+  // ==========================================
+  // 9. UNIVERSAL ORDER STATUS OPERATIONS (BY ORDER ID)
+  // ==========================================
+  public updateOrderStatus(orderId: string, status: string, metadata: Record<string, any> = {}) {
+    const timestamp = metadata.timestamp || new Date().toISOString();
+    return this.request(`/admin/orders/${encodeURIComponent(orderId)}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        status,
+        timestamp,
+        statusChangedAt: timestamp,
+        updatedAt: timestamp,
+        statusTimestamps: metadata.statusTimestamps || { [status]: timestamp },
+        ...metadata,
+      }),
+    });
+  }
+
+  public cancelOrder(orderId: string, reason: string = 'Cancelled by User/Dispatcher', metadata: Record<string, any> = {}) {
+    const timestamp = metadata.timestamp || new Date().toISOString();
+    return this.request(`/admin/orders/${encodeURIComponent(orderId)}/cancel`, {
+      method: 'POST',
+      body: JSON.stringify({
+        reason,
+        timestamp,
+        cancelledAt: timestamp,
+        status: 'CANCELLED',
+        ...metadata,
+      }),
+    });
+  }
 }
 
 export class DelivezApiError extends Error {
