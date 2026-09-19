@@ -34,11 +34,13 @@ export interface LuggageTypeOption {
 }
 
 export interface LuggageAddonItem {
-  id: string;
+  id: string | number;
+  code?: string;
   title: string;
   price: number;
   description: string;
   category: string;
+  popular?: boolean;
 }
 
 export interface LuggageProtectionItem {
@@ -304,22 +306,22 @@ export const luggageTypes: LuggageTypeOption[] = [
 
 // 16 Add-ons from add_ons.dart
 export const luggageAddOns: LuggageAddonItem[] = [
-  { id: 'tag', title: 'Secure luggage tag', price: 29, description: 'Durable serialized barcode tag attached to handle', category: 'Security' },
-  { id: 'seal', title: 'Tamper-proof seal', price: 29, description: 'Numbered zip-tie tamper seal preventing zipper opening', category: 'Security' },
-  { id: 'wrapping', title: 'Wrapping / protective cover', price: 49, description: 'Protective shrink-wrap film guarding against scuffs and moisture', category: 'Packaging' },
-  { id: 'priority', title: 'Priority delivery', price: 99, description: 'First-in-line vehicle dispatch with dedicated priority routing', category: 'Speed' },
-  { id: 'airport_express', title: 'Airport express handling', price: 79, description: 'Express terminal gate ramp-side handover coordination', category: 'Transit' },
-  { id: 'hotel_concierge', title: 'Hotel concierge coordination', price: 79, description: 'Direct liaison with hotel reception & bell desk management', category: 'Hospitality' },
-  { id: 'waiting_time', title: 'Extra waiting time', price: 49, description: 'Up to 45 mins executive grace waiting buffer at location', category: 'Convenience' },
-  { id: 'fragile', title: 'Fragile handling', price: 59, description: 'Specialized padded stowage with high-priority handling stickers', category: 'Care' },
-  { id: 'insurance', title: 'Insurance coverage', price: 129, description: 'Comprehensive loss & accidental damage cover up to ₹50,000', category: 'Protection' },
-  { id: 'photo_pickup', title: 'Photo proof of pickup', price: 39, description: 'High-res photos of bags & affixed seals sent upon collection', category: 'Verification' },
-  { id: 'photo_delivery', title: 'Photo proof of delivery', price: 39, description: 'Timestamped photo proof of luggage handover at destination', category: 'Verification' },
-  { id: 'otp_verification', title: 'OTP verification at handover', price: 29, description: 'Secure two-factor 6-digit OTP confirmation before release', category: 'Verification' },
-  { id: 'signature_capture', title: 'Signature capture', price: 29, description: 'Digital biometric/e-pen signature captured on courier device', category: 'Verification' },
-  { id: 'video_proof', title: 'Video proof (premium)', price: 99, description: '30-second 360-degree video scan during pickup and handover', category: 'Verification' },
-  { id: 'traveler_assist', title: 'Premium traveler assistance', price: 149, description: 'Dedicated traveler concierge phone line on WhatsApp/Call', category: 'Support' },
-  { id: 'porter', title: 'Porter assistance add-on', price: 69, description: 'Luggage porter assistance from vehicle to check-in/room', category: 'Assistance' },
+  { id: 1, code: 'secure_luggage_tag', title: 'Secure luggage tag', price: 29, description: 'Durable serialized barcode tag attached to handle', category: 'Security', popular: true },
+  { id: 2, code: 'tamper_proof_seal', title: 'Tamper-proof seal', price: 29, description: 'Numbered zip-tie tamper seal preventing zipper opening', category: 'Security', popular: true },
+  { id: 3, code: 'wrapping', title: 'Wrapping / protective cover', price: 49, description: 'Protective shrink-wrap film guarding against scuffs and moisture', category: 'Packaging', popular: true },
+  { id: 4, code: 'doorstep_weighing', title: 'Doorstep weighing & calibration', price: 19, description: 'Calibrated digital scale weighing at collection point', category: 'Inspection', popular: true },
+  { id: 5, code: 'fragile_handling', title: 'Fragile handling sticker & pouch', price: 39, description: 'Specialized padded stowage with high-priority handling stickers', category: 'Care' },
+  { id: 6, code: 'priority_loading', title: 'Priority dispatch & loading', price: 49, description: 'First-in-line vehicle dispatch with dedicated priority routing', category: 'Speed' },
+  { id: 7, code: 'waterproof_cover', title: 'Waterproof protective cover', price: 39, description: 'Heavy gauge waterproof sleeve protecting against rain', category: 'Protection' },
+  { id: 8, code: 'gps_tracker', title: 'GPS tracker attachment', price: 79, description: 'Hardware BLE/GPS beacon attached to luggage for pinpoint telemetry', category: 'Tracking' },
+  { id: 9, code: 'express_pickup', title: 'Express 30-min pickup window', price: 59, description: 'Driver assigned immediately with 30-minute arrival guarantee', category: 'Speed' },
+  { id: 10, code: 'sms_updates', title: 'SMS & WhatsApp milestone pings', price: 19, description: 'Direct cellular notifications on each stage transition', category: 'Notifications' },
+  { id: 11, code: 'photo_proof_delivery', title: 'Photo proof of delivery', price: 19, description: 'Timestamped photo proof of luggage handover at destination', category: 'Proof', popular: true },
+  { id: 12, code: 'sanitization', title: 'Exterior sanitization wipe', price: 29, description: 'Hospital-grade sanitizing wipe before departure and after transit', category: 'Care' },
+  { id: 13, code: 'storage_extension', title: 'Flexible 24-hr hub storage', price: 99, description: 'Secure luggage holding at Delivez central hub for up to 24 hours', category: 'Storage' },
+  { id: 14, code: 'video_proof', title: 'Video proof of inspection', price: 99, description: 'End-to-end recorded inspection video of luggage condition', category: 'Proof' },
+  { id: 15, code: 'dedicated_support', title: 'Premium 24/7 luggage concierge', price: 149, description: 'Dedicated personal logistics executive assigned to your order', category: 'Support' },
+  { id: 16, code: 'porter_assistance', title: 'Porter assistance at gate', price: 69, description: 'Physical luggage porter to assist with bag transfer', category: 'Convenience' },
 ];
 
 // 5 Luggage Protections from luggage_protection.dart
@@ -433,3 +435,47 @@ export function getLuggageOptions() {
     ],
   };
 }
+
+
+export interface LuggageCoupon {
+  code: string;
+  discountType: 'percentage' | 'fixed';
+  discountValue: number;
+  maxDiscount: number;
+  minSubtotal: number;
+  description: string;
+}
+
+export const LUGGAGE_COUPONS: Record<string, LuggageCoupon> = {
+  DELIVEZ10: {
+    code: 'DELIVEZ10',
+    discountType: 'percentage',
+    discountValue: 10,
+    maxDiscount: 235,
+    minSubtotal: 200,
+    description: '10% off up to ₹235 on your luggage booking',
+  },
+  WELCOME50: {
+    code: 'WELCOME50',
+    discountType: 'fixed',
+    discountValue: 50,
+    maxDiscount: 50,
+    minSubtotal: 300,
+    description: 'Flat ₹50 welcome discount on your luggage booking',
+  },
+  AIRPORT100: {
+    code: 'AIRPORT100',
+    discountType: 'fixed',
+    discountValue: 100,
+    maxDiscount: 100,
+    minSubtotal: 400,
+    description: 'Flat ₹100 off on airport transfers',
+  },
+};
+
+export function findCoupon(code: string): LuggageCoupon | null {
+  if (!code) return null;
+  const clean = code.trim().toUpperCase();
+  return LUGGAGE_COUPONS[clean] || null;
+}
+
