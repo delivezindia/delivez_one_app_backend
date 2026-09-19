@@ -20,6 +20,8 @@ export const personalCourierRouter = Router();
 
 // Public routes (options, universal tracking, public POD, public quote)
 personalCourierRouter.get('/options', getOptions);
+personalCourierRouter.get('/delivery-config', getOptions);
+personalCourierRouter.get('/config', getOptions);
 personalCourierRouter.post('/quote', courierMutationRateLimit, createQuote);
 personalCourierRouter.get('/bookings/:id/track', getBookingTracking);
 personalCourierRouter.get('/track/:id', getBookingTracking);

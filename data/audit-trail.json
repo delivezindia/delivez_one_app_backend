@@ -1,5 +1,43 @@
 [
   {
+    "id": "aud-1789731300135-3805",
+    "timestamp": "2026-09-18T11:35:00.135Z",
+    "category": "ORDERS",
+    "action": "POST_COURIER_DELIVERY_RECEIPTS",
+    "severity": "SUCCESS",
+    "actorName": "Admin Test Customer",
+    "actorEmail": "admintest_1788159425648@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.7.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/courier-delivery/receipts executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/courier-delivery/receipts",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1789731255592-7770",
+    "timestamp": "2026-09-18T11:34:15.592Z",
+    "category": "ORDERS",
+    "action": "POST_COURIER_DELIVERY_PAYMENTS",
+    "severity": "SUCCESS",
+    "actorName": "Admin Test Customer",
+    "actorEmail": "admintest_1788159425648@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.7.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/courier-delivery/payments executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/courier-delivery/payments",
+      "statusCode": 201
+    }
+  },
+  {
     "id": "aud-1789730880595-176",
     "timestamp": "2026-09-18T11:28:00.595Z",
     "category": "ORDERS",
