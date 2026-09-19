@@ -1,5 +1,176 @@
 [
   {
+    "id": "aud-1789811945212-75",
+    "timestamp": "2026-09-19T09:59:05.212Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789811077626-9495",
+    "timestamp": "2026-09-19T09:44:37.626Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789810668377-6944",
+    "timestamp": "2026-09-19T09:37:48.377Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789809495723-1316",
+    "timestamp": "2026-09-19T09:18:15.723Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_CONFIDENTIAL_BOOKINGS_0C5FF543_F0",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/confidential/bookings/0c5ff543-f05a-4c0b-b941-748a9495cfbb/status executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/confidential/bookings/0c5ff543-f05a-4c0b-b941-748a9495cfbb/status",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789809495595-8395",
+    "timestamp": "2026-09-19T09:18:15.595Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_LUGGAGE_BOOKINGS_2393345F_593B_49",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/luggage/bookings/2393345f-593b-496f-8c1d-efeb83397ce2/status executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/luggage/bookings/2393345f-593b-496f-8c1d-efeb83397ce2/status",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789809495452-7389",
+    "timestamp": "2026-09-19T09:18:15.452Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789809320377-9164",
+    "timestamp": "2026-09-19T09:15:20.377Z",
+    "category": "ORDERS",
+    "action": "PATCH_ADMIN_LUGGAGE_BOOKINGS_2393345F_593B_49",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "ORDERS",
+    "description": "PATCH /api/v1/admin/luggage/bookings/2393345f-593b-496f-8c1d-efeb83397ce2/status executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/luggage/bookings/2393345f-593b-496f-8c1d-efeb83397ce2/status",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789809320229-8356",
+    "timestamp": "2026-09-19T09:15:20.229Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789809310170-9980",
+    "timestamp": "2026-09-19T09:15:10.170Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
     "id": "aud-1789798008881-7886",
     "timestamp": "2026-09-19T06:06:48.881Z",
     "category": "ORDERS",

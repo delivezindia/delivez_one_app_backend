@@ -137,6 +137,11 @@ export const getUserDetails: RequestHandler = async (req, res) => {
         orderBy: { createdAt: 'desc' },
         select: { id: true, bookingNumber: true, status: true, totalAmount: true, productName: true, recipientName: true, deliveryCity: true, createdAt: true },
       },
+      luggageDeliveryBookings: {
+        take: 10,
+        orderBy: { createdAt: 'desc' },
+        select: { id: true, bookingNumber: true, status: true, totalAmount: true, serviceId: true, routeType: true, createdAt: true },
+      },
     },
   });
 
@@ -147,7 +152,8 @@ export const getUserDetails: RequestHandler = async (req, res) => {
   const totalForgot = user.forgotSomethingBookings.length;
   const totalReturn = user.returnPickupBookings.length;
   const totalGift = user.giftDeliveryBookings.length;
-  const lifetimeBookings = totalCourier + totalConfidential + totalForgot + totalReturn + totalGift;
+  const totalLuggage = (user as any).luggageDeliveryBookings?.length || 0;
+  const lifetimeBookings = totalCourier + totalConfidential + totalForgot + totalReturn + totalGift + totalLuggage;
 
   res.status(200).json({
     status: 'success',

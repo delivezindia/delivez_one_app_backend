@@ -39,6 +39,11 @@ export const getUnifiedDashboardStats: RequestHandler = async (_req, res) => {
     returnActiveCount,
     returnRevenue,
 
+    luggageCount,
+    luggageTodayCount,
+    luggageActiveCount,
+    luggageRevenue,
+
     usersCount,
     driversCount,
   ] = await Promise.all([
@@ -82,20 +87,29 @@ export const getUnifiedDashboardStats: RequestHandler = async (_req, res) => {
       where: { status: { not: 'CANCELLED' } },
     }),
 
+    prisma.luggageDeliveryBooking.count(),
+    prisma.luggageDeliveryBooking.count({ where: { createdAt: { gte: today } } }),
+    prisma.luggageDeliveryBooking.count({ where: { status: { notIn: ['DELIVERED', 'CANCELLED'] } } }),
+    prisma.luggageDeliveryBooking.aggregate({
+      _sum: { totalAmount: true },
+      where: { status: { not: 'CANCELLED' } },
+    }),
+
     prisma.user.count({ where: { role: 'USER' } }),
     prisma.user.count({ where: { role: 'DRIVER' } }),
   ]);
 
-  const totalOrders = giftCount + courierCount + confidentialCount + forgotCount + returnCount;
-  const todayOrders = giftTodayCount + courierTodayCount + confidentialTodayCount + forgotTodayCount + returnTodayCount;
-  const activeDeliveries = giftActiveCount + courierActiveCount + confidentialActiveCount + forgotActiveCount + returnActiveCount;
+  const totalOrders = giftCount + courierCount + confidentialCount + forgotCount + returnCount + luggageCount;
+  const todayOrders = giftTodayCount + courierTodayCount + confidentialTodayCount + forgotTodayCount + returnTodayCount + luggageTodayCount;
+  const activeDeliveries = giftActiveCount + courierActiveCount + confidentialActiveCount + forgotActiveCount + returnActiveCount + luggageActiveCount;
   
   const totalRevenue = Math.round(
     Number(giftRevenue._sum.totalAmount || 0) +
     Number(courierRevenue._sum.totalAmount || 0) +
     Number(confidentialRevenue._sum.totalAmount || 0) +
     Number(forgotRevenue._sum.totalAmount || 0) +
-    Number(returnRevenue._sum.totalAmount || 0)
+    Number(returnRevenue._sum.totalAmount || 0) +
+    Number(luggageRevenue._sum.totalAmount || 0)
   );
 
   res.status(200).json({
@@ -110,6 +124,7 @@ export const getUnifiedDashboardStats: RequestHandler = async (_req, res) => {
       breakdown: {
         giftDelivery: giftCount,
         personalCourier: courierCount,
+        luggageDelivery: luggageCount,
         confidentialCourier: confidentialCount,
         forgotSomething: forgotCount,
         returnPickup: returnCount,
@@ -267,7 +282,7 @@ export const listAllUnifiedOrders: RequestHandler = async (req, res) => {
   const serviceType = typeof req.query.serviceType === 'string' ? req.query.serviceType : 'ALL';
   const status = typeof req.query.status === 'string' ? req.query.status : 'ALL';
 
-  const [giftOrders, courierOrders, confidentialOrders, forgotOrders, returnOrders] = await Promise.all([
+  const [giftOrders, courierOrders, confidentialOrders, forgotOrders, returnOrders, luggageOrders] = await Promise.all([
     (serviceType === 'ALL' || serviceType === 'GIFT' || serviceType === 'gift-delivery')
       ? prisma.giftDeliveryBooking.findMany({
           orderBy: { createdAt: 'desc' },
@@ -305,6 +320,13 @@ export const listAllUnifiedOrders: RequestHandler = async (req, res) => {
       : [],
     (serviceType === 'ALL' || serviceType === 'RETURN' || serviceType === 'return-pickup')
       ? prisma.returnPickupBooking.findMany({
+          orderBy: { createdAt: 'desc' },
+          take: 50,
+          include: { user: { select: { fullName: true, mobileNumber: true, email: true } } },
+        })
+      : [],
+    (serviceType === 'ALL' || serviceType === 'LUGGAGE' || serviceType === 'luggage-delivery' || serviceType === 'airport-luggage')
+      ? prisma.luggageDeliveryBooking.findMany({
           orderBy: { createdAt: 'desc' },
           take: 50,
           include: { user: { select: { fullName: true, mobileNumber: true, email: true } } },
@@ -438,6 +460,34 @@ export const listAllUnifiedOrders: RequestHandler = async (req, res) => {
     });
   });
 
+  luggageOrders.forEach((o: any) => {
+    const pickup = (o.pickupDetails as any) || {};
+    const delivery = (o.deliveryDetails as any) || {};
+    const flight = (o.flightDetails as any) || pickup.airport_specific || delivery.airport_specific || {};
+    const items = Array.isArray(o.luggageItems) ? (o.luggageItems as any[]) : [];
+    const bagCount = items.reduce((acc: number, it: any) => acc + (Number(it.quantity) || 1), 0) || 1;
+    const dest = delivery.full_address || delivery.address || [delivery.city, delivery.state].filter(Boolean).join(', ') || 'Airport / Hotel Terminal';
+
+    unified.push({
+      id: o.id,
+      bookingNumber: o.bookingNumber,
+      serviceKey: 'luggage-delivery',
+      serviceName: 'Luggage Delivery',
+      customerName: o.user?.fullName || pickup.contact?.full_name || 'Passenger',
+      customerPhone: o.user?.mobileNumber || pickup.contact?.mobile || '—',
+      recipientName: delivery.contact?.full_name || 'Recipient / Hotel Desk',
+      destination: dest,
+      itemSummary: `${bagCount} Luggage Bag${bagCount > 1 ? 's' : ''}${flight.flight_number ? ` • Flight ${flight.flight_number}` : ''}`,
+      amount: Number(o.totalAmount || 0),
+      paymentMethod: o.paymentMethod,
+      paymentStatus: o.paymentStatus,
+      status: o.status,
+      assignedPartner: (o.driverDetails as any)?.name || 'Unassigned',
+      partnerPhone: (o.driverDetails as any)?.phone || '',
+      createdAt: o.createdAt,
+    });
+  });
+
   // Sort by createdAt desc
   unified.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
@@ -488,7 +538,7 @@ export const listAllUnifiedOrders: RequestHandler = async (req, res) => {
 export const universalTrackOrder: RequestHandler = async (req, res) => {
   const trackingId = String(req.params.trackingId || '').trim();
 
-  const [gift, courier, confidential, forgot, ret] = await Promise.all([
+  const [gift, courier, confidential, forgot, ret, luggage] = await Promise.all([
     prisma.giftDeliveryBooking.findFirst({
       where: { OR: [{ id: trackingId }, { bookingNumber: { equals: trackingId, mode: 'insensitive' } }] },
       include: { user: { select: { fullName: true, mobileNumber: true } } },
@@ -508,6 +558,10 @@ export const universalTrackOrder: RequestHandler = async (req, res) => {
     prisma.returnPickupBooking.findFirst({
       where: { OR: [{ id: trackingId }, { bookingNumber: { equals: trackingId, mode: 'insensitive' } }] },
       include: { user: { select: { fullName: true, mobileNumber: true } } },
+    }),
+    prisma.luggageDeliveryBooking.findFirst({
+      where: { OR: [{ id: trackingId }, { bookingNumber: { equals: trackingId, mode: 'insensitive' } }] },
+      include: { user: { select: { fullName: true, mobileNumber: true, email: true } } },
     }),
   ]);
 
@@ -603,6 +657,44 @@ export const universalTrackOrder: RequestHandler = async (req, res) => {
         progress: 3,
         steps: ['Pickup Initiated', 'Item Collected', 'Direct Transit', 'Safely Returned'],
         createdAt: forgot.createdAt,
+      },
+    });
+    return;
+  }
+
+
+  if (luggage) {
+    const pickup = (luggage.pickupDetails as any) || {};
+    const delivery = (luggage.deliveryDetails as any) || {};
+    const flight = (luggage.flightDetails as any) || pickup.airport_specific || delivery.airport_specific || {};
+    const hotel = (luggage.hotelDetails as any) || pickup.hotel_specific || delivery.hotel_specific || {};
+    const items = Array.isArray(luggage.luggageItems) ? (luggage.luggageItems as any[]) : [];
+    const bagCount = items.reduce((acc: number, it: any) => acc + (Number(it.quantity) || 1), 0) || 1;
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        serviceKey: 'luggage-delivery',
+        serviceName: 'Luggage Delivery',
+        bookingNumber: luggage.bookingNumber,
+        status: luggage.status,
+        customerName: luggage.user?.fullName || pickup.contact?.full_name || 'Passenger',
+        recipientName: delivery.contact?.full_name || hotel.hotelName || 'Recipient / Hotel Front Desk',
+        recipientPhone: delivery.contact?.mobile || '—',
+        address: delivery.full_address || delivery.address || [delivery.city, delivery.state].filter(Boolean).join(', '),
+        item: `${bagCount} Luggage Bag${bagCount > 1 ? 's' : ''}${flight.flight_number ? ` (Flight ${flight.flight_number})` : ''}`,
+        amount: Number(luggage.totalAmount || 0),
+        eta: (luggage.schedule as any)?.delivery_speed?.label || '3-4 Hours Transit',
+        partnerName: (luggage.driverDetails as any)?.name || 'Designated Airport Luggage Agent',
+        partnerPhone: (luggage.driverDetails as any)?.phone || '+91 98765 43210',
+        progress: luggage.status === 'DELIVERED' ? 5 : (luggage.status === 'IN_TRANSIT' || luggage.status === 'OUT_FOR_DELIVERY') ? 4 : (luggage.status === 'LUGGAGE_PICKED') ? 3 : 2,
+        steps: ['Booking Confirmed', 'Agent Assigned', 'Luggage Picked Up', 'In Transit', 'Delivered'],
+        createdAt: luggage.createdAt,
+        flightDetails: flight,
+        hotelDetails: hotel,
+        pickupDetails: pickup,
+        deliveryDetails: delivery,
+        milestones: luggage.milestones,
       },
     });
     return;
@@ -1697,7 +1789,7 @@ export function resolveVaultServiceKey(b: any): string {
   return 'VAULT_SECURE';
 }
 
-const serializeAdminConfidentialBooking = (booking: any) => {
+const serializeAdminConfidentialBooking = (booking: any, vault?: any) => {
   const pickupAddr = booking.addresses?.find((a: any) => a.kind === 'PICKUP' || a.type === 'PICKUP') || booking.addresses?.[0];
   const dropoffAddr = booking.addresses?.find((a: any) => a.kind === 'DROPOFF' || a.type === 'DROPOFF') || booking.addresses?.[1];
 
@@ -1788,6 +1880,25 @@ const serializeAdminConfidentialBooking = (booking: any) => {
       latitude: dropoffAddr.latitude != null ? Number(dropoffAddr.latitude) : null,
       longitude: dropoffAddr.longitude != null ? Number(dropoffAddr.longitude) : null,
     } : null,
+    // Vault relations & rich canonical fields
+    vault: vault || null,
+    pickupType: vault?.pickup?.pickupType || 'Business',
+    companyOrganization: vault?.pickup?.companyOrganization || vault?.delivery?.companyOrganization || null,
+    gstin: vault?.pickup?.gstin || vault?.delivery?.gstin || null,
+    specialInstructions: vault?.pickup?.specialInstructions || vault?.delivery?.specialInstructions || null,
+    item: vault?.item ? {
+      ...vault.item,
+      declaredValue: vault.item.declaredValue != null ? Number(vault.item.declaredValue) : null,
+    } : null,
+    packaging: vault?.packaging || null,
+    security: vault?.security || null,
+    verification: vault?.verification || null,
+    multipointStops: vault?.multipointStops || [],
+    attachments: vault?.attachments || [],
+    timings: vault?.timings || [],
+    contacts: vault?.contacts || [],
+    receipts: vault?.receipts || [],
+    serviceDetails: vault?.serviceDetails || null,
   };
 };
 
@@ -1918,7 +2029,29 @@ export const listAdminConfidentialBookings: RequestHandler = async (req, res) =>
     }),
   ]);
 
-  const bookings = rawBookings.map((b: any) => serializeAdminConfidentialBooking(b));
+  // Hydrate with matching VaultCourierBooking records for comprehensive dossier view
+  const bookingNumbers = rawBookings.map((b: any) => b.bookingNumber).filter(Boolean);
+  const vaultBookings = await prisma.vaultCourierBooking.findMany({
+    where: { bookingNumber: { in: bookingNumbers } },
+    include: {
+      pickup: true,
+      delivery: true,
+      contacts: true,
+      timings: true,
+      item: true,
+      attachments: true,
+      packaging: true,
+      security: true,
+      verification: true,
+      serviceDetails: true,
+      multipointStops: { orderBy: { stopNumber: 'asc' } },
+      payments: true,
+      receipts: true,
+    },
+  });
+  const vaultMap = new Map(vaultBookings.map((v: any) => [v.bookingNumber, v]));
+
+  const bookings = rawBookings.map((b: any) => serializeAdminConfidentialBooking(b, vaultMap.get(b.bookingNumber)));
 
   // Build dynamic counts for the 9 document category cards
   const docMap: Record<string, number> = {};
@@ -1989,9 +2122,28 @@ export const getAdminConfidentialBooking: RequestHandler = async (req, res) => {
     throw new AppError(404, 'Confidential courier booking not found.');
   }
 
+  const vault = await prisma.vaultCourierBooking.findFirst({
+    where: { OR: [{ id }, { bookingNumber: booking.bookingNumber }] },
+    include: {
+      pickup: true,
+      delivery: true,
+      contacts: true,
+      timings: true,
+      item: true,
+      attachments: true,
+      packaging: true,
+      security: true,
+      verification: true,
+      serviceDetails: true,
+      multipointStops: { orderBy: { stopNumber: 'asc' } },
+      payments: true,
+      receipts: true,
+    },
+  });
+
   res.status(200).json({
     status: 'success',
-    data: { booking: serializeAdminConfidentialBooking(booking) },
+    data: { booking: serializeAdminConfidentialBooking(booking, vault) },
   });
 };
 
@@ -2004,23 +2156,64 @@ export const updateAdminConfidentialStatus: RequestHandler = async (req, res) =>
   });
   if (!existing) throw new AppError(404, 'Confidential courier booking not found.');
 
-  const updated = await prisma.confidentialCourierBooking.update({
-    where: { id: existing.id },
-    data: {
-      status: status as any,
-      ...(status === 'CONFIRMED' ? { confirmedAt: new Date() } : {}),
-      ...(status === 'CANCELLED' ? { cancelledAt: new Date(), cancellationReason: cancellationReason || 'Cancelled by Administrator' } : {}),
-    },
+  // Normalize status across models
+  const vaultStatusMap: Record<string, string> = {
+    PAYMENT_PENDING: 'pending_payment',
+    CONFIRMED: 'confirmed',
+    PICKUP_ASSIGNED: 'assigned',
+    PICKED_UP: 'in_transit',
+    IN_TRANSIT: 'in_transit',
+    DELIVERED: 'delivered',
+    CANCELLED: 'cancelled',
+  };
+  const vStatus = vaultStatusMap[status] || status.toLowerCase();
+
+  const [updated] = await prisma.$transaction([
+    prisma.confidentialCourierBooking.update({
+      where: { id: existing.id },
+      data: {
+        status: status as any,
+        ...(status === 'CONFIRMED' ? { confirmedAt: new Date() } : {}),
+        ...(status === 'CANCELLED' ? { cancelledAt: new Date(), cancellationReason: cancellationReason || 'Cancelled by Administrator' } : {}),
+      },
+      include: {
+        user: { select: publicUserSelect },
+        addresses: true,
+      },
+    }),
+    prisma.vaultCourierBooking.updateMany({
+      where: { bookingNumber: existing.bookingNumber },
+      data: {
+        status: vStatus,
+        ...(status === 'CONFIRMED' ? { confirmedAt: new Date() } : {}),
+        ...(status === 'CANCELLED' ? { cancelledAt: new Date(), cancellationReason: cancellationReason || 'Cancelled by Administrator' } : {}),
+      },
+    }),
+  ]);
+
+  const vault = await prisma.vaultCourierBooking.findFirst({
+    where: { bookingNumber: existing.bookingNumber },
     include: {
-      user: { select: publicUserSelect },
-      addresses: true,
+      pickup: true,
+      delivery: true,
+      contacts: true,
+      timings: true,
+      item: true,
+      attachments: true,
+      packaging: true,
+      security: true,
+      verification: true,
+      serviceDetails: true,
+      multipointStops: { orderBy: { stopNumber: 'asc' } },
+      payments: true,
+      receipts: true,
     },
   });
 
   res.status(200).json({
     status: 'success',
     message: `Status updated to ${status}`,
-    data: { booking: serializeAdminConfidentialBooking(updated) },
+    data: { booking: serializeAdminConfidentialBooking(updated, vault) },
   });
 };
 
@@ -2145,6 +2338,214 @@ export const updateAdminReturnStatus: RequestHandler = async (req, res) => {
     data: { booking: updated },
   });
 };
+// ============================================================================
+// 7.5. LUGGAGE DELIVERY (AIRPORT & HOTEL TRANSIT)
+// ============================================================================
+export const serializeAdminLuggageBooking = (b: any) => {
+  const pickup = (b.pickupDetails as any) || {};
+  const delivery = (b.deliveryDetails as any) || {};
+  const flight = (b.flightDetails as any) || pickup.airport_specific || delivery.airport_specific || {};
+  const hotel = (b.hotelDetails as any) || pickup.hotel_specific || delivery.hotel_specific || {};
+  const items = Array.isArray(b.luggageItems) ? (b.luggageItems as any[]) : [];
+  const totalBags = items.reduce((acc: number, it: any) => acc + (Number(it.quantity) || 1), 0);
+  const totalWeight = items.reduce((acc: number, it: any) => acc + (Number(it.declared_weight_kg || it.weight || 0) * (Number(it.quantity) || 1)), 0);
+
+  const serviceId = b.serviceId || 'home_airport';
+  const routeMap: Record<string, string> = {
+    home_airport: 'Home to Airport',
+    airport_home: 'Airport to Home',
+    hotel_airport: 'Hotel to Airport',
+    airport_hotel: 'Airport to Hotel',
+    hotel_home: 'Hotel to Home',
+    home_hotel: 'Home to Hotel',
+    multi_stop: 'Multi-Stop Transit',
+  };
+  const routeTitle = routeMap[serviceId] || serviceId.replace(/_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase());
+
+  return {
+    ...b,
+    totalAmount: Number(b.totalAmount || 0),
+    serviceKey: 'luggage-delivery',
+    serviceName: 'Luggage Delivery',
+    serviceType: routeTitle,
+    routeTitle,
+    customerName: b.user?.fullName || pickup.contact?.full_name || 'Passenger',
+    customerPhone: b.user?.mobileNumber || pickup.contact?.mobile || '—',
+    customerEmail: b.user?.email || pickup.contact?.email || '—',
+    totalBags: totalBags || 1,
+    totalWeightKg: totalWeight || 15,
+    pickupAddress: pickup.full_address || pickup.address || [pickup.city, pickup.state].filter(Boolean).join(', '),
+    deliveryAddress: delivery.full_address || delivery.address || [delivery.city, delivery.state].filter(Boolean).join(', '),
+    terminal: flight.terminal || pickup.terminal || delivery.terminal || null,
+    luggageBelt: flight.belt_number || flight.luggageBelt || pickup.luggageBelt || delivery.luggageBelt || null,
+    flightNumber: flight.flight_number || flight.flightNumber || null,
+    pnr: flight.pnr || null,
+    airline: flight.airline_name || flight.airline || null,
+    hotelName: hotel.hotel_name || hotel.hotelName || null,
+    roomNumber: hotel.room_number || hotel.roomNumber || null,
+    guestName: hotel.guest_name || hotel.guestName || null,
+    bookingReference: hotel.booking_reference || hotel.bookingReference || null,
+    addresses: [
+      {
+        kind: 'PICKUP',
+        label: 'Pickup',
+        contactName: pickup.contact?.full_name || b.user?.fullName || 'Sender',
+        phoneNumber: pickup.contact?.mobile || b.user?.mobileNumber || '',
+        addressLine1: pickup.full_address || pickup.address || '',
+        city: pickup.city || '',
+        state: pickup.state || '',
+        postalCode: pickup.pincode || '',
+      },
+      {
+        kind: 'DROPOFF',
+        label: 'Delivery',
+        contactName: delivery.contact?.full_name || 'Recipient',
+        phoneNumber: delivery.contact?.mobile || '',
+        addressLine1: delivery.full_address || delivery.address || '',
+        city: delivery.city || '',
+        state: delivery.state || '',
+        postalCode: delivery.pincode || '',
+      },
+    ],
+  };
+};
+
+export const listAdminLuggageBookings: RequestHandler = async (req, res) => {
+  const page = Math.max(1, parseInt(String(req.query.page || '1'), 10));
+  const limit = Math.min(50, Math.max(1, parseInt(String(req.query.limit || '20'), 10)));
+  const search = typeof req.query.search === 'string' ? req.query.search.trim().toLowerCase() : '';
+  const status = typeof req.query.status === 'string' ? req.query.status : 'ALL';
+  const routeType = typeof req.query.routeType === 'string' ? req.query.routeType.trim() : 'ALL';
+
+  const where: Prisma.LuggageDeliveryBookingWhereInput = {};
+  if (status !== 'ALL') where.status = status;
+  if (routeType !== 'ALL') {
+    where.OR = [
+      { serviceId: { contains: routeType, mode: 'insensitive' } },
+      { routeType: { contains: routeType, mode: 'insensitive' } },
+    ];
+  }
+  if (search) {
+    where.OR = [
+      { bookingNumber: { contains: search, mode: 'insensitive' } },
+      { user: { fullName: { contains: search, mode: 'insensitive' } } },
+      { user: { mobileNumber: { contains: search } } },
+      { user: { email: { contains: search, mode: 'insensitive' } } },
+      { serviceId: { contains: search, mode: 'insensitive' } },
+    ];
+  }
+
+  const [total, rawBookings, statusGroups] = await Promise.all([
+    prisma.luggageDeliveryBooking.count({ where }),
+    prisma.luggageDeliveryBooking.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        user: { select: publicUserSelect },
+      },
+    }),
+    prisma.luggageDeliveryBooking.groupBy({
+      by: ['status'],
+      _count: { _all: true },
+    }),
+  ]);
+
+  const bookings = rawBookings.map((b: any) => serializeAdminLuggageBooking(b));
+
+  const statusCounts: Record<string, number> = {
+    ALL: total,
+    BOOKING_CONFIRMED: 0,
+    AGENT_ASSIGNED: 0,
+    PICKUP_IN_PROGRESS: 0,
+    LUGGAGE_PICKED: 0,
+    IN_TRANSIT: 0,
+    OUT_FOR_DELIVERY: 0,
+    DELIVERED: 0,
+    CANCELLED: 0,
+  };
+
+  statusGroups.forEach((g: any) => {
+    if (statusCounts[g.status] !== undefined) {
+      statusCounts[g.status] = g._count._all;
+    }
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      bookings,
+      statusCounts,
+      pagination: { total, page, limit, totalPages: Math.ceil(total / limit) || 1 },
+    },
+  });
+};
+
+export const getAdminLuggageBooking: RequestHandler = async (req, res) => {
+  const id = String(req.params.id);
+  const booking = await prisma.luggageDeliveryBooking.findFirst({
+    where: { OR: [{ id }, { bookingNumber: id }] },
+    include: {
+      user: { select: publicUserSelect },
+    },
+  });
+
+  if (!booking) {
+    throw new AppError(404, 'Luggage delivery booking not found.');
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: { booking: serializeAdminLuggageBooking(booking) },
+  });
+};
+
+export const updateAdminLuggageStatus: RequestHandler = async (req, res) => {
+  const id = String(req.params.id);
+  const { status, cancellationReason, notes } = req.body;
+
+  const existing = await prisma.luggageDeliveryBooking.findFirst({
+    where: { OR: [{ id }, { bookingNumber: id }] },
+  });
+  if (!existing) throw new AppError(404, 'Luggage delivery booking not found.');
+
+  const milestoneMap: Record<string, number> = {
+    BOOKING_CONFIRMED: 0,
+    AGENT_ASSIGNED: 1,
+    PICKUP_IN_PROGRESS: 2,
+    LUGGAGE_PICKED: 4,
+    IN_TRANSIT: 5,
+    OUT_FOR_DELIVERY: 6,
+    DELIVERED: 9,
+    CANCELLED: existing.currentMilestoneIndex,
+  };
+
+  const nextMilestoneIndex = milestoneMap[status] !== undefined ? milestoneMap[status] : existing.currentMilestoneIndex;
+
+  const updated = await prisma.luggageDeliveryBooking.update({
+    where: { id: existing.id },
+    data: {
+      status,
+      currentMilestoneIndex: nextMilestoneIndex,
+      ...(status === 'DELIVERED' ? { paymentStatus: 'PAID' } : {}),
+      ...(status === 'CANCELLED' ? {
+        cancelledAt: new Date(),
+        cancellationReason: cancellationReason || notes || 'Cancelled by Administrator',
+      } : {}),
+    },
+    include: {
+      user: { select: publicUserSelect },
+    },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    message: `Luggage status updated to ${status}`,
+    data: { booking: serializeAdminLuggageBooking(updated) },
+  });
+};
+
 
 
 // ============================================================================
@@ -2190,6 +2591,26 @@ export const updateUnifiedOrderStatus: RequestHandler = async (req, res) => {
       confStatus = 'CONFIRMED';
     }
 
+    const vaultStatusMap: Record<string, string> = {
+      PAYMENT_PENDING: 'pending_payment',
+      CONFIRMED: 'confirmed',
+      PICKUP_ASSIGNED: 'assigned',
+      PICKED_UP: 'in_transit',
+      IN_TRANSIT: 'in_transit',
+      DELIVERED: 'delivered',
+      CANCELLED: 'cancelled',
+    };
+    const vStatus = vaultStatusMap[confStatus] || confStatus.toLowerCase();
+
+    await prisma.vaultCourierBooking.updateMany({
+      where: { bookingNumber: existing.bookingNumber },
+      data: {
+        status: vStatus,
+        ...(confStatus === 'CONFIRMED' ? { confirmedAt: new Date() } : {}),
+        ...(confStatus === 'CANCELLED' ? { cancelledAt: new Date() } : {}),
+      },
+    });
+
     updatedOrder = await prisma.confidentialCourierBooking.update({
       where: { id: existing.id },
       data: {
@@ -2198,7 +2619,34 @@ export const updateUnifiedOrderStatus: RequestHandler = async (req, res) => {
         ...(confStatus === 'CANCELLED' ? { cancelledAt: new Date() } : {}),
       },
     });
-  } else if (serviceKey.includes('courier') || serviceKey.includes('personal') || serviceKey.includes('luggage')) {
+  } else if (serviceKey.includes('luggage') || serviceKey.includes('airport-luggage')) {
+    const existing = await prisma.luggageDeliveryBooking.findFirst({
+      where: { OR: [{ id }, { bookingNumber: id }] },
+    });
+    if (!existing) throw new AppError(404, 'Luggage delivery booking not found.');
+
+    const milestoneMap: Record<string, number> = {
+      BOOKING_CONFIRMED: 0,
+      AGENT_ASSIGNED: 1,
+      PICKUP_IN_PROGRESS: 2,
+      LUGGAGE_PICKED: 4,
+      IN_TRANSIT: 5,
+      OUT_FOR_DELIVERY: 6,
+      DELIVERED: 9,
+      CANCELLED: existing.currentMilestoneIndex,
+    };
+    const nextIdx = milestoneMap[status] !== undefined ? milestoneMap[status] : existing.currentMilestoneIndex;
+
+    updatedOrder = await prisma.luggageDeliveryBooking.update({
+      where: { id: existing.id },
+      data: {
+        status,
+        currentMilestoneIndex: nextIdx,
+        ...(status === 'DELIVERED' ? { paymentStatus: 'PAID' } : {}),
+        ...(status === 'CANCELLED' ? { cancelledAt: new Date(), cancellationReason: 'Cancelled via Unified Operations' } : {}),
+      },
+    });
+  } else if (serviceKey.includes('courier') || serviceKey.includes('personal')) {
     const existing = await prisma.courierBooking.findFirst({
       where: { OR: [{ id }, { bookingNumber: id }] },
     });
@@ -2380,11 +2828,22 @@ export const cancelUnifiedOrder: RequestHandler = async (req, res) => {
   } else if (serviceKey.includes('confidential') || serviceKey.includes('vault')) {
     const existing = await prisma.confidentialCourierBooking.findFirst({ where: { OR: [{ id }, { bookingNumber: id }] } });
     if (!existing) throw new AppError(404, 'Confidential courier booking not found.');
+    await prisma.vaultCourierBooking.updateMany({
+      where: { bookingNumber: existing.bookingNumber },
+      data: { status: 'cancelled', cancellationReason, cancelledAt: new Date() },
+    });
     await prisma.confidentialCourierBooking.update({
       where: { id: existing.id },
       data: { status: 'CANCELLED', cancellationReason, cancelledAt: new Date() },
     });
-  } else if (serviceKey.includes('courier') || serviceKey.includes('personal') || serviceKey.includes('luggage')) {
+  } else if (serviceKey.includes('luggage') || serviceKey.includes('airport-luggage')) {
+    const existing = await prisma.luggageDeliveryBooking.findFirst({ where: { OR: [{ id }, { bookingNumber: id }] } });
+    if (!existing) throw new AppError(404, 'Luggage delivery booking not found.');
+    await prisma.luggageDeliveryBooking.update({
+      where: { id: existing.id },
+      data: { status: 'CANCELLED', cancellationReason, cancelledAt: new Date() },
+    });
+  } else if (serviceKey.includes('courier') || serviceKey.includes('personal')) {
     const existing = await prisma.courierBooking.findFirst({ where: { OR: [{ id }, { bookingNumber: id }] } });
     if (!existing) throw new AppError(404, 'Order not found.');
     await prisma.courierBooking.update({
