@@ -1,3 +1,4 @@
+import { userOrdersRouter } from './modules/user-orders/user-orders.routes.js';
 import { courierDeliveryDispatcherRouter } from './modules/confidential-courier/courier-delivery-dispatcher.router.js';
 import { vaultCourierRouter } from './modules/confidential-courier/vault-courier.routes.js';
 import { luggageDeliveryRouter } from './modules/luggage-delivery/luggage-delivery.routes.js';
@@ -83,6 +84,8 @@ apiRouter.use('/services', serviceRouter);
 apiRouter.use('/home', homeContentRouter);
 apiRouter.use('/location', locationRouter);
 apiRouter.use('/pincode', pincodeRouter);
+apiRouter.use('/orders', userOrdersRouter);
+apiRouter.use('/user/orders', userOrdersRouter);
 apiRouter.use('/support', supportRouter);
 apiRouter.use('/prompt-examples', promptExamplesRouter);
 apiRouter.use('/prompt-example', promptExamplesRouter);

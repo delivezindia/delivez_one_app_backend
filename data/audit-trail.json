@@ -1,5 +1,100 @@
 [
   {
+    "id": "aud-1789972117869-4837",
+    "timestamp": "2026-09-21T06:28:37.869Z",
+    "category": "ORDERS",
+    "action": "POST_ORDERS_RECENT",
+    "severity": "WARNING",
+    "actorName": "Admin Test Customer",
+    "actorEmail": "admintest_1788159425648@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.7.0",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/orders/recent executed with status 404 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/orders/recent",
+      "statusCode": 404
+    }
+  },
+  {
+    "id": "aud-1789971351487-4851",
+    "timestamp": "2026-09-21T06:15:51.487Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-IN) WindowsPowerShell/5.1.26100.9444",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789971295308-9248",
+    "timestamp": "2026-09-21T06:14:55.308Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-IN) WindowsPowerShell/5.1.26100.9444",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789970824975-4967",
+    "timestamp": "2026-09-21T06:07:04.976Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_VERIFY_OTP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.7.0",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/verify-otp executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-otp",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789970804695-5139",
+    "timestamp": "2026-09-21T06:06:44.695Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.7.0",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
     "id": "aud-1789811945212-75",
     "timestamp": "2026-09-19T09:59:05.212Z",
     "category": "SECURITY",
