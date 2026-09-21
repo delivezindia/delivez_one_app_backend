@@ -1,5 +1,138 @@
 [
   {
+    "id": "aud-1789987087780-8559",
+    "timestamp": "2026-09-21T10:38:07.780Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_VERIFY_OTP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.7.0",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/verify-otp executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-otp",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789987081290-6434",
+    "timestamp": "2026-09-21T10:38:01.291Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.7.0",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789979630994-3304",
+    "timestamp": "2026-09-21T08:33:50.994Z",
+    "category": "SYSTEM",
+    "action": "POST_PROFILE_AVATAR",
+    "severity": "SUCCESS",
+    "actorName": "Rahul Sharma",
+    "actorEmail": "customer@gmail.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/profile/avatar executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/profile/avatar",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789979618497-7077",
+    "timestamp": "2026-09-21T08:33:38.497Z",
+    "category": "SYSTEM",
+    "action": "POST_PROFILE_WALLET_ADD",
+    "severity": "SUCCESS",
+    "actorName": "Rahul Sharma",
+    "actorEmail": "customer@gmail.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/profile/wallet/add executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/profile/wallet/add",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789979618485-3071",
+    "timestamp": "2026-09-21T08:33:38.485Z",
+    "category": "SYSTEM",
+    "action": "PATCH_PROFILE_NOTIFICATIONS",
+    "severity": "SUCCESS",
+    "actorName": "Rahul Sharma",
+    "actorEmail": "customer@gmail.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "PATCH /api/v1/profile/notifications executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/profile/notifications",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789979618474-2048",
+    "timestamp": "2026-09-21T08:33:38.474Z",
+    "category": "SYSTEM",
+    "action": "PUT_PROFILE",
+    "severity": "SUCCESS",
+    "actorName": "Ravi Kishan",
+    "actorEmail": "customer@gmail.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "PUT /api/v1/profile executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PUT",
+      "path": "/api/v1/profile",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1789979582221-9019",
+    "timestamp": "2026-09-21T08:33:02.221Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_LOGIN",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/login executed with status 401 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "statusCode": 401
+    }
+  },
+  {
     "id": "aud-1789972117869-4837",
     "timestamp": "2026-09-21T06:28:37.869Z",
     "category": "ORDERS",

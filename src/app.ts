@@ -1,3 +1,4 @@
+import path from 'node:path';
 import compression from 'compression';
 import cors from 'cors';
 import express from 'express';
@@ -41,6 +42,7 @@ app.use(express.json({ limit: env.JSON_BODY_LIMIT }));
 app.use(express.urlencoded({ extended: false, limit: env.JSON_BODY_LIMIT }));
 app.use(autoAuditLogger);
 
+app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 app.use('/health', systemRouter);
 app.use(
   '/api',

@@ -167,6 +167,25 @@ model User {
   createdAt        DateTime  @default(now()) @map("created_at")
   updatedAt        DateTime  @updatedAt @map("updated_at")
 
+  // Dynamic Profile & Preferences
+  avatarUrl             String?   @map("avatar_url")
+  dateOfBirth           String?   @map("date_of_birth")
+  gender                String?   @map("gender")
+  alternatePhone        String?   @map("alternate_phone")
+  address               String?   @map("address")
+  emergencyContactName  String?   @map("emergency_contact_name")
+  emergencyContactPhone String?   @map("emergency_contact_phone")
+  memberTier            String    @default("Delivez Member") @map("member_tier")
+  walletBalance         Decimal   @default(1250.00) @map("wallet_balance") @db.Decimal(12, 2)
+  theme                 String    @default("light") @map("theme")
+  language              String    @default("English") @map("language")
+  defaultPickupAddress  String    @default("Home") @map("default_pickup_address")
+  defaultPackageType    String    @default("15 Kg Box") @map("default_package_type")
+  pushNotifications     Boolean   @default(true) @map("push_notifications")
+  shipmentUpdates       Boolean   @default(true) @map("shipment_updates")
+  offersPromotions      Boolean   @default(true) @map("offers_promotions")
+  newsUpdates           Boolean   @default(false) @map("news_updates")
+
   authOtps                    AuthOtp[]
   devices                     UserDevice[]
   addresses                   UserAddress[]

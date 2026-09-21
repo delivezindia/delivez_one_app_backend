@@ -1,3 +1,4 @@
+import { profileRouter } from './modules/profile/profile.routes.js';
 import { userOrdersRouter } from './modules/user-orders/user-orders.routes.js';
 import { courierDeliveryDispatcherRouter } from './modules/confidential-courier/courier-delivery-dispatcher.router.js';
 import { vaultCourierRouter } from './modules/confidential-courier/vault-courier.routes.js';
@@ -36,6 +37,7 @@ apiRouter.get('/', (_request, response) => {
   });
 });
 
+apiRouter.use('/profile', profileRouter);
 apiRouter.use('/addresses', addressRouter);
 apiRouter.use('/admin/gift-delivery', giftDeliveryAdminRouter);
 apiRouter.use('/admin/gifts', giftDeliveryAdminRouter);
