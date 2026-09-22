@@ -493,4 +493,214 @@ class DelivezApiException implements Exception {
 
   @override
   String toString() => 'DelivezApiException($statusCode): $message';
+
+  // ==========================================
+  // 12. OFFERS & REWARDS (APK SCREEN)
+  // ==========================================
+  Future<Map<String, dynamic>> getRewards() async {
+    final res = await http.get(Uri.parse('$baseUrl/rewards'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> redeemReward(String rewardId) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/rewards/redeem'),
+      headers: _buildHeaders(),
+      body: jsonEncode({'rewardId': rewardId}),
+    );
+    return _handleResponse(res);
+  }
+
+  // ==========================================
+  // 13. PAYMENT METHODS & WALLET (APK SCREEN)
+  // ==========================================
+  Future<Map<String, dynamic>> getPaymentMethods() async {
+    final res = await http.get(Uri.parse('$baseUrl/payment-methods'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> addPaymentMethod(Map<String, dynamic> methodData) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/payment-methods'),
+      headers: _buildHeaders(),
+      body: jsonEncode(methodData),
+    );
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> setDefaultPaymentMethod(String id) async {
+    final res = await http.patch(
+      Uri.parse('$baseUrl/payment-methods/$id/default'),
+      headers: _buildHeaders(),
+    );
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> deletePaymentMethod(String id) async {
+    final res = await http.delete(
+      Uri.parse('$baseUrl/payment-methods/$id'),
+      headers: _buildHeaders(),
+    );
+    return _handleResponse(res);
+  }
+
+  // ==========================================
+  // 14. PRIVACY & SECURITY (APK SCREEN)
+  // ==========================================
+  Future<Map<String, dynamic>> getPrivacySecurity() async {
+    final res = await http.get(Uri.parse('$baseUrl/privacy-security'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> updatePrivacySettings(Map<String, dynamic> settings) async {
+    final res = await http.patch(
+      Uri.parse('$baseUrl/privacy-security/settings'),
+      headers: _buildHeaders(),
+      body: jsonEncode(settings),
+    );
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> toggleTwoFactorAuth() async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/privacy-security/toggle-2fa'),
+      headers: _buildHeaders(),
+    );
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> getUserDevices() async {
+    final res = await http.get(Uri.parse('$baseUrl/privacy-security/devices'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> revokeUserDevice(String deviceId) async {
+    final res = await http.delete(
+      Uri.parse('$baseUrl/privacy-security/devices/$deviceId'),
+      headers: _buildHeaders(),
+    );
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> getLoginActivity() async {
+    final res = await http.get(Uri.parse('$baseUrl/privacy-security/login-activity'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> downloadUserData() async {
+    final res = await http.get(Uri.parse('$baseUrl/privacy-security/download-data'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> reportSecurityIssue(String issueType, String description) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/privacy-security/report-issue'),
+      headers: _buildHeaders(),
+      body: jsonEncode({'issueType': issueType, 'description': description}),
+    );
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> deleteAccount() async {
+    final res = await http.delete(
+      Uri.parse('$baseUrl/privacy-security/delete-account'),
+      headers: _buildHeaders(),
+    );
+    return _handleResponse(res);
+  }
+
+  // ==========================================
+  // 15. HELP & SUPPORT (APK SCREEN)
+  // ==========================================
+  Future<Map<String, dynamic>> getSupportConfig() async {
+    final res = await http.get(Uri.parse('$baseUrl/support/config'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> getSupportFaqs({String? search, String? category}) async {
+    String query = '';
+    final params = <String>[];
+    if (search != null) params.add('search=${Uri.encodeComponent(search)}');
+    if (category != null) params.add('category=${Uri.encodeComponent(category)}');
+    if (params.isNotEmpty) query = '?' + params.join('&');
+    final res = await http.get(Uri.parse('$baseUrl/support/faqs$query'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> submitSupportInquiry({
+    required String message,
+    String? name,
+    String? mobileNumber,
+    String? email,
+    String? subject,
+  }) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/support/inquiry'),
+      headers: _buildHeaders(),
+      body: jsonEncode({
+        'message': message,
+        'name': name,
+        'mobileNumber': mobileNumber,
+        'email': email,
+        'subject': subject,
+      }),
+    );
+    return _handleResponse(res);
+  }
+
+  // ==========================================
+  // 16. LEGAL & POLICIES (APK SCREENS)
+  // ==========================================
+  Future<Map<String, dynamic>> getTermsAndConditions() async {
+    final res = await http.get(Uri.parse('$baseUrl/legal/terms'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> agreeToTerms() async {
+    final res = await http.post(Uri.parse('$baseUrl/legal/terms/agree'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> getPrivacyPolicy() async {
+    final res = await http.get(Uri.parse('$baseUrl/legal/privacy'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> acknowledgePrivacyPolicy() async {
+    final res = await http.post(Uri.parse('$baseUrl/legal/privacy/acknowledge'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  // ==========================================
+  // 17. COMPANY & NETWORK HUBS (APK SCREENS)
+  // ==========================================
+  Future<Map<String, dynamic>> getAboutDelivez() async {
+    final res = await http.get(Uri.parse('$baseUrl/company/about'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> getCompanyOverview() async {
+    final res = await http.get(Uri.parse('$baseUrl/company/overview'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> getOurJourney() async {
+    final res = await http.get(Uri.parse('$baseUrl/company/journey'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> getNetworkOverview() async {
+    final res = await http.get(Uri.parse('$baseUrl/network/overview'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> getNetworkHubs({String? search, String? region}) async {
+    String query = '';
+    final params = <String>[];
+    if (search != null) params.add('search=${Uri.encodeComponent(search)}');
+    if (region != null) params.add('region=${Uri.encodeComponent(region)}');
+    if (params.isNotEmpty) query = '?' + params.join('&');
+    final res = await http.get(Uri.parse('$baseUrl/network/hubs$query'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
 }

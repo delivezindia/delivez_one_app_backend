@@ -1,0 +1,685 @@
+{
+  "info": {
+    "_postman_id": "delivez-additional-apk-apis-v1",
+    "name": "Delivez Additional APK APIs (Live & Verified)",
+    "description": "Complete Postman collection covering all additional endpoints required by Delivez APK reference screens: Offers & Rewards, Payment Methods, Privacy & Security, Help & Support, Legal (Terms & Privacy), Company Overview, Our Journey, and Network Hubs.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Offers & Rewards",
+      "item": [
+        {
+          "name": "Get Rewards Dashboard & Balance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rewards",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rewards"
+              ]
+            },
+            "description": "Fetches user points balance (2,450), member tier, 4 quick actions, featured coupon offers (DELIVEZ20, SHIP100), ways to earn, and redeem rewards catalog."
+          }
+        },
+        {
+          "name": "Redeem Reward for Coupon",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rewardId\": \"redeem-coupons\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rewards/redeem",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rewards",
+                "redeem"
+              ]
+            },
+            "description": "Redeems points for an instant discount voucher code."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Payment Methods",
+      "item": [
+        {
+          "name": "Get Saved Payment Methods & Wallet",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payment-methods",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment-methods"
+              ]
+            },
+            "description": "Fetches Delivez Money card, saved cards (HDFC/ICICI), UPI IDs (Google Pay/PhonePe), and saved wallets with Default badge."
+          }
+        },
+        {
+          "name": "Add New Payment Method",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"UPI\",\n  \"upiId\": \"user@oksbi\",\n  \"isDefault\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payment-methods",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment-methods"
+              ]
+            },
+            "description": "Saves a new payment instrument (card, upi, or wallet)."
+          }
+        },
+        {
+          "name": "Set Primary Default Payment Method",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payment-methods/pm-upi-1/default",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment-methods",
+                "pm-upi-1",
+                "default"
+              ]
+            },
+            "description": "Sets selected payment instrument as default for one-tap checkout."
+          }
+        },
+        {
+          "name": "Delete Saved Payment Method",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payment-methods/pm-upi-1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment-methods",
+                "pm-upi-1"
+              ]
+            },
+            "description": "Removes saved payment instrument from user profile."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Privacy & Security",
+      "item": [
+        {
+          "name": "Get Privacy & Security Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/privacy-security",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "privacy-security"
+              ]
+            },
+            "description": "Returns 2FA status, biometric lock toggle, active device sessions, and recent login activity."
+          }
+        },
+        {
+          "name": "Update Security Settings",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"loginAlerts\": true,\n  \"biometricLock\": true,\n  \"dataAnalyticsSharing\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/privacy-security/settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "privacy-security",
+                "settings"
+              ]
+            },
+            "description": "Toggles login notifications, biometric lock, and telemetry data sharing."
+          }
+        },
+        {
+          "name": "Toggle Two-Factor Authentication (2FA)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/privacy-security/toggle-2fa",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "privacy-security",
+                "toggle-2fa"
+              ]
+            },
+            "description": "Enables or disables mandatory SMS/WhatsApp OTP for new session logins."
+          }
+        },
+        {
+          "name": "Get Active Devices",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/privacy-security/devices",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "privacy-security",
+                "devices"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Revoke Device Session",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/privacy-security/devices/dev-mobile-1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "privacy-security",
+                "devices",
+                "dev-mobile-1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Recent Login Activity",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/privacy-security/login-activity",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "privacy-security",
+                "login-activity"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Download User Data Package (JSON)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/privacy-security/download-data",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "privacy-security",
+                "download-data"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Report Security Issue",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"issueType\": \"suspicious_login\",\n  \"description\": \"Observed unexpected login attempt notification on device.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/privacy-security/report-issue",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "privacy-security",
+                "report-issue"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Account",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmation\": \"DELETE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/privacy-security/delete-account",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "privacy-security",
+                "delete-account"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Help & Support",
+      "item": [
+        {
+          "name": "Get Support Helpline & Config",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/support/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "support",
+                "config"
+              ]
+            },
+            "description": "Returns toll-free helpline '1800 123 4567', email, WhatsApp, and 8 quick help topic buttons."
+          }
+        },
+        {
+          "name": "Get FAQs (with Search)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/support/faqs?search=track",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "support",
+                "faqs"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "track"
+                }
+              ]
+            },
+            "description": "Returns 5 FAQs with searchable query matching questions or answers."
+          }
+        },
+        {
+          "name": "Submit Support Inquiry Ticket",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"topic\": \"Delivery Delay Report\",\n  \"message\": \"Shipment AWB DELV-90823 is delayed beyond SLA window.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/support/inquiry",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "support",
+                "inquiry"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Legal (Terms & Privacy Policy)",
+      "item": [
+        {
+          "name": "Get Terms & Conditions",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/legal/terms",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "legal",
+                "terms"
+              ]
+            },
+            "description": "Returns User Terms (8 clauses), Service Terms (10 clauses categorized across Express, Delivez Now, and Move), and Privacy Terms."
+          }
+        },
+        {
+          "name": "Agree to Terms & Conditions",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/legal/terms/agree",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "legal",
+                "terms",
+                "agree"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Full Privacy Policy",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/legal/privacy",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "legal",
+                "privacy"
+              ]
+            },
+            "description": "Returns all 10 comprehensive Privacy Policy clauses compliant with DPDPA 2023."
+          }
+        },
+        {
+          "name": "Acknowledge Privacy Policy",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/legal/privacy/acknowledge",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "legal",
+                "privacy",
+                "acknowledge"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Company Overview, Journey & Network Hubs",
+      "item": [
+        {
+          "name": "Get About Delivez",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/company/about",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "company",
+                "about"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Company Overview & Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/company/overview",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "company",
+                "overview"
+              ]
+            },
+            "description": "Returns hero brand info, stats (1M+ customers, 25k+ daily deliveries, 220+ cities, 6+ years), and 4 core pillars."
+          }
+        },
+        {
+          "name": "Get Our Journey Milestones",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/company/journey",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "company",
+                "journey"
+              ]
+            },
+            "description": "Returns vertical timeline milestones from 2018 (Genesis) to Today & Beyond (Green fleet & global scale)."
+          }
+        },
+        {
+          "name": "Get Network Overview",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/network/overview",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "network",
+                "overview"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search & Filter Network Hubs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/network/hubs?region=South&search=Bengaluru",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "network",
+                "hubs"
+              ],
+              "query": [
+                {
+                  "key": "region",
+                  "value": "South"
+                },
+                {
+                  "key": "search",
+                  "value": "Bengaluru"
+                }
+              ]
+            },
+            "description": "Filters 2,400+ hubs across India by region (South, North, West, East, Central) and keyword search."
+          }
+        }
+      ]
+    }
+  ]
+}

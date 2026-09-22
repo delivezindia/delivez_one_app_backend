@@ -17,6 +17,7 @@ import {
   getPromptExampleById,
   getSupportConfig,
   submitSupportInquiry,
+  getSupportFaqs,
 } from './home-content.controller.js';
 
 // 1. Home master router: /api/v1/home
@@ -72,6 +73,7 @@ pincodeRouter.get('/:pincode', checkPincode);
 // 4. Dedicated support router: /api/v1/support
 export const supportRouter = Router();
 supportRouter.get('/config', getSupportConfig);
+supportRouter.get('/faqs', getSupportFaqs);
 supportRouter.post('/inquiry', submitSupportInquiry);
 
 // 5. Dedicated prompt examples router: /api/v1/prompt-examples and /api/v1/prompt-example

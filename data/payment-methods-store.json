@@ -1,0 +1,163 @@
+{
+  "paymentMethods": [
+    {
+      "id": "pm-1",
+      "userId": "default",
+      "type": "CREDIT_CARD",
+      "title": "HDFC Bank Credit Card",
+      "subtitle": "•••• 4321 | Expires 05/28",
+      "details": {
+        "cardBrand": "HDFC Bank",
+        "last4": "4321",
+        "expiryDate": "05/28"
+      },
+      "isDefault": true,
+      "createdAt": "2026-01-10T00:00:00.000Z"
+    },
+    {
+      "id": "pm-2",
+      "userId": "default",
+      "type": "DEBIT_CARD",
+      "title": "ICICI Bank Debit Card",
+      "subtitle": "•••• 9876 | Expires 11/26",
+      "details": {
+        "cardBrand": "ICICI Bank",
+        "last4": "9876",
+        "expiryDate": "11/26"
+      },
+      "isDefault": false,
+      "createdAt": "2026-02-15T00:00:00.000Z"
+    },
+    {
+      "id": "pm-3",
+      "userId": "default",
+      "type": "UPI",
+      "title": "Google Pay",
+      "subtitle": "user@okhdfcbank",
+      "details": {
+        "upiId": "user@okhdfcbank"
+      },
+      "isDefault": false,
+      "createdAt": "2026-03-01T00:00:00.000Z"
+    },
+    {
+      "id": "pm-4",
+      "userId": "default",
+      "type": "WALLET",
+      "title": "Paytm Wallet",
+      "subtitle": "Linked • 9100 1234 5678",
+      "details": {
+        "walletProvider": "Paytm",
+        "linkedPhone": "9100 1234 5678"
+      },
+      "isDefault": false,
+      "createdAt": "2026-03-12T00:00:00.000Z"
+    },
+    {
+      "id": "pm-06ec3e-pm-1",
+      "userId": "06ec3e59-a50f-4427-a826-7982af2818a9",
+      "type": "CREDIT_CARD",
+      "title": "HDFC Bank Credit Card",
+      "subtitle": "•••• 4321 | Expires 05/28",
+      "details": {
+        "cardBrand": "HDFC Bank",
+        "last4": "4321",
+        "expiryDate": "05/28"
+      },
+      "isDefault": true,
+      "createdAt": "2026-01-10T00:00:00.000Z"
+    },
+    {
+      "id": "pm-06ec3e-pm-2",
+      "userId": "06ec3e59-a50f-4427-a826-7982af2818a9",
+      "type": "DEBIT_CARD",
+      "title": "ICICI Bank Debit Card",
+      "subtitle": "•••• 9876 | Expires 11/26",
+      "details": {
+        "cardBrand": "ICICI Bank",
+        "last4": "9876",
+        "expiryDate": "11/26"
+      },
+      "isDefault": false,
+      "createdAt": "2026-02-15T00:00:00.000Z"
+    },
+    {
+      "id": "pm-06ec3e-pm-3",
+      "userId": "06ec3e59-a50f-4427-a826-7982af2818a9",
+      "type": "UPI",
+      "title": "Google Pay",
+      "subtitle": "user@okhdfcbank",
+      "details": {
+        "upiId": "user@okhdfcbank"
+      },
+      "isDefault": false,
+      "createdAt": "2026-03-01T00:00:00.000Z"
+    },
+    {
+      "id": "pm-06ec3e-pm-4",
+      "userId": "06ec3e59-a50f-4427-a826-7982af2818a9",
+      "type": "WALLET",
+      "title": "Paytm Wallet",
+      "subtitle": "Linked • 9100 1234 5678",
+      "details": {
+        "walletProvider": "Paytm",
+        "linkedPhone": "9100 1234 5678"
+      },
+      "isDefault": false,
+      "createdAt": "2026-03-12T00:00:00.000Z"
+    },
+    {
+      "id": "pm-8d6804-pm-1",
+      "userId": "8d6804b0-44db-4f17-b032-c7ddaaeb3cf1",
+      "type": "CREDIT_CARD",
+      "title": "HDFC Bank Credit Card",
+      "subtitle": "•••• 4321 | Expires 05/28",
+      "details": {
+        "cardBrand": "HDFC Bank",
+        "last4": "4321",
+        "expiryDate": "05/28"
+      },
+      "isDefault": true,
+      "createdAt": "2026-01-10T00:00:00.000Z"
+    },
+    {
+      "id": "pm-8d6804-pm-2",
+      "userId": "8d6804b0-44db-4f17-b032-c7ddaaeb3cf1",
+      "type": "DEBIT_CARD",
+      "title": "ICICI Bank Debit Card",
+      "subtitle": "•••• 9876 | Expires 11/26",
+      "details": {
+        "cardBrand": "ICICI Bank",
+        "last4": "9876",
+        "expiryDate": "11/26"
+      },
+      "isDefault": false,
+      "createdAt": "2026-02-15T00:00:00.000Z"
+    },
+    {
+      "id": "pm-8d6804-pm-3",
+      "userId": "8d6804b0-44db-4f17-b032-c7ddaaeb3cf1",
+      "type": "UPI",
+      "title": "Google Pay",
+      "subtitle": "user@okhdfcbank",
+      "details": {
+        "upiId": "user@okhdfcbank"
+      },
+      "isDefault": false,
+      "createdAt": "2026-03-01T00:00:00.000Z"
+    },
+    {
+      "id": "pm-8d6804-pm-4",
+      "userId": "8d6804b0-44db-4f17-b032-c7ddaaeb3cf1",
+      "type": "WALLET",
+      "title": "Paytm Wallet",
+      "subtitle": "Linked • 9100 1234 5678",
+      "details": {
+        "walletProvider": "Paytm",
+        "linkedPhone": "9100 1234 5678"
+      },
+      "isDefault": false,
+      "createdAt": "2026-03-12T00:00:00.000Z"
+    }
+  ]
+}

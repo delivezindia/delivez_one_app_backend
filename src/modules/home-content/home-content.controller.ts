@@ -1069,3 +1069,33 @@ export const adminDeletePromptExample: RequestHandler = (req, res) => {
     message: 'Prompt example deleted successfully.',
   });
 };
+
+
+export const getSupportFaqs: RequestHandler = (req, res) => {
+  const store = getHomeStore();
+  const { search, category } = req.query;
+  let faqs = (store.support as any).faqs || [];
+
+  if (category && typeof category === 'string') {
+    faqs = faqs.filter((f: any) => f.category.toLowerCase() === category.toLowerCase());
+  }
+
+  if (search && typeof search === 'string') {
+    const q = search.toLowerCase();
+    faqs = faqs.filter((f: any) => f.question.toLowerCase().includes(q) || f.answer.toLowerCase().includes(q));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      faqs,
+      quickHelp: (store.support as any).quickHelp || [],
+      contact: {
+        helpline: store.support.helpline,
+        whatsapp: store.support.whatsapp,
+        email: store.support.email,
+        chatAvailable: store.support.chatEnabled,
+      },
+    },
+  });
+};

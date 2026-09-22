@@ -1,0 +1,138 @@
+{
+  "privacyStore": {
+    "06ec3e59-a50f-4427-a826-7982af2818a9": {
+      "settings": {
+        "twoFactorAuth": false,
+        "twoFactorStatusText": "Off",
+        "profileVisibility": "Public",
+        "personalisedRecommendations": true,
+        "analyticsUsageData": false,
+        "activeDevicesCount": 2
+      },
+      "devices": [
+        {
+          "id": "dev-curr",
+          "deviceId": "android-pixel7-01",
+          "deviceName": "Google Pixel 7 (This Device)",
+          "deviceType": "Mobile",
+          "platform": "Android 14",
+          "browser": "Delivez Mobile App",
+          "lastActive": "Active Now",
+          "isCurrent": true
+        },
+        {
+          "id": "dev-chrome",
+          "deviceId": "win-chrome-02",
+          "deviceName": "Chrome on Windows 11",
+          "deviceType": "Desktop",
+          "platform": "Windows NT 10.0",
+          "browser": "Chrome 122.0",
+          "lastActive": "2 hours ago",
+          "isCurrent": false
+        }
+      ],
+      "loginActivity": [
+        {
+          "id": "log-1",
+          "timestamp": "2026-09-22T10:02:12.527Z",
+          "device": "Google Pixel 7 (Delivez App)",
+          "location": "Bengaluru, India",
+          "ipAddress": "49.37.12.89",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "log-2",
+          "timestamp": "2026-09-22T08:02:12.527Z",
+          "device": "Chrome on Windows 11",
+          "location": "Bengaluru, India",
+          "ipAddress": "49.37.12.89",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "log-3",
+          "timestamp": "2026-09-20T10:02:12.527Z",
+          "device": "Mobile Safari on iPhone 14",
+          "location": "Mumbai, India",
+          "ipAddress": "152.58.24.110",
+          "status": "SUCCESS"
+        }
+      ]
+    },
+    "8d6804b0-44db-4f17-b032-c7ddaaeb3cf1": {
+      "settings": {
+        "twoFactorAuth": false,
+        "twoFactorStatusText": "Off",
+        "profileVisibility": "Public",
+        "personalisedRecommendations": true,
+        "analyticsUsageData": false,
+        "activeDevicesCount": 2
+      },
+      "devices": [
+        {
+          "id": "dev-curr",
+          "deviceId": "android-pixel7-01",
+          "deviceName": "Google Pixel 7 (This Device)",
+          "deviceType": "Mobile",
+          "platform": "Android 14",
+          "browser": "Delivez Mobile App",
+          "lastActive": "Active Now",
+          "isCurrent": true
+        },
+        {
+          "id": "dev-chrome",
+          "deviceId": "win-chrome-02",
+          "deviceName": "Chrome on Windows 11",
+          "deviceType": "Desktop",
+          "platform": "Windows NT 10.0",
+          "browser": "Chrome 122.0",
+          "lastActive": "2 hours ago",
+          "isCurrent": false
+        }
+      ],
+      "loginActivity": [
+        {
+          "id": "log-1",
+          "timestamp": "2026-09-22T10:02:12.527Z",
+          "device": "Google Pixel 7 (Delivez App)",
+          "location": "Bengaluru, India",
+          "ipAddress": "49.37.12.89",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "log-2",
+          "timestamp": "2026-09-22T08:02:12.527Z",
+          "device": "Chrome on Windows 11",
+          "location": "Bengaluru, India",
+          "ipAddress": "49.37.12.89",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "log-3",
+          "timestamp": "2026-09-20T10:02:12.527Z",
+          "device": "Mobile Safari on iPhone 14",
+          "location": "Mumbai, India",
+          "ipAddress": "152.58.24.110",
+          "status": "SUCCESS"
+        }
+      ]
+    }
+  },
+  "securityReports": [
+    {
+      "id": "sec-1790071465377",
+      "userId": "06ec3e59-a50f-4427-a826-7982af2818a9",
+      "issueType": "suspicious_login",
+      "description": "Test automated check",
+      "reportedAt": "2026-09-22T10:04:25.377Z",
+      "status": "PENDING"
+    },
+    {
+      "id": "sec-1790071407871",
+      "userId": "06ec3e59-a50f-4427-a826-7982af2818a9",
+      "issueType": "suspicious_login",
+      "description": "Test automated check",
+      "reportedAt": "2026-09-22T10:03:27.871Z",
+      "status": "PENDING"
+    }
+  ]
+}

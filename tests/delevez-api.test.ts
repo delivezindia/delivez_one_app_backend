@@ -193,8 +193,8 @@ describe('Delevez API Endpoints & Core Logic', () => {
     });
 
     it('calculates personal courier quote correctly', () => {
-      const validated = validateCourierRequest(validCourierRequest);
-      const quote = calculateCourierQuote(validated);
+      const validated = validateCourierRequest(validCourierRequest as any);
+      const quote = calculateCourierQuote(validated as any);
 
       expect(quote.breakdown.baseCharge).toBe(120);
       expect(quote.breakdown.packagingCharge).toBe(49);

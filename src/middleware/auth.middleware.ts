@@ -141,3 +141,34 @@ export const authenticate = async (
     return next(error);
   }
 };
+
+
+export const optionalAuthenticate = async (
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const token = extractAuthToken(req);
+    if (!token || token === 'null' || token === 'undefined' || token.startsWith('{{')) {
+      return next();
+    }
+    try {
+      const payload = verifyAccessToken(token);
+      if (payload && typeof payload === 'object' && payload.sub) {
+        const user = await prisma.user.findUnique({
+          where: { id: payload.sub },
+          select: publicUserSelect,
+        });
+        if (user) {
+          req.user = user;
+        }
+      }
+    } catch {
+      // Optional, ignore invalid token
+    }
+    return next();
+  } catch {
+    return next();
+  }
+};
