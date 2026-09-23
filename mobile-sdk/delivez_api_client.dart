@@ -52,6 +52,43 @@ class DelivezApiClient {
     return _handleResponse(res);
   }
 
+  Future<Map<String, dynamic>> addWalletBalance({
+    required double amount,
+    String paymentMethod = 'UPI',
+    String? description,
+    String? transactionReference,
+  }) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/payment-methods/wallet/add'),
+      headers: _buildHeaders(),
+      body: jsonEncode({
+        'amount': amount,
+        'paymentMethod': paymentMethod,
+        if (description != null) 'description': description,
+        if (transactionReference != null) 'transactionReference': transactionReference,
+      }),
+    );
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> getWalletTransactions({
+    int? page,
+    int? limit,
+    String? type,
+  }) async {
+    final params = <String>[];
+    if (page != null) params.add('page=$page');
+    if (limit != null) params.add('limit=$limit');
+    if (type != null) params.add('type=$type');
+    final query = params.isNotEmpty ? '?' + params.join('&') : '';
+    final res = await http.get(
+      Uri.parse('$baseUrl/payment-methods/wallet/transactions' + query),
+      headers: _buildHeaders(),
+    );
+    return _handleResponse(res);
+  }
+
+
   Future<Map<String, dynamic>> getHomeFeed() async {
     final res = await http.get(Uri.parse('$baseUrl/home/all'), headers: _buildHeaders());
     return _handleResponse(res);

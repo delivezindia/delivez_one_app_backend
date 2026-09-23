@@ -1,5 +1,5 @@
 import { rewardsRouter } from './modules/rewards/rewards.routes.js';
-import { paymentMethodsRouter } from './modules/payment-methods/payment-methods.routes.js';
+import { paymentMethodsRouter, walletRouter } from './modules/payment-methods/payment-methods.routes.js';
 import { privacySecurityRouter } from './modules/privacy-security/privacy-security.routes.js';
 import { legalRouter } from './modules/legal/legal.routes.js';
 import { companyRouter, networkRouter } from './modules/company-network/company-network.routes.js';
@@ -36,6 +36,7 @@ export const apiRouter = Router();
 // Additional APK Frontend APIs
 apiRouter.use('/rewards', rewardsRouter);
 apiRouter.use('/payment-methods', paymentMethodsRouter);
+apiRouter.use('/wallet', walletRouter);
 apiRouter.use('/privacy-security', privacySecurityRouter);
 apiRouter.use('/legal', legalRouter);
 apiRouter.use('/company', companyRouter);

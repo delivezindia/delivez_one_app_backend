@@ -1,9 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import type { SavedPaymentMethod, PaymentMethodType } from './payment-methods.types.js';
+import type { SavedPaymentMethod, PaymentMethodType, WalletTransaction } from './payment-methods.types.js';
 
 const DATA_DIR = path.resolve(process.cwd(), 'data');
 const STORE_FILE = path.join(DATA_DIR, 'payment-methods-store.json');
+const TX_STORE_FILE = path.join(DATA_DIR, 'wallet-transactions-store.json');
 
 let paymentMethodsMemory: SavedPaymentMethod[] = [
   {
@@ -61,6 +62,35 @@ let paymentMethodsMemory: SavedPaymentMethod[] = [
   },
 ];
 
+let walletTransactionsMemory: WalletTransaction[] = [
+  {
+    id: 'wt-seed-1',
+    userId: 'default',
+    type: 'CREDIT',
+    amount: 1000,
+    currency: 'INR',
+    paymentMethod: 'UPI (Google Pay)',
+    referenceId: 'TXN_UPI_88291039',
+    status: 'SUCCESS',
+    description: 'Added to Delivez Money wallet',
+    balanceAfter: 1000,
+    createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
+  },
+  {
+    id: 'wt-seed-2',
+    userId: 'default',
+    type: 'CREDIT',
+    amount: 250,
+    currency: 'INR',
+    paymentMethod: 'HDFC Credit Card',
+    referenceId: 'TXN_CARD_77192031',
+    status: 'SUCCESS',
+    description: 'Promotional Balance Credit',
+    balanceAfter: 1250,
+    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+  },
+];
+
 function initStorage() {
   try {
     if (!fs.existsSync(DATA_DIR)) {
@@ -71,6 +101,13 @@ function initStorage() {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed.paymentMethods)) {
         paymentMethodsMemory = parsed.paymentMethods;
+      }
+    }
+    if (fs.existsSync(TX_STORE_FILE)) {
+      const raw = fs.readFileSync(TX_STORE_FILE, 'utf8');
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed.transactions)) {
+        walletTransactionsMemory = parsed.transactions;
       }
     }
   } catch (err) {
@@ -89,15 +126,24 @@ function saveStorage() {
   }
 }
 
+function saveTransactionStorage() {
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    fs.writeFileSync(TX_STORE_FILE, JSON.stringify({ transactions: walletTransactionsMemory }, null, 2), 'utf8');
+  } catch (err) {
+    console.error('Failed to save transactions store:', err);
+  }
+}
+
 initStorage();
 
 export function getUserPaymentMethods(userId: string): SavedPaymentMethod[] {
-  // If specific methods exist for userId, return them. Otherwise return default seeds mapped to this userId
   const userMethods = paymentMethodsMemory.filter((pm) => pm.userId === userId);
   if (userMethods.length > 0) {
     return userMethods;
   }
-  // Initialize default seed methods for user
   const defaults = paymentMethodsMemory.filter((pm) => pm.userId === 'default').map((pm) => ({
     ...pm,
     id: `pm-${userId.slice(0, 6)}-${pm.id}`,
@@ -195,7 +241,6 @@ export function deleteMethodForUser(userId: string, methodId: string): boolean {
   paymentMethodsMemory = paymentMethodsMemory.filter((m) => !(m.userId === userId && m.id === methodId));
   const changed = paymentMethodsMemory.length !== initialLen;
   if (changed) {
-    // If deleted method was default, make another method default
     const userMethods = paymentMethodsMemory.filter((m) => m.userId === userId);
     if (userMethods.length > 0 && !userMethods.some((m) => m.isDefault)) {
       if (userMethods[0]) userMethods[0].isDefault = true;
@@ -203,4 +248,56 @@ export function deleteMethodForUser(userId: string, methodId: string): boolean {
     saveStorage();
   }
   return changed;
+}
+
+// ---------------------------------------------------------------------------
+// WALLET TRANSACTIONS STORE
+// ---------------------------------------------------------------------------
+
+export function getUserWalletTransactions(userId: string): WalletTransaction[] {
+  const userTxs = walletTransactionsMemory.filter((tx) => tx.userId === userId);
+  if (userTxs.length > 0) {
+    return [...userTxs].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+  // Initialize seed transactions for this user
+  const defaults = walletTransactionsMemory.filter((tx) => tx.userId === 'default').map((tx, idx) => ({
+    ...tx,
+    id: `wt-${userId.slice(0, 6)}-${idx + 1}`,
+    userId,
+  }));
+  walletTransactionsMemory.push(...defaults);
+  saveTransactionStorage();
+  return [...defaults].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}
+
+export function recordWalletTransaction(
+  userId: string,
+  tx: {
+    type: 'CREDIT' | 'DEBIT';
+    amount: number;
+    currency?: string;
+    paymentMethod?: string;
+    referenceId?: string;
+    status?: 'SUCCESS' | 'PENDING' | 'FAILED';
+    description?: string;
+    balanceAfter: number;
+  }
+): WalletTransaction {
+  const newTx: WalletTransaction = {
+    id: `wt-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
+    userId,
+    type: tx.type,
+    amount: tx.amount,
+    currency: tx.currency || 'INR',
+    paymentMethod: tx.paymentMethod || 'UPI',
+    referenceId: tx.referenceId || `TXN_${Date.now()}`,
+    status: tx.status || 'SUCCESS',
+    description: tx.description || (tx.type === 'CREDIT' ? 'Added to Delivez Money wallet' : 'Debited for delivery booking'),
+    balanceAfter: tx.balanceAfter,
+    createdAt: new Date().toISOString(),
+  };
+
+  walletTransactionsMemory.unshift(newTx);
+  saveTransactionStorage();
+  return newTx;
 }

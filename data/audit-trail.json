@@ -1,5 +1,100 @@
 [
   {
+    "id": "aud-1790164941833-5383",
+    "timestamp": "2026-09-23T12:02:21.833Z",
+    "category": "SYSTEM",
+    "action": "POST_WALLET_TOPUP",
+    "severity": "SUCCESS",
+    "actorName": "Rajesh Sharma",
+    "actorEmail": "rajesh.rider@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/wallet/topup executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/wallet/topup",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790164941809-7662",
+    "timestamp": "2026-09-23T12:02:21.809Z",
+    "category": "SYSTEM",
+    "action": "POST_WALLET_ADD",
+    "severity": "SUCCESS",
+    "actorName": "Rajesh Sharma",
+    "actorEmail": "rajesh.rider@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/wallet/add executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/wallet/add",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790164487694-1969",
+    "timestamp": "2026-09-23T11:54:47.694Z",
+    "category": "SYSTEM",
+    "action": "POST_WALLET_ADD",
+    "severity": "SUCCESS",
+    "actorName": "Rajesh Sharma",
+    "actorEmail": "rajesh.rider@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/wallet/add executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/wallet/add",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790164190432-7595",
+    "timestamp": "2026-09-23T11:49:50.432Z",
+    "category": "SYSTEM",
+    "action": "POST_WALLET_ADD",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/wallet/add executed with status 404 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/wallet/add",
+      "statusCode": 404
+    }
+  },
+  {
+    "id": "aud-1790164190413-3500",
+    "timestamp": "2026-09-23T11:49:50.413Z",
+    "category": "SYSTEM",
+    "action": "POST_PAYMENT_METHODS_WALLET_ADD",
+    "severity": "SUCCESS",
+    "actorName": "Rajesh Sharma",
+    "actorEmail": "rajesh.rider@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/payment-methods/wallet/add executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/payment-methods/wallet/add",
+      "statusCode": 200
+    }
+  },
+  {
     "id": "aud-1790156354407-1787",
     "timestamp": "2026-09-23T09:39:14.407Z",
     "category": "SECURITY",

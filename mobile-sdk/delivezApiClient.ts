@@ -286,4 +286,21 @@ export class DelivezApiError extends Error {
     this.statusCode = statusCode;
     this.details = details;
   }
+
+  public addWalletBalance(amount: number, paymentMethod: string = 'UPI', description?: string, transactionReference?: string) {
+    return this.request('/payment-methods/wallet/add', {
+      method: 'POST',
+      body: JSON.stringify({ amount, paymentMethod, description, transactionReference }),
+    });
+  }
+
+  public getWalletTransactions(params?: { page?: number; limit?: number; type?: 'CREDIT' | 'DEBIT' }) {
+    const qs = new URLSearchParams();
+    if (params?.page) qs.append('page', String(params.page));
+    if (params?.limit) qs.append('limit', String(params.limit));
+    if (params?.type) qs.append('type', params.type);
+    const queryString = qs.toString() ? ('?' + qs.toString()) : '';
+    return this.request('/payment-methods/wallet/transactions' + queryString);
+  }
+
 }

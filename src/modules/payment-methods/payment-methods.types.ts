@@ -19,6 +19,20 @@ export interface SavedPaymentMethod {
   createdAt: string;
 }
 
+export interface WalletTransaction {
+  id: string;
+  userId: string;
+  type: 'CREDIT' | 'DEBIT';
+  amount: number;
+  currency: string;
+  paymentMethod: string;
+  referenceId: string;
+  status: 'SUCCESS' | 'PENDING' | 'FAILED';
+  description: string;
+  balanceAfter: number;
+  createdAt: string;
+}
+
 export interface PaymentMethodsOverview {
   delivezMoney: {
     balance: number;

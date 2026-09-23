@@ -1,0 +1,108 @@
+{
+  "transactions": [
+    {
+      "id": "wt-1790164941830-499",
+      "userId": "06ec3e59-a50f-4427-a826-7982af2818a9",
+      "type": "CREDIT",
+      "amount": 500,
+      "currency": "INR",
+      "paymentMethod": "CREDIT_CARD",
+      "referenceId": "TXN_1790164941826_5868",
+      "status": "SUCCESS",
+      "description": "Top up via HDFC Bank Credit Card",
+      "balanceAfter": 3500,
+      "createdAt": "2026-09-23T12:02:21.830Z"
+    },
+    {
+      "id": "wt-1790164941804-114",
+      "userId": "06ec3e59-a50f-4427-a826-7982af2818a9",
+      "type": "CREDIT",
+      "amount": 1000,
+      "currency": "INR",
+      "paymentMethod": "UPI",
+      "referenceId": "TXN_TEST_1790164941778",
+      "status": "SUCCESS",
+      "description": "Added via Google Pay UPI test",
+      "balanceAfter": 3000,
+      "createdAt": "2026-09-23T12:02:21.804Z"
+    },
+    {
+      "id": "wt-1790164487691-791",
+      "userId": "06ec3e59-a50f-4427-a826-7982af2818a9",
+      "type": "CREDIT",
+      "amount": 250,
+      "currency": "INR",
+      "paymentMethod": "UPI",
+      "referenceId": "TXN_1790164487666_8331",
+      "status": "SUCCESS",
+      "description": "Test wallet topup via /wallet/add",
+      "balanceAfter": 2000,
+      "createdAt": "2026-09-23T11:54:47.691Z"
+    },
+    {
+      "id": "wt-1790164190410-434",
+      "userId": "06ec3e59-a50f-4427-a826-7982af2818a9",
+      "type": "CREDIT",
+      "amount": 500,
+      "currency": "INR",
+      "paymentMethod": "UPI",
+      "referenceId": "TXN_1790164190378_9244",
+      "status": "SUCCESS",
+      "description": "Added via Google Pay UPI",
+      "balanceAfter": 1750,
+      "createdAt": "2026-09-23T11:49:50.410Z"
+    },
+    {
+      "id": "wt-seed-1",
+      "userId": "default",
+      "type": "CREDIT",
+      "amount": 1000,
+      "currency": "INR",
+      "paymentMethod": "UPI (Google Pay)",
+      "referenceId": "TXN_UPI_88291039",
+      "status": "SUCCESS",
+      "description": "Added to Delivez Money wallet",
+      "balanceAfter": 1000,
+      "createdAt": "2026-09-18T11:49:35.411Z"
+    },
+    {
+      "id": "wt-seed-2",
+      "userId": "default",
+      "type": "CREDIT",
+      "amount": 250,
+      "currency": "INR",
+      "paymentMethod": "HDFC Credit Card",
+      "referenceId": "TXN_CARD_77192031",
+      "status": "SUCCESS",
+      "description": "Promotional Balance Credit",
+      "balanceAfter": 1250,
+      "createdAt": "2026-09-21T11:49:35.411Z"
+    },
+    {
+      "id": "wt-06ec3e-1",
+      "userId": "06ec3e59-a50f-4427-a826-7982af2818a9",
+      "type": "CREDIT",
+      "amount": 1000,
+      "currency": "INR",
+      "paymentMethod": "UPI (Google Pay)",
+      "referenceId": "TXN_UPI_88291039",
+      "status": "SUCCESS",
+      "description": "Added to Delivez Money wallet",
+      "balanceAfter": 1000,
+      "createdAt": "2026-09-18T11:49:35.411Z"
+    },
+    {
+      "id": "wt-06ec3e-2",
+      "userId": "06ec3e59-a50f-4427-a826-7982af2818a9",
+      "type": "CREDIT",
+      "amount": 250,
+      "currency": "INR",
+      "paymentMethod": "HDFC Credit Card",
+      "referenceId": "TXN_CARD_77192031",
+      "status": "SUCCESS",
+      "description": "Promotional Balance Credit",
+      "balanceAfter": 1250,
+      "createdAt": "2026-09-21T11:49:35.411Z"
+    }
+  ]
+}
