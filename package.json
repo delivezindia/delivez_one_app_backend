@@ -28,7 +28,9 @@
     "db:seed-services": "tsx prisma/seed-services.ts",
     "db:seed": "tsx prisma/seed-services.ts && tsx prisma/seed-admin.ts",
     "deploy:setup": "npm ci && npm run db:deploy && npm run db:generate && npm run build",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "db:seed-delivez-admin": "tsx prisma/seed-delivez-admin.ts",
+    "db:seed-admin-node": "node scripts/seed_delivez_admin.cjs"
   },
   "dependencies": {
     "@prisma/client": "6.12.0",
