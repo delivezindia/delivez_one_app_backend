@@ -1,5 +1,233 @@
 [
   {
+    "id": "aud-1790156354407-1787",
+    "timestamp": "2026-09-23T09:39:14.407Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790156336616-9473",
+    "timestamp": "2026-09-23T09:38:56.617Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790146356378-712",
+    "timestamp": "2026-09-23T06:52:36.378Z",
+    "category": "SYSTEM",
+    "action": "POST_LEGAL_PRIVACY_ACKNOWLEDGE",
+    "severity": "SUCCESS",
+    "actorName": "Rajesh Sharma",
+    "actorEmail": "rajesh.rider@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/legal/privacy/acknowledge executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/legal/privacy/acknowledge",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790146356370-9983",
+    "timestamp": "2026-09-23T06:52:36.370Z",
+    "category": "SYSTEM",
+    "action": "POST_LEGAL_TERMS_AGREE",
+    "severity": "SUCCESS",
+    "actorName": "Rajesh Sharma",
+    "actorEmail": "rajesh.rider@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/legal/terms/agree executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/legal/terms/agree",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790146356347-6580",
+    "timestamp": "2026-09-23T06:52:36.347Z",
+    "category": "SYSTEM",
+    "action": "POST_PRIVACY_SECURITY_REPORT_ISSUE",
+    "severity": "SUCCESS",
+    "actorName": "Rajesh Sharma",
+    "actorEmail": "rajesh.rider@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/privacy-security/report-issue executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/privacy-security/report-issue",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1790146356303-3487",
+    "timestamp": "2026-09-23T06:52:36.304Z",
+    "category": "SYSTEM",
+    "action": "POST_PRIVACY_SECURITY_TOGGLE_2FA",
+    "severity": "SUCCESS",
+    "actorName": "Rajesh Sharma",
+    "actorEmail": "rajesh.rider@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/privacy-security/toggle-2fa executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/privacy-security/toggle-2fa",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790146356294-1424",
+    "timestamp": "2026-09-23T06:52:36.294Z",
+    "category": "SETTINGS",
+    "action": "PATCH_PRIVACY_SECURITY_SETTINGS",
+    "severity": "SUCCESS",
+    "actorName": "Rajesh Sharma",
+    "actorEmail": "rajesh.rider@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SETTINGS",
+    "description": "PATCH /api/v1/privacy-security/settings executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/privacy-security/settings",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790146356277-6654",
+    "timestamp": "2026-09-23T06:52:36.277Z",
+    "category": "SYSTEM",
+    "action": "DELETE_PAYMENT_METHODS_PM_1790146356257_88",
+    "severity": "WARNING",
+    "actorName": "Rajesh Sharma",
+    "actorEmail": "rajesh.rider@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "DELETE /api/v1/payment-methods/pm-1790146356257-88 executed with status 200 (WARNING)",
+    "metadata": {
+      "method": "DELETE",
+      "path": "/api/v1/payment-methods/pm-1790146356257-88",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790146356267-2439",
+    "timestamp": "2026-09-23T06:52:36.267Z",
+    "category": "SYSTEM",
+    "action": "PATCH_PAYMENT_METHODS_PM_1790146356257_88_DEF",
+    "severity": "SUCCESS",
+    "actorName": "Rajesh Sharma",
+    "actorEmail": "rajesh.rider@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "PATCH /api/v1/payment-methods/pm-1790146356257-88/default executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/payment-methods/pm-1790146356257-88/default",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790146356258-9072",
+    "timestamp": "2026-09-23T06:52:36.258Z",
+    "category": "SYSTEM",
+    "action": "POST_PAYMENT_METHODS",
+    "severity": "SUCCESS",
+    "actorName": "Rajesh Sharma",
+    "actorEmail": "rajesh.rider@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/payment-methods executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/payment-methods",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1790146356227-4938",
+    "timestamp": "2026-09-23T06:52:36.227Z",
+    "category": "SYSTEM",
+    "action": "POST_REWARDS_REDEEM",
+    "severity": "SUCCESS",
+    "actorName": "Rajesh Sharma",
+    "actorEmail": "rajesh.rider@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/rewards/redeem executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/rewards/redeem",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790146355954-6623",
+    "timestamp": "2026-09-23T06:52:35.954Z",
+    "category": "SUPPORT",
+    "action": "POST_SUPPORT_INQUIRY",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SUPPORT",
+    "description": "POST /api/v1/support/inquiry executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/support/inquiry",
+      "statusCode": 201
+    }
+  },
+  {
     "id": "aud-1790072070572-916",
     "timestamp": "2026-09-22T10:14:30.573Z",
     "category": "SECURITY",
