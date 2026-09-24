@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F0FDF4" />
+      <stop offset="100%" stop-color="#DCFCE7" />
+    </linearGradient>
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22C55E" />
+      <stop offset="100%" stop-color="#16A34A" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="125%" height="125%">
+      <feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#16A34A" flood-opacity="0.32" />
+    </filter>
+  </defs>
+  <!-- Background Card -->
+  <rect x="20" y="20" width="472" height="472" rx="100" fill="url(#bg)" stroke="#BBF7D0" stroke-width="8" />
+
+  <!-- Confetti / Sparkle Accents -->
+  <polygon points="120,120 126,134 140,140 126,146 120,160 114,146 100,140 114,134" fill="#F59E0B" />
+  <polygon points="380,110 384,122 396,126 384,130 380,142 376,130 364,126 376,122" fill="#3B82F6" />
+  <polygon points="390,370 395,382 408,388 395,394 390,406 385,394 372,388 385,382" fill="#EC4899" />
+  <polygon points="110,360 114,370 124,374 114,378 110,388 106,378 96,374 106,370" fill="#10B981" />
+
+  <g filter="url(#shadow)">
+    <!-- Big Glowing Circular Badge -->
+    <circle cx="256" cy="256" r="140" fill="url(#badgeGrad)" stroke="#15803D" stroke-width="8" />
+    <!-- Inner Ring -->
+    <circle cx="256" cy="256" r="122" stroke="#86EFAC" stroke-width="4" stroke-dasharray="10 8" fill="none" />
+
+    <!-- Bold Smooth White Checkmark -->
+    <path d="M 186 256 L 234 306 L 326 204" stroke="#FFFFFF" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  </g>
+</svg>

@@ -941,22 +941,29 @@ export const getEnrichedPackageCategories = (req?: any) => {
     else if (cat.id === 'GIFTS_TOYS') iconKey = 'order_box';
     else if (cat.id === 'OTHER') iconKey = 'order_box';
 
-    const lottie = buildLottieMeta(iconKey, cat.title, req);
+    const iconMeta = buildLottieMeta(iconKey, cat.title, req);
     return {
       ...cat,
-      icon: lottie.lottieUrl,
-      iconUrl: lottie.lottieUrl,
-      icon_url: lottie.lottieUrl,
+      icon: iconMeta.pngUrl,
+      iconUrl: iconMeta.pngUrl,
+      icon_url: iconMeta.pngUrl,
+      imageUrl: iconMeta.pngUrl,
+      image_url: iconMeta.pngUrl,
+      image: iconMeta.pngUrl,
+      pngUrl: iconMeta.pngUrl,
+      png_url: iconMeta.pngUrl,
+      svgUrl: iconMeta.svgUrl,
+      svg_url: iconMeta.svgUrl,
       iconName: iconKey,
       icon_name: iconKey,
       lottieIcon: iconKey,
       lottie_icon: iconKey,
-      lottieUrl: lottie.lottieUrl,
-      lottie_url: lottie.lottieUrl,
-      lottieAsset: lottie.lottieAsset,
-      lottie_asset: lottie.lottieAsset,
-      lottie,
-      animationData: lottie.animationData,
+      lottieUrl: iconMeta.lottieUrl,
+      lottie_url: iconMeta.lottieUrl,
+      lottieAsset: iconMeta.lottieAsset,
+      lottie_asset: iconMeta.lottieAsset,
+      lottie: iconMeta,
+      animationData: iconMeta.animationData,
       materialIcon: cat.icon,
       material_icon: cat.icon,
     };
@@ -971,22 +978,29 @@ export const getEnrichedLocalOptions = (req?: any) => {
     else if (opt.id === 'HYBRID_DRONE') iconKey = 'express_delivery';
     else if (opt.id === 'NEXT_DAY_LOCAL') iconKey = 'standard_delivery';
 
-    const lottie = buildLottieMeta(iconKey, opt.title, req);
+    const iconMeta = buildLottieMeta(iconKey, opt.title, req);
     return {
       ...opt,
-      icon: lottie.lottieUrl,
-      iconUrl: lottie.lottieUrl,
-      icon_url: lottie.lottieUrl,
+      icon: iconMeta.pngUrl,
+      iconUrl: iconMeta.pngUrl,
+      icon_url: iconMeta.pngUrl,
+      imageUrl: iconMeta.pngUrl,
+      image_url: iconMeta.pngUrl,
+      image: iconMeta.pngUrl,
+      pngUrl: iconMeta.pngUrl,
+      png_url: iconMeta.pngUrl,
+      svgUrl: iconMeta.svgUrl,
+      svg_url: iconMeta.svgUrl,
       iconName: iconKey,
       icon_name: iconKey,
       lottieIcon: iconKey,
       lottie_icon: iconKey,
-      lottieUrl: lottie.lottieUrl,
-      lottie_url: lottie.lottieUrl,
-      lottieAsset: lottie.lottieAsset,
-      lottie_asset: lottie.lottieAsset,
-      lottie,
-      animationData: lottie.animationData,
+      lottieUrl: iconMeta.lottieUrl,
+      lottie_url: iconMeta.lottieUrl,
+      lottieAsset: iconMeta.lottieAsset,
+      lottie_asset: iconMeta.lottieAsset,
+      lottie: iconMeta,
+      animationData: iconMeta.animationData,
       materialIcon: opt.icon,
       material_icon: opt.icon,
     };
@@ -1002,22 +1016,29 @@ export const getEnrichedIntercityOptions = (req?: any) => {
     else if (opt.id === 'SCHEDULE_DELIVERY') iconKey = 'order_box';
     else if (opt.id === 'NEXT_DAY_INTERCITY') iconKey = 'standard_delivery';
 
-    const lottie = buildLottieMeta(iconKey, opt.title, req);
+    const iconMeta = buildLottieMeta(iconKey, opt.title, req);
     return {
       ...opt,
-      icon: lottie.lottieUrl,
-      iconUrl: lottie.lottieUrl,
-      icon_url: lottie.lottieUrl,
+      icon: iconMeta.pngUrl,
+      iconUrl: iconMeta.pngUrl,
+      icon_url: iconMeta.pngUrl,
+      imageUrl: iconMeta.pngUrl,
+      image_url: iconMeta.pngUrl,
+      image: iconMeta.pngUrl,
+      pngUrl: iconMeta.pngUrl,
+      png_url: iconMeta.pngUrl,
+      svgUrl: iconMeta.svgUrl,
+      svg_url: iconMeta.svgUrl,
       iconName: iconKey,
       icon_name: iconKey,
       lottieIcon: iconKey,
       lottie_icon: iconKey,
-      lottieUrl: lottie.lottieUrl,
-      lottie_url: lottie.lottieUrl,
-      lottieAsset: lottie.lottieAsset,
-      lottie_asset: lottie.lottieAsset,
-      lottie,
-      animationData: lottie.animationData,
+      lottieUrl: iconMeta.lottieUrl,
+      lottie_url: iconMeta.lottieUrl,
+      lottieAsset: iconMeta.lottieAsset,
+      lottie_asset: iconMeta.lottieAsset,
+      lottie: iconMeta,
+      animationData: iconMeta.animationData,
       materialIcon: opt.icon,
       material_icon: opt.icon,
     };
@@ -1030,22 +1051,29 @@ export const getEnrichedDeliverySpeeds = (req?: any) => {
     if (spd.id === 'EXPRESS') iconKey = 'express_delivery';
     else if (spd.id === 'SAME_DAY') iconKey = 'truck_delivery';
 
-    const lottie = buildLottieMeta(iconKey, spd.title, req);
+    const iconMeta = buildLottieMeta(iconKey, spd.title, req);
     return {
       ...spd,
-      icon: lottie.lottieUrl,
-      iconUrl: lottie.lottieUrl,
-      icon_url: lottie.lottieUrl,
+      icon: iconMeta.pngUrl,
+      iconUrl: iconMeta.pngUrl,
+      icon_url: iconMeta.pngUrl,
+      imageUrl: iconMeta.pngUrl,
+      image_url: iconMeta.pngUrl,
+      image: iconMeta.pngUrl,
+      pngUrl: iconMeta.pngUrl,
+      png_url: iconMeta.pngUrl,
+      svgUrl: iconMeta.svgUrl,
+      svg_url: iconMeta.svgUrl,
       iconName: iconKey,
       icon_name: iconKey,
       lottieIcon: iconKey,
       lottie_icon: iconKey,
-      lottieUrl: lottie.lottieUrl,
-      lottie_url: lottie.lottieUrl,
-      lottieAsset: lottie.lottieAsset,
-      lottie_asset: lottie.lottieAsset,
-      lottie,
-      animationData: lottie.animationData,
+      lottieUrl: iconMeta.lottieUrl,
+      lottie_url: iconMeta.lottieUrl,
+      lottieAsset: iconMeta.lottieAsset,
+      lottie_asset: iconMeta.lottieAsset,
+      lottie: iconMeta,
+      animationData: iconMeta.animationData,
     };
   });
 };
@@ -1056,22 +1084,29 @@ export const getEnrichedAddons = (req?: any) => {
     if (addon.id.includes('TRACK')) iconKey = 'tracking_live';
     else if (addon.id.includes('EXPRESS') || addon.id.includes('PRIORITY')) iconKey = 'express_delivery';
 
-    const lottie = buildLottieMeta(iconKey, addon.title, req);
+    const iconMeta = buildLottieMeta(iconKey, addon.title, req);
     return {
       ...addon,
-      icon: lottie.lottieUrl,
-      iconUrl: lottie.lottieUrl,
-      icon_url: lottie.lottieUrl,
+      icon: iconMeta.pngUrl,
+      iconUrl: iconMeta.pngUrl,
+      icon_url: iconMeta.pngUrl,
+      imageUrl: iconMeta.pngUrl,
+      image_url: iconMeta.pngUrl,
+      image: iconMeta.pngUrl,
+      pngUrl: iconMeta.pngUrl,
+      png_url: iconMeta.pngUrl,
+      svgUrl: iconMeta.svgUrl,
+      svg_url: iconMeta.svgUrl,
       iconName: iconKey,
       icon_name: iconKey,
       lottieIcon: iconKey,
       lottie_icon: iconKey,
-      lottieUrl: lottie.lottieUrl,
-      lottie_url: lottie.lottieUrl,
-      lottieAsset: lottie.lottieAsset,
-      lottie_asset: lottie.lottieAsset,
-      lottie,
-      animationData: lottie.animationData,
+      lottieUrl: iconMeta.lottieUrl,
+      lottie_url: iconMeta.lottieUrl,
+      lottieAsset: iconMeta.lottieAsset,
+      lottie_asset: iconMeta.lottieAsset,
+      lottie: iconMeta,
+      animationData: iconMeta.animationData,
     };
   });
 };
@@ -1080,7 +1115,16 @@ export const getCourierDeliveryConfig = (req?: any) => {
   const categories = getEnrichedPackageCategories(req);
   const local = getEnrichedLocalOptions(req);
   const intercity = getEnrichedIntercityOptions(req);
-  const allLotties = getAllLottieIcons(req);
+  const allIcons = getAllLottieIcons(req);
+
+  const iconUrls: Record<string, string> = {};
+  const imageUrls: Record<string, string> = {};
+  const svgUrls: Record<string, string> = {};
+  for (const [k, v] of Object.entries(allIcons)) {
+    iconUrls[k] = v.pngUrl;
+    imageUrls[k] = v.pngUrl;
+    svgUrls[k] = v.svgUrl;
+  }
 
   return {
     categories,
@@ -1114,10 +1158,16 @@ export const getCourierDeliveryConfig = (req?: any) => {
     self_service_options: courierDropOptions,
     insuranceOptions: courierInsuranceOptions,
     insurance_options: courierInsuranceOptions,
-    icon: allLotties,
-    icons: allLotties,
-    lottieIcons: allLotties,
-    lottie_icons: allLotties,
+    icon: allIcons,
+    icons: allIcons,
+    iconUrls,
+    icon_urls: iconUrls,
+    imageUrls,
+    image_urls: imageUrls,
+    svgUrls,
+    svg_urls: svgUrls,
+    lottieIcons: allIcons,
+    lottie_icons: allIcons,
   };
 };
 
@@ -1127,7 +1177,16 @@ export const getCourierOptions = (req?: any) => {
   const intercity = getEnrichedIntercityOptions(req);
   const speeds = getEnrichedDeliverySpeeds(req);
   const enrichedAddons = getEnrichedAddons(req);
-  const allLotties = getAllLottieIcons(req);
+  const allIcons = getAllLottieIcons(req);
+
+  const iconUrls: Record<string, string> = {};
+  const imageUrls: Record<string, string> = {};
+  const svgUrls: Record<string, string> = {};
+  for (const [k, v] of Object.entries(allIcons)) {
+    iconUrls[k] = v.pngUrl;
+    imageUrls[k] = v.pngUrl;
+    svgUrls[k] = v.svgUrl;
+  }
 
   return {
     pricingVersion: PRICING_VERSION,
@@ -1175,10 +1234,16 @@ export const getCourierOptions = (req?: any) => {
     packagingTypes: Object.entries(packagingTypes).map(([id, val]) => ({ id, ...val })),
     contentCategories: Object.entries(contentCategories).map(([id, val]) => ({ id, ...val })),
     insuranceTypes: Object.entries(insuranceTypes).map(([id, val]) => ({ id, ...val })),
-    icon: allLotties,
-    icons: allLotties,
-    lottieIcons: allLotties,
-    lottie_icons: allLotties,
+    icon: allIcons,
+    icons: allIcons,
+    iconUrls,
+    icon_urls: iconUrls,
+    imageUrls,
+    image_urls: imageUrls,
+    svgUrls,
+    svg_urls: svgUrls,
+    lottieIcons: allIcons,
+    lottie_icons: allIcons,
     limits: {
       maxWeightPerBagKg: 32,
       maxDimensionSumCm: 158,

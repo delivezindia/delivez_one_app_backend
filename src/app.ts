@@ -45,6 +45,7 @@ app.use(autoAuditLogger);
 app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 app.use('/public', express.static(path.resolve(process.cwd(), 'public')));
 app.use('/assets/lottie', express.static(path.resolve(process.cwd(), 'public/lottie')));
+app.use('/assets/icons', express.static(path.resolve(process.cwd(), 'public/icons/courier')));
 app.use('/health', systemRouter);
 app.use(
   '/api',

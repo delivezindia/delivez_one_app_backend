@@ -305,6 +305,7 @@ model CourierBooking {
   insurancePremium   Decimal                   @default(0) @map("insurance_premium") @db.Decimal(12, 2)
   taxAmount          Decimal                   @default(0) @map("tax_amount") @db.Decimal(12, 2)
   totalAmount        Decimal                   @map("total_amount") @db.Decimal(12, 2)
+  actualPrice        Decimal                   @default(0) @map("actual_price") @db.Decimal(12, 2)
   paymentMethod      CourierPaymentMethod      @map("payment_method")
   paymentStatus      CourierPaymentStatus      @map("payment_status")
   paymentProvider    String?                   @map("payment_provider")

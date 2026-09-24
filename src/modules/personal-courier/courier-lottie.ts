@@ -1,11 +1,26 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import type { Request, RequestHandler } from 'express';
 import { env } from '../../config/env.js';
 
 export interface LottieIconMeta {
   iconName: string;
+  name?: string;
   title: string;
+  icon: string;
+  iconUrl: string;
+  icon_url: string;
+  imageUrl: string;
+  image_url: string;
+  image: string;
+  pngUrl: string;
+  png_url: string;
+  svgUrl: string;
+  svg_url: string;
   lottieUrl: string;
+  lottie_url: string;
   lottieAsset: string;
+  lottie_asset: string;
   cdnUrl: string;
   animationData: Record<string, any>;
 }
@@ -11142,28 +11157,89 @@ export function getBaseApiUrl(req?: Request): string {
   return env.PUBLIC_API_BASE_URL || 'http://localhost:4000/api/v1';
 }
 
+export function getBaseOrigin(req?: Request): string {
+  if (req) {
+    const host = req.get('host') || 'localhost:4000';
+    return `${req.protocol}://${host}`;
+  }
+  const apiBase = env.PUBLIC_API_BASE_URL || 'http://localhost:4000/api/v1';
+  return apiBase.replace(/\/api\/v1\/?$/, '');
+}
+
 export function buildLottieMeta(iconName: string, title?: string, req?: Request): LottieIconMeta {
   const base = getBaseApiUrl(req);
-  const cleanName = iconName.toLowerCase().replace(/\.json$/, '');
+  const origin = getBaseOrigin(req);
+  const cleanName = iconName.toLowerCase().replace(/\.(json|png|svg|webp)$/, '');
   const anim: Record<string, any> = COURIER_LOTTIE_LIBRARY[cleanName] || COURIER_LOTTIE_LIBRARY.order_box || {};
+
+  const pngUrl = `${origin}/public/icons/courier/${cleanName}.png`;
+  const svgUrl = `${origin}/public/icons/courier/${cleanName}.svg`;
+  const lottieUrl = `${base}/courier-delivery/lottie/${cleanName}.json`;
 
   return {
     iconName: cleanName,
+    name: cleanName,
     title: title || (anim.nm as string) || cleanName,
-    lottieUrl: `${base}/courier-delivery/lottie/${cleanName}.json`,
+    icon: pngUrl,
+    iconUrl: pngUrl,
+    icon_url: pngUrl,
+    imageUrl: pngUrl,
+    image_url: pngUrl,
+    image: pngUrl,
+    pngUrl,
+    png_url: pngUrl,
+    svgUrl,
+    svg_url: svgUrl,
+    lottieUrl,
+    lottie_url: lottieUrl,
     lottieAsset: `assets/lottie/${cleanName}.json`,
-    cdnUrl: `${base}/courier-delivery/lottie/${cleanName}.json`,
+    lottie_asset: `assets/lottie/${cleanName}.json`,
+    cdnUrl: pngUrl,
     animationData: anim,
   };
 }
 
-export function getAllLottieIcons(req?: Request): Record<string, LottieIconMeta> {
+export const buildIconMeta = buildLottieMeta;
+
+export function getAllCourierIcons(req?: Request): Record<string, LottieIconMeta> {
   const result: Record<string, LottieIconMeta> = {};
   for (const [key, anim] of Object.entries(COURIER_LOTTIE_LIBRARY)) {
     result[key] = buildLottieMeta(key, anim.nm as string, req);
   }
   return result;
 }
+
+export const getAllLottieIcons = getAllCourierIcons;
+
+export const getCourierIconHandler: RequestHandler = (req, res) => {
+  const rawParam = typeof req.params.iconName === 'string' ? req.params.iconName : '';
+  const isSvg = rawParam.toLowerCase().endsWith('.svg');
+  const cleanKey = rawParam.toLowerCase().replace(/\.(png|svg|json|webp)$/, '');
+
+  const ext = isSvg ? 'svg' : 'png';
+  const filePath = path.resolve(process.cwd(), `public/icons/courier/${cleanKey}.${ext}`);
+
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', isSvg ? 'image/svg+xml' : 'image/png');
+    res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+    res.sendFile(filePath);
+    return;
+  }
+
+  // Fallback to order_box
+  const fallbackPath = path.resolve(process.cwd(), `public/icons/courier/order_box.${ext}`);
+  if (fs.existsSync(fallbackPath)) {
+    res.setHeader('Content-Type', isSvg ? 'image/svg+xml' : 'image/png');
+    res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+    res.sendFile(fallbackPath);
+    return;
+  }
+
+  res.status(404).json({
+    status: 'fail',
+    message: `Icon '${rawParam}' not found. Available icons: ${Object.keys(COURIER_LOTTIE_LIBRARY).join(', ')}`,
+  });
+};
 
 export const getLottieIconHandler: RequestHandler = (req, res) => {
   const rawParam = typeof req.params.iconName === 'string' ? req.params.iconName : '';

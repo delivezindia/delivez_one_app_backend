@@ -284,6 +284,25 @@ export const serializeBooking = (booking: any) => {
   const volumetricWeightKg = Math.round(((lengthCm * widthCm * heightCm) / 5000) * 10) / 10;
   const parcelSize = String(booking.package?.parcelSize || meta.packageDetails?.parcelSize || 'MEDIUM');
 
+  const serverActualPrice = Number(booking.actualPrice ?? booking.actual_price ?? 0);
+  const pricing = meta.pricing ? {
+    baseFare: Number(meta.pricing.baseFare ?? booking.baseCharge ?? 120),
+    boxFee: Number(meta.pricing.boxFee ?? 30),
+    handlingFee: Number(meta.pricing.handlingFee ?? 0),
+    insuranceFee: Number(meta.pricing.insuranceFee ?? booking.insurancePremium ?? 0),
+    discount: Number(meta.pricing.discount ?? 0),
+    tax: Number(meta.pricing.tax ?? booking.taxAmount ?? 0),
+    totalPayable: Number(meta.pricing.totalPayable ?? booking.totalAmount ?? 0),
+  } : {
+    baseFare: Number(meta.fareBreakdown?.baseCharge ?? booking.baseCharge ?? 120),
+    boxFee: Number(meta.fareBreakdown?.boxFee ?? booking.packagingCharge ?? 30),
+    handlingFee: Number(meta.fareBreakdown?.handlingFee ?? booking.weightCharge ?? 0),
+    insuranceFee: Number(booking.insurancePremium ?? 0),
+    discount: Number(meta.fareBreakdown?.discount ?? 0),
+    tax: Number(booking.taxAmount ?? 0),
+    totalPayable: Number(booking.totalAmount ?? 0),
+  };
+
   return {
     ...booking,
     bookingNumber: booking.bookingNumber,
@@ -292,6 +311,8 @@ export const serializeBooking = (booking: any) => {
     serviceName: serviceHuman,
     deliverySpeed: serviceHuman,
     serviceSpeed: serviceHuman,
+    actualPrice: serverActualPrice,
+    pricing,
     selfServiceOption: selfServiceOpt,
     selfServiceLabel: selfServiceHuman,
     contentCategory: rawCat,
@@ -444,7 +465,13 @@ export const createQuote: RequestHandler = (req, res) => {
 
   res.status(200).json({
     status: 'success',
-    data: { quote },
+    data: {
+      quote: {
+        ...quote,
+        actualPrice: quote.actualPrice ?? 0,
+      },
+      actualPrice: quote.actualPrice ?? 0,
+    },
   });
 };
 
@@ -558,17 +585,20 @@ export const createBooking: RequestHandler = async (req, res) => {
       deliverySpeed: input.deliverySpeed || 'STANDARD',
       estimatedDelivery: 'Same Day by 06:00 PM',
     },
+    pricing: quote.pricing,
     fareBreakdown: {
       baseCharge: quote.breakdown.baseCharge,
       distanceCharge: quote.breakdown.distanceCharge,
       luggageCharge: quote.breakdown.weightCharge,
+      handlingFee: (quote.pricing as any)?.handlingFee ?? quote.breakdown.handlingFee ?? 0,
+      boxFee: (quote.pricing as any)?.boxFee ?? quote.breakdown.boxFee ?? 30,
       airportCharge: (quote as any).airportHandlingFee || 0,
       addonsCharge: quote.breakdown.packagingCharge,
       deliverySpeedCharge: quote.breakdown.baseCharge,
       gst: quote.breakdown.taxAmount,
-      discount: quote.breakdown.discountAmount || 0,
+      discount: (quote.pricing as any)?.discount ?? quote.breakdown.discountAmount ?? 0,
       totalAmount: quote.totalAmount,
-      promoCode: input.promoCode || 'DELIVEZ10',
+      promoCode: input.promoCode || null,
     },
     sealNumber: 'DLV-SEAL-' + Math.floor(10000 + Math.random() * 90000),
     agent: defaultAgent,
@@ -579,6 +609,7 @@ export const createBooking: RequestHandler = async (req, res) => {
   meta.timeline = initialTimeline;
 
   try {
+    // Requirement 7: When the order is initially created, the database field must have: actual_price = 0
     const booking = await prisma.courierBooking.create({
       data: {
         bookingNumber: bNumber,
@@ -600,6 +631,7 @@ export const createBooking: RequestHandler = async (req, res) => {
         insurancePremium: quote.breakdown.insurancePremium,
         taxAmount: quote.breakdown.taxAmount,
         totalAmount: quote.totalAmount,
+        actualPrice: 0,
         paymentMethod: (input.paymentMethod === 'PAY_ON_DELIVERY' ? 'PAY_ON_DELIVERY' : 'ONLINE') as any,
         paymentStatus,
         confirmedAt,
@@ -632,10 +664,17 @@ export const createBooking: RequestHandler = async (req, res) => {
       include: bookingInclude,
     });
 
-    res.status(201).json({
+    // Requirement 7: Then the backend must calculate the actual price using package weight/dimensions and update the same record.
+    const serverActualPrice = quote.actualPrice ?? 0;
+    const updatedBooking = await prisma.courierBooking.update({
+      where: { id: booking.id },
+      data: { actualPrice: serverActualPrice },
+      include: bookingInclude,
+    });
 
+    res.status(201).json({
       status: 'success',
-      data: { booking: serializeBooking(booking), idempotentReplay: false },
+      data: { booking: serializeBooking(updatedBooking), idempotentReplay: false },
     });
   } catch (error: any) {
     if (error?.code === 'P2002') {
@@ -936,6 +975,7 @@ export const getBookingTracking: RequestHandler = async (req, res) => {
       tracking: {
         bookingId: serialized.bookingNumber,
         status: serialized.status,
+        actualPrice: serialized.actualPrice,
         expectedDelivery: serialized.schedule?.estimatedDelivery || '12 May 2025 by 06:00 PM',
         currentLocation: 'Near Kota, Rajasthan',
         destinationHub: `${serialized.deliveryDetails?.city || 'Gurugram'} Hub`,
@@ -1000,4 +1040,4 @@ export const getBookingPod: RequestHandler = async (req, res) => {
   });
 };
 
-export { getLottieIconHandler } from './courier-lottie.js';
+export { getLottieIconHandler, getCourierIconHandler } from './courier-lottie.js';

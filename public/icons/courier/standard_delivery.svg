@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EFF6FF" />
+      <stop offset="100%" stop-color="#DBEAFE" />
+    </linearGradient>
+    <linearGradient id="truckCab" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#1D4ED8" />
+    </linearGradient>
+    <linearGradient id="truckBox" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F1F5F9" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="125%" height="125%">
+      <feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#1D4ED8" flood-opacity="0.25" />
+    </filter>
+  </defs>
+  <!-- Background Card -->
+  <rect x="20" y="20" width="472" height="472" rx="100" fill="url(#bg)" stroke="#BFDBFE" stroke-width="8" />
+
+  <!-- Road Base -->
+  <rect x="60" y="380" width="392" height="12" rx="6" fill="#94A3B8" />
+  <line x1="80" y1="410" x2="160" y2="410" stroke="#CBD5E1" stroke-width="8" stroke-linecap="round" />
+  <line x1="200" y1="410" x2="280" y2="410" stroke="#CBD5E1" stroke-width="8" stroke-linecap="round" />
+  <line x1="320" y1="410" x2="400" y2="410" stroke="#CBD5E1" stroke-width="8" stroke-linecap="round" />
+
+  <g filter="url(#shadow)">
+    <!-- Cargo Box (White container with Delivez branding) -->
+    <rect x="90" y="160" width="220" height="190" rx="12" fill="url(#truckBox)" stroke="#64748B" stroke-width="5" />
+    <!-- Delivez Arrow on Cargo Box -->
+    <g transform="translate(140, 230)">
+      <rect x="0" y="16" width="100" height="24" rx="12" fill="#2563EB" />
+      <polygon points="100,8 130,28 100,48" fill="#F59E0B" />
+      <circle cx="20" cy="28" r="6" fill="#FFFFFF" />
+    </g>
+
+    <!-- Truck Cab -->
+    <path d="M 310 200 L 370 200 L 416 260 L 416 350 L 310 350 Z" fill="url(#truckCab)" stroke="#1E40AF" stroke-width="5" />
+    <!-- Windshield -->
+    <path d="M 324 214 L 366 214 L 402 260 L 324 260 Z" fill="#93C5FD" stroke="#1E40AF" stroke-width="3" />
+    <!-- Headlight -->
+    <path d="M 416 310 L 426 310 A 6 6 0 0 1 426 330 L 416 330 Z" fill="#FDE047" stroke="#D97706" stroke-width="2" />
+
+    <!-- Wheels -->
+    <!-- Rear Wheel 1 -->
+    <circle cx="160" cy="360" r="34" fill="#0F172A" stroke="#334155" stroke-width="4" />
+    <circle cx="160" cy="360" r="16" fill="#94A3B8" />
+    <!-- Front Wheel -->
+    <circle cx="360" cy="360" r="34" fill="#0F172A" stroke="#334155" stroke-width="4" />
+    <circle cx="360" cy="360" r="16" fill="#94A3B8" />
+  </g>
+</svg>
