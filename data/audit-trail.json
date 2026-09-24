@@ -1,5 +1,24 @@
 [
   {
+    "id": "aud-1790250521809-2069",
+    "timestamp": "2026-09-24T11:48:41.809Z",
+    "category": "SYSTEM",
+    "action": "POST_TRANSIT_CALCULATOR_CALCULATE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/transit-calculator/calculate executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/transit-calculator/calculate",
+      "statusCode": 200
+    }
+  },
+  {
     "id": "aud-1790244184832-3077",
     "timestamp": "2026-09-24T10:03:04.832Z",
     "category": "SYSTEM",
