@@ -116,6 +116,7 @@ export function computeTransitCalculation(input: TransitCalculatorInput, baseUrl
   const ecoTotal = ecoSub + ecoGst;
   const ecoSavings = Math.max(0, seTotal - ecoTotal);
   const ecoSavingsPercent = Math.round((ecoSavings / seTotal) * 100);
+  const origin = baseUrl.replace(/\/api\/v1\/?$/, '');
 
   const deliveryOptions: DeliveryOption[] = [
     {
@@ -127,7 +128,7 @@ export function computeTransitCalculation(input: TransitCalculatorInput, baseUrl
       deliveryDate: `By ${formatDisplayDate(3)}`,
       estimatedCost: seTotal,
       reliability: '99%',
-      icon: `${baseUrl}/courier-delivery/lottie/truck_delivery.json`,
+      icon: `${origin}/public/icons/courier/truck_delivery.png`,
       costBreakup: {
         baseFreight: seBase,
         fuelSurcharge: seFuel,
@@ -150,7 +151,7 @@ export function computeTransitCalculation(input: TransitCalculatorInput, baseUrl
       deliveryDate: `By ${formatDisplayDate(2)}`,
       estimatedCost: aeTotal,
       reliability: '98%',
-      icon: `${baseUrl}/courier-delivery/lottie/express_delivery.json`,
+      icon: `${origin}/public/icons/courier/express_delivery.png`,
       costBreakup: {
         baseFreight: aeBase,
         fuelSurcharge: aeFuel,
@@ -173,7 +174,7 @@ export function computeTransitCalculation(input: TransitCalculatorInput, baseUrl
       deliveryDate: `By ${formatDisplayDate(5)}`,
       estimatedCost: ecoTotal,
       reliability: '97%',
-      icon: `${baseUrl}/courier-delivery/lottie/standard_delivery.json`,
+      icon: `${origin}/public/icons/courier/standard_delivery.png`,
       costBreakup: {
         baseFreight: ecoBase,
         fuelSurcharge: ecoFuel,

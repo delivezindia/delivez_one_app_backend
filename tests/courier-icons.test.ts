@@ -1,9 +1,9 @@
-import { describe, expect, it } from 'vitest';
+﻿import { describe, expect, it } from 'vitest';
 import request from 'supertest';
 import { app } from '../src/app.js';
 
 describe('Courier Delivery Image Icons & Options Suite', () => {
-  it('1. GET /api/v1/courier-delivery/options returns proper image icon URLs for all categories and keys', async () => {
+  it('1. GET /api/v1/courier-delivery/options returns lightweight image icon URLs without animation bloat', async () => {
     const res = await request(app).get('/api/v1/courier-delivery/options');
 
     expect(res.status).toBe(200);
@@ -15,6 +15,8 @@ describe('Courier Delivery Image Icons & Options Suite', () => {
     expect(data.icon).toBeDefined();
     expect(data.iconUrls).toBeDefined();
     expect(data.imageUrls).toBeDefined();
+    expect(data.lottieIcons).toBeUndefined();
+    expect(data.lottie_icons).toBeUndefined();
 
     const expectedKeys = [
       'documents',
@@ -42,21 +44,24 @@ describe('Courier Delivery Image Icons & Options Suite', () => {
       expect(item.imageUrl).toMatch(/\.png$/);
       expect(item.pngUrl).toMatch(/\.png$/);
       expect(item.svgUrl).toMatch(/\.svg$/);
-      expect(item.lottieUrl).toMatch(/\.json$/);
+      expect(item.animationData).toBeUndefined();
+      expect(item.lottieUrl).toBeUndefined();
 
       // Verify direct mapping
       expect(data.iconUrls[key]).toMatch(/\.png$/);
       expect(data.imageUrls[key]).toMatch(/\.png$/);
     }
 
-    // Verify categories have real image icons
+    // Verify categories have real image icons and NO animationData or lottie bloat
     expect(data.categories.length).toBeGreaterThan(0);
     for (const cat of data.categories) {
       expect(cat.icon).toMatch(/\.png$/);
       expect(cat.iconUrl).toMatch(/\.png$/);
       expect(cat.imageUrl).toMatch(/\.png$/);
       expect(cat.svgUrl).toMatch(/\.svg$/);
-      expect(cat.lottieUrl).toMatch(/\.json$/);
+      expect(cat.animationData).toBeUndefined();
+      expect(cat.lottie).toBeUndefined();
+      expect(cat.lottieUrl).toBeUndefined();
     }
 
     // Verify local options have real image icons
@@ -65,6 +70,8 @@ describe('Courier Delivery Image Icons & Options Suite', () => {
       expect(opt.iconUrl).toMatch(/\.png$/);
       expect(opt.imageUrl).toMatch(/\.png$/);
       expect(opt.svgUrl).toMatch(/\.svg$/);
+      expect(opt.animationData).toBeUndefined();
+      expect(opt.lottie).toBeUndefined();
     }
 
     // Verify intercity options have real image icons
@@ -73,7 +80,13 @@ describe('Courier Delivery Image Icons & Options Suite', () => {
       expect(opt.iconUrl).toMatch(/\.png$/);
       expect(opt.imageUrl).toMatch(/\.png$/);
       expect(opt.svgUrl).toMatch(/\.svg$/);
+      expect(opt.animationData).toBeUndefined();
+      expect(opt.lottie).toBeUndefined();
     }
+
+    // Verify response size is lightweight (< 40KB)
+    const jsonStr = JSON.stringify(res.body);
+    expect(jsonStr.length).toBeLessThan(160000);
   });
 
   it('2. GET /public/icons/courier/documents.png serves valid PNG binary', async () => {
@@ -105,7 +118,7 @@ describe('Courier Delivery Image Icons & Options Suite', () => {
     expect(resNoExt.headers['content-type']).toContain('image/png');
   });
 
-  it('5. GET /api/v1/courier-delivery/lottie/:name still preserves backward-compatibility for Lottie consumers', async () => {
+  it('5. GET /api/v1/courier-delivery/lottie/:name still preserves backward-compatibility for direct Lottie file requests', async () => {
     const res = await request(app).get('/api/v1/courier-delivery/lottie/documents.json');
     expect(res.status).toBe(200);
     expect(res.headers['content-type']).toContain('application/json');

@@ -1,4 +1,4 @@
-import { buildLottieMeta, getAllLottieIcons, type LottieIconMeta } from './courier-lottie.js';
+import { buildIconMeta, getAllCourierIcons, type CourierIconMeta } from './courier-lottie.js';
 export const PRICING_VERSION = '2026-09-07.1';
 
 // 7 Service Options from Screens 01 & 02
@@ -928,7 +928,7 @@ export const courierInsuranceOptions = Object.freeze([
 ]);
 
 
-// Helper enrichment functions for Lottie animated icons
+// Helper enrichment functions for clean image icons
 export const getEnrichedPackageCategories = (req?: any) => {
   return courierPackageCategories.map((cat) => {
     let iconKey = 'order_box';
@@ -941,7 +941,7 @@ export const getEnrichedPackageCategories = (req?: any) => {
     else if (cat.id === 'GIFTS_TOYS') iconKey = 'order_box';
     else if (cat.id === 'OTHER') iconKey = 'order_box';
 
-    const iconMeta = buildLottieMeta(iconKey, cat.title, req);
+    const iconMeta = buildIconMeta(iconKey, cat.title, req);
     return {
       ...cat,
       icon: iconMeta.pngUrl,
@@ -956,14 +956,6 @@ export const getEnrichedPackageCategories = (req?: any) => {
       svg_url: iconMeta.svgUrl,
       iconName: iconKey,
       icon_name: iconKey,
-      lottieIcon: iconKey,
-      lottie_icon: iconKey,
-      lottieUrl: iconMeta.lottieUrl,
-      lottie_url: iconMeta.lottieUrl,
-      lottieAsset: iconMeta.lottieAsset,
-      lottie_asset: iconMeta.lottieAsset,
-      lottie: iconMeta,
-      animationData: iconMeta.animationData,
       materialIcon: cat.icon,
       material_icon: cat.icon,
     };
@@ -978,7 +970,7 @@ export const getEnrichedLocalOptions = (req?: any) => {
     else if (opt.id === 'HYBRID_DRONE') iconKey = 'express_delivery';
     else if (opt.id === 'NEXT_DAY_LOCAL') iconKey = 'standard_delivery';
 
-    const iconMeta = buildLottieMeta(iconKey, opt.title, req);
+    const iconMeta = buildIconMeta(iconKey, opt.title, req);
     return {
       ...opt,
       icon: iconMeta.pngUrl,
@@ -993,14 +985,6 @@ export const getEnrichedLocalOptions = (req?: any) => {
       svg_url: iconMeta.svgUrl,
       iconName: iconKey,
       icon_name: iconKey,
-      lottieIcon: iconKey,
-      lottie_icon: iconKey,
-      lottieUrl: iconMeta.lottieUrl,
-      lottie_url: iconMeta.lottieUrl,
-      lottieAsset: iconMeta.lottieAsset,
-      lottie_asset: iconMeta.lottieAsset,
-      lottie: iconMeta,
-      animationData: iconMeta.animationData,
       materialIcon: opt.icon,
       material_icon: opt.icon,
     };
@@ -1016,7 +1000,7 @@ export const getEnrichedIntercityOptions = (req?: any) => {
     else if (opt.id === 'SCHEDULE_DELIVERY') iconKey = 'order_box';
     else if (opt.id === 'NEXT_DAY_INTERCITY') iconKey = 'standard_delivery';
 
-    const iconMeta = buildLottieMeta(iconKey, opt.title, req);
+    const iconMeta = buildIconMeta(iconKey, opt.title, req);
     return {
       ...opt,
       icon: iconMeta.pngUrl,
@@ -1031,14 +1015,6 @@ export const getEnrichedIntercityOptions = (req?: any) => {
       svg_url: iconMeta.svgUrl,
       iconName: iconKey,
       icon_name: iconKey,
-      lottieIcon: iconKey,
-      lottie_icon: iconKey,
-      lottieUrl: iconMeta.lottieUrl,
-      lottie_url: iconMeta.lottieUrl,
-      lottieAsset: iconMeta.lottieAsset,
-      lottie_asset: iconMeta.lottieAsset,
-      lottie: iconMeta,
-      animationData: iconMeta.animationData,
       materialIcon: opt.icon,
       material_icon: opt.icon,
     };
@@ -1051,7 +1027,7 @@ export const getEnrichedDeliverySpeeds = (req?: any) => {
     if (spd.id === 'EXPRESS') iconKey = 'express_delivery';
     else if (spd.id === 'SAME_DAY') iconKey = 'truck_delivery';
 
-    const iconMeta = buildLottieMeta(iconKey, spd.title, req);
+    const iconMeta = buildIconMeta(iconKey, spd.title, req);
     return {
       ...spd,
       icon: iconMeta.pngUrl,
@@ -1066,14 +1042,6 @@ export const getEnrichedDeliverySpeeds = (req?: any) => {
       svg_url: iconMeta.svgUrl,
       iconName: iconKey,
       icon_name: iconKey,
-      lottieIcon: iconKey,
-      lottie_icon: iconKey,
-      lottieUrl: iconMeta.lottieUrl,
-      lottie_url: iconMeta.lottieUrl,
-      lottieAsset: iconMeta.lottieAsset,
-      lottie_asset: iconMeta.lottieAsset,
-      lottie: iconMeta,
-      animationData: iconMeta.animationData,
     };
   });
 };
@@ -1084,7 +1052,7 @@ export const getEnrichedAddons = (req?: any) => {
     if (addon.id.includes('TRACK')) iconKey = 'tracking_live';
     else if (addon.id.includes('EXPRESS') || addon.id.includes('PRIORITY')) iconKey = 'express_delivery';
 
-    const iconMeta = buildLottieMeta(iconKey, addon.title, req);
+    const iconMeta = buildIconMeta(iconKey, addon.title, req);
     return {
       ...addon,
       icon: iconMeta.pngUrl,
@@ -1099,14 +1067,6 @@ export const getEnrichedAddons = (req?: any) => {
       svg_url: iconMeta.svgUrl,
       iconName: iconKey,
       icon_name: iconKey,
-      lottieIcon: iconKey,
-      lottie_icon: iconKey,
-      lottieUrl: iconMeta.lottieUrl,
-      lottie_url: iconMeta.lottieUrl,
-      lottieAsset: iconMeta.lottieAsset,
-      lottie_asset: iconMeta.lottieAsset,
-      lottie: iconMeta,
-      animationData: iconMeta.animationData,
     };
   });
 };
@@ -1115,7 +1075,7 @@ export const getCourierDeliveryConfig = (req?: any) => {
   const categories = getEnrichedPackageCategories(req);
   const local = getEnrichedLocalOptions(req);
   const intercity = getEnrichedIntercityOptions(req);
-  const allIcons = getAllLottieIcons(req);
+  const allIcons = getAllCourierIcons(req);
 
   const iconUrls: Record<string, string> = {};
   const imageUrls: Record<string, string> = {};
@@ -1166,8 +1126,6 @@ export const getCourierDeliveryConfig = (req?: any) => {
     image_urls: imageUrls,
     svgUrls,
     svg_urls: svgUrls,
-    lottieIcons: allIcons,
-    lottie_icons: allIcons,
   };
 };
 
@@ -1177,7 +1135,7 @@ export const getCourierOptions = (req?: any) => {
   const intercity = getEnrichedIntercityOptions(req);
   const speeds = getEnrichedDeliverySpeeds(req);
   const enrichedAddons = getEnrichedAddons(req);
-  const allIcons = getAllLottieIcons(req);
+  const allIcons = getAllCourierIcons(req);
 
   const iconUrls: Record<string, string> = {};
   const imageUrls: Record<string, string> = {};
@@ -1242,8 +1200,6 @@ export const getCourierOptions = (req?: any) => {
     image_urls: imageUrls,
     svgUrls,
     svg_urls: svgUrls,
-    lottieIcons: allIcons,
-    lottie_icons: allIcons,
     limits: {
       maxWeightPerBagKg: 32,
       maxDimensionSumCm: 158,
