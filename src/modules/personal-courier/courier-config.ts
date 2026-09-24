@@ -872,7 +872,20 @@ export const courierDropOptions = Object.freeze([
     desc: 'You drop the parcel at our nearest Delivez location.',
     description: 'You drop the parcel at our nearest Delivez location.',
     tags: ['Quick Drop', 'Lower Cost'],
-    icon: 'directions_run_outlined',
+    icon: '/public/icons/courier/self_pickup.png',
+    iconUrl: '/public/icons/courier/self_pickup.png',
+    icon_url: '/public/icons/courier/self_pickup.png',
+    imageUrl: '/public/icons/courier/self_pickup.png',
+    image_url: '/public/icons/courier/self_pickup.png',
+    image: '/public/icons/courier/self_pickup.png',
+    pngUrl: '/public/icons/courier/self_pickup.png',
+    png_url: '/public/icons/courier/self_pickup.png',
+    svgUrl: '/public/icons/courier/self_pickup.svg',
+    svg_url: '/public/icons/courier/self_pickup.svg',
+    iconName: 'self_pickup',
+    icon_name: 'self_pickup',
+    materialIcon: 'directions_run_outlined',
+    material_icon: 'directions_run_outlined',
   },
   {
     index: 1,
@@ -884,7 +897,20 @@ export const courierDropOptions = Object.freeze([
     desc: 'You drop the parcel at our destination hub.',
     description: 'You drop the parcel at our destination hub.',
     tags: ['Flexible', 'Lower Cost'],
-    icon: 'storefront_outlined',
+    icon: '/public/icons/courier/self_drop.png',
+    iconUrl: '/public/icons/courier/self_drop.png',
+    icon_url: '/public/icons/courier/self_drop.png',
+    imageUrl: '/public/icons/courier/self_drop.png',
+    image_url: '/public/icons/courier/self_drop.png',
+    image: '/public/icons/courier/self_drop.png',
+    pngUrl: '/public/icons/courier/self_drop.png',
+    png_url: '/public/icons/courier/self_drop.png',
+    svgUrl: '/public/icons/courier/self_drop.svg',
+    svg_url: '/public/icons/courier/self_drop.svg',
+    iconName: 'self_drop',
+    icon_name: 'self_drop',
+    materialIcon: 'storefront_outlined',
+    material_icon: 'storefront_outlined',
   },
 ]);
 
@@ -991,6 +1017,35 @@ export const getEnrichedLocalOptions = (req?: any) => {
   });
 };
 
+
+export const getEnrichedDropOptions = (req?: any) => {
+  return courierDropOptions.map((opt) => {
+    let iconKey = 'self_pickup';
+    if (opt.id === 'SELF_DROP') {
+      iconKey = 'self_drop';
+    }
+
+    const iconMeta = buildIconMeta(iconKey, opt.title, req);
+    return {
+      ...opt,
+      icon: iconMeta.pngUrl,
+      iconUrl: iconMeta.pngUrl,
+      icon_url: iconMeta.pngUrl,
+      imageUrl: iconMeta.pngUrl,
+      image_url: iconMeta.pngUrl,
+      image: iconMeta.pngUrl,
+      pngUrl: iconMeta.pngUrl,
+      png_url: iconMeta.pngUrl,
+      svgUrl: iconMeta.svgUrl,
+      svg_url: iconMeta.svgUrl,
+      iconName: iconKey,
+      icon_name: iconKey,
+      materialIcon: opt.materialIcon || 'directions_run_outlined',
+      material_icon: opt.material_icon || 'directions_run_outlined',
+    };
+  });
+};
+
 export const getEnrichedIntercityOptions = (req?: any) => {
   return courierIntercityOptions.map((opt) => {
     let iconKey = 'standard_delivery';
@@ -1075,6 +1130,7 @@ export const getCourierDeliveryConfig = (req?: any) => {
   const categories = getEnrichedPackageCategories(req);
   const local = getEnrichedLocalOptions(req);
   const intercity = getEnrichedIntercityOptions(req);
+  const drop = getEnrichedDropOptions(req);
   const allIcons = getAllCourierIcons(req);
 
   const iconUrls: Record<string, string> = {};
@@ -1112,10 +1168,10 @@ export const getCourierDeliveryConfig = (req?: any) => {
       local,
       intercity,
     },
-    dropOptions: courierDropOptions,
-    drop_options: courierDropOptions,
-    selfServiceOptions: courierDropOptions,
-    self_service_options: courierDropOptions,
+    dropOptions: drop,
+    drop_options: drop,
+    selfServiceOptions: drop,
+    self_service_options: drop,
     insuranceOptions: courierInsuranceOptions,
     insurance_options: courierInsuranceOptions,
     icon: allIcons,
@@ -1135,6 +1191,7 @@ export const getCourierOptions = (req?: any) => {
   const intercity = getEnrichedIntercityOptions(req);
   const speeds = getEnrichedDeliverySpeeds(req);
   const enrichedAddons = getEnrichedAddons(req);
+  const drop = getEnrichedDropOptions(req);
   const allIcons = getAllCourierIcons(req);
 
   const iconUrls: Record<string, string> = {};
@@ -1171,10 +1228,10 @@ export const getCourierOptions = (req?: any) => {
       local,
       intercity,
     },
-    dropOptions: courierDropOptions,
-    drop_options: courierDropOptions,
-    selfServiceOptions: courierDropOptions,
-    self_service_options: courierDropOptions,
+    dropOptions: drop,
+    drop_options: drop,
+    selfServiceOptions: drop,
+    self_service_options: drop,
     insuranceOptions: courierInsuranceOptions,
     insurance_options: courierInsuranceOptions,
     services: Object.values(courierServices),

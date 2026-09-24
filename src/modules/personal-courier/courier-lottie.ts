@@ -37,6 +37,8 @@ export const COURIER_ICON_KEYS = [
   'tracking_live',
   'order_box',
   'success_check',
+  'self_pickup',
+  'self_drop',
 ] as const;
 
 export const COURIER_ICON_TITLES: Record<string, string> = {
@@ -54,6 +56,8 @@ export const COURIER_ICON_TITLES: Record<string, string> = {
   tracking_live: 'Live GPS Tracking',
   order_box: 'Standard Parcel Box',
   success_check: 'Delivery Success Confirmation',
+  self_pickup: 'Self Pickup at Nearest Hub',
+  self_drop: 'Self Drop at Destination Hub',
 };
 
 function getBaseApiUrl(req?: Request): string {

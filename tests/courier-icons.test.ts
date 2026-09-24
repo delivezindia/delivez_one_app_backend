@@ -33,6 +33,8 @@ describe('Courier Delivery Image Icons & Options Suite', () => {
       'tracking_live',
       'order_box',
       'success_check',
+      'self_pickup',
+      'self_drop',
     ];
 
     for (const key of expectedKeys) {
@@ -82,6 +84,15 @@ describe('Courier Delivery Image Icons & Options Suite', () => {
       expect(opt.svgUrl).toMatch(/\.svg$/);
       expect(opt.animationData).toBeUndefined();
       expect(opt.lottie).toBeUndefined();
+    }
+
+    // Verify drop options have real image icons
+    expect(data.dropOptions.length).toBe(2);
+    for (const opt of data.dropOptions) {
+      expect(opt.icon).toMatch(/\.(png|jpg)$/);
+      expect(opt.iconUrl).toMatch(/\.(png|jpg)$/);
+      expect(opt.imageUrl).toMatch(/\.(png|jpg)$/);
+      expect(opt.svgUrl).toMatch(/\.svg$/);
     }
 
     // Verify response size is lightweight (< 40KB)
