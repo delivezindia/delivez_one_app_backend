@@ -1,5 +1,556 @@
 [
   {
+    "id": "aud-1790230802750-546",
+    "timestamp": "2026-09-24T06:20:02.750Z",
+    "category": "SYSTEM",
+    "action": "POST_SCHEDULE_PICKUP_PKP_197BF0E4_CANCEL",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/schedule-pickup/PKP-197BF0E4/cancel executed with status 200 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/schedule-pickup/PKP-197BF0E4/cancel",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790230802739-5747",
+    "timestamp": "2026-09-24T06:20:02.739Z",
+    "category": "SYSTEM",
+    "action": "POST_SCHEDULE_PICKUP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/schedule-pickup executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/schedule-pickup",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1790230802730-4218",
+    "timestamp": "2026-09-24T06:20:02.730Z",
+    "category": "SYSTEM",
+    "action": "POST_TRANSIT_CALCULATOR_SHARE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/transit-calculator/share executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/transit-calculator/share",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790230802722-30",
+    "timestamp": "2026-09-24T06:20:02.722Z",
+    "category": "SYSTEM",
+    "action": "POST_TRANSIT_CALCULATOR_DOWNLOAD",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/transit-calculator/download executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/transit-calculator/download",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790230802704-4880",
+    "timestamp": "2026-09-24T06:20:02.705Z",
+    "category": "SYSTEM",
+    "action": "POST_TRANSIT_CALCULATOR_CALCULATE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/transit-calculator/calculate executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/transit-calculator/calculate",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790230135946-9677",
+    "timestamp": "2026-09-24T06:08:55.946Z",
+    "category": "SYSTEM",
+    "action": "POST_SCHEDULE_PICKUP_PKP_3EC447D5_CANCEL",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/schedule-pickup/PKP-3EC447D5/cancel executed with status 200 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/schedule-pickup/PKP-3EC447D5/cancel",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790230135911-8196",
+    "timestamp": "2026-09-24T06:08:55.911Z",
+    "category": "SYSTEM",
+    "action": "POST_SCHEDULE_PICKUP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/schedule-pickup executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/schedule-pickup",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1790230135869-2488",
+    "timestamp": "2026-09-24T06:08:55.869Z",
+    "category": "SYSTEM",
+    "action": "POST_TRANSIT_CALCULATOR_SHARE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/transit-calculator/share executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/transit-calculator/share",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790230135857-8158",
+    "timestamp": "2026-09-24T06:08:55.857Z",
+    "category": "SYSTEM",
+    "action": "POST_TRANSIT_CALCULATOR_DOWNLOAD",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/transit-calculator/download executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/transit-calculator/download",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790230135830-1757",
+    "timestamp": "2026-09-24T06:08:55.830Z",
+    "category": "SYSTEM",
+    "action": "POST_TRANSIT_CALCULATOR_CALCULATE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/transit-calculator/calculate executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/transit-calculator/calculate",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790225218096-9010",
+    "timestamp": "2026-09-24T04:46:58.096Z",
+    "category": "SYSTEM",
+    "action": "POST_GIFTS",
+    "severity": "WARNING",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/gifts executed with status 403 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/gifts",
+      "statusCode": 403
+    }
+  },
+  {
+    "id": "aud-1790225218069-3204",
+    "timestamp": "2026-09-24T04:46:58.069Z",
+    "category": "SYSTEM",
+    "action": "POST_GIFT_DELIVERY",
+    "severity": "WARNING",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/gift-delivery executed with status 403 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/gift-delivery",
+      "statusCode": 403
+    }
+  },
+  {
+    "id": "aud-1790225218009-5143",
+    "timestamp": "2026-09-24T04:46:58.009Z",
+    "category": "PRICING",
+    "action": "POST_GIFT_DELIVERY_QUOTE",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "PRICING",
+    "description": "POST /api/v1/gift-delivery/quote executed with status 403 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/gift-delivery/quote",
+      "statusCode": 403
+    }
+  },
+  {
+    "id": "aud-1790225187503-2609",
+    "timestamp": "2026-09-24T04:46:27.503Z",
+    "category": "SYSTEM",
+    "action": "POST_GIFTS",
+    "severity": "WARNING",
+    "actorName": "Aman Verma",
+    "actorEmail": "aman.v@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/gifts executed with status 403 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/gifts",
+      "statusCode": 403
+    }
+  },
+  {
+    "id": "aud-1790225187494-6750",
+    "timestamp": "2026-09-24T04:46:27.494Z",
+    "category": "SYSTEM",
+    "action": "POST_GIFT_DELIVERY",
+    "severity": "WARNING",
+    "actorName": "Aman Verma",
+    "actorEmail": "aman.v@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/gift-delivery executed with status 403 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/gift-delivery",
+      "statusCode": 403
+    }
+  },
+  {
+    "id": "aud-1790225187475-8165",
+    "timestamp": "2026-09-24T04:46:27.475Z",
+    "category": "PRICING",
+    "action": "POST_GIFT_DELIVERY_QUOTE",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "PRICING",
+    "description": "POST /api/v1/gift-delivery/quote executed with status 403 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/gift-delivery/quote",
+      "statusCode": 403
+    }
+  },
+  {
+    "id": "aud-1790225158880-7083",
+    "timestamp": "2026-09-24T04:45:58.880Z",
+    "category": "SYSTEM",
+    "action": "POST_GIFTS",
+    "severity": "WARNING",
+    "actorName": "Aman Verma",
+    "actorEmail": "aman.v@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/gifts executed with status 403 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/gifts",
+      "statusCode": 403
+    }
+  },
+  {
+    "id": "aud-1790225158868-5414",
+    "timestamp": "2026-09-24T04:45:58.868Z",
+    "category": "SYSTEM",
+    "action": "POST_GIFT_DELIVERY",
+    "severity": "WARNING",
+    "actorName": "Aman Verma",
+    "actorEmail": "aman.v@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/gift-delivery executed with status 403 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/gift-delivery",
+      "statusCode": 403
+    }
+  },
+  {
+    "id": "aud-1790225158835-7010",
+    "timestamp": "2026-09-24T04:45:58.835Z",
+    "category": "PRICING",
+    "action": "POST_GIFT_DELIVERY_QUOTE",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "PRICING",
+    "description": "POST /api/v1/gift-delivery/quote executed with status 403 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/gift-delivery/quote",
+      "statusCode": 403
+    }
+  },
+  {
+    "id": "aud-1790225146593-8006",
+    "timestamp": "2026-09-24T04:45:46.593Z",
+    "category": "SYSTEM",
+    "action": "POST_GIFTS",
+    "severity": "WARNING",
+    "actorName": "Aman Verma",
+    "actorEmail": "aman.v@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/gifts executed with status 403 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/gifts",
+      "statusCode": 403
+    }
+  },
+  {
+    "id": "aud-1790225146584-2091",
+    "timestamp": "2026-09-24T04:45:46.584Z",
+    "category": "SYSTEM",
+    "action": "POST_GIFT_DELIVERY",
+    "severity": "WARNING",
+    "actorName": "Aman Verma",
+    "actorEmail": "aman.v@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/gift-delivery executed with status 403 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/gift-delivery",
+      "statusCode": 403
+    }
+  },
+  {
+    "id": "aud-1790225146565-69",
+    "timestamp": "2026-09-24T04:45:46.565Z",
+    "category": "PRICING",
+    "action": "POST_GIFT_DELIVERY_QUOTE",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "PRICING",
+    "description": "POST /api/v1/gift-delivery/quote executed with status 403 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/gift-delivery/quote",
+      "statusCode": 403
+    }
+  },
+  {
+    "id": "aud-1790225136566-1452",
+    "timestamp": "2026-09-24T04:45:36.566Z",
+    "category": "SYSTEM",
+    "action": "POST_GIFTS",
+    "severity": "WARNING",
+    "actorName": "Rajesh Sharma",
+    "actorEmail": "rajesh.rider@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/gifts executed with status 403 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/gifts",
+      "statusCode": 403
+    }
+  },
+  {
+    "id": "aud-1790225136556-9337",
+    "timestamp": "2026-09-24T04:45:36.556Z",
+    "category": "SYSTEM",
+    "action": "POST_GIFT_DELIVERY",
+    "severity": "WARNING",
+    "actorName": "Rajesh Sharma",
+    "actorEmail": "rajesh.rider@delivez.com",
+    "actorRole": "DRIVER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/gift-delivery executed with status 403 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/gift-delivery",
+      "statusCode": 403
+    }
+  },
+  {
+    "id": "aud-1790225136507-5772",
+    "timestamp": "2026-09-24T04:45:36.507Z",
+    "category": "PRICING",
+    "action": "POST_GIFT_DELIVERY_QUOTE",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "resourceType": "PRICING",
+    "description": "POST /api/v1/gift-delivery/quote executed with status 403 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/gift-delivery/quote",
+      "statusCode": 403
+    }
+  },
+  {
+    "id": "aud-1790169210416-8476",
+    "timestamp": "2026-09-23T13:13:30.416Z",
+    "category": "SYSTEM",
+    "action": "POST_WALLET_ADD",
+    "severity": "SUCCESS",
+    "actorName": "Postman Test User",
+    "actorEmail": "postman.user@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.7.0",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/wallet/add executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/wallet/add",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790169188066-3237",
+    "timestamp": "2026-09-23T13:13:08.066Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_VERIFY_OTP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.7.0",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/verify-otp executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-otp",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790169156935-5252",
+    "timestamp": "2026-09-23T13:12:36.935Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_VERIFY_OTP",
+    "severity": "WARNING",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.7.0",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/verify-otp executed with status 400 (WARNING)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-otp",
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "aud-1790169151731-6500",
+    "timestamp": "2026-09-23T13:12:31.731Z",
+    "category": "SECURITY",
+    "action": "POST_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::1",
+    "userAgent": "PostmanRuntime/2.7.0",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
     "id": "aud-1790164941833-5383",
     "timestamp": "2026-09-23T12:02:21.833Z",
     "category": "SYSTEM",

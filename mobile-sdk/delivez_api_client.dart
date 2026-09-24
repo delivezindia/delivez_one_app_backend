@@ -740,4 +740,75 @@ class DelivezApiException implements Exception {
     final res = await http.get(Uri.parse('$baseUrl/network/hubs$query'), headers: _buildHeaders());
     return _handleResponse(res);
   }
+  // ==========================================
+  // 18. TRANSIT CALCULATOR (APK SCREENS)
+  // ==========================================
+  Future<Map<String, dynamic>> getTransitCalculatorConfig() async {
+    final res = await http.get(Uri.parse('$baseUrl/transit-calculator/config'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> calculateTransit(Map<String, dynamic> payload) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/transit-calculator/calculate'),
+      headers: _buildHeaders(),
+      body: jsonEncode(payload),
+    );
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> getTransitOptionBreakup(String optionId) async {
+    final res = await http.get(Uri.parse('$baseUrl/transit-calculator/breakup/$optionId'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> downloadTransitEstimate(String estimateId) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/transit-calculator/download'),
+      headers: _buildHeaders(),
+      body: jsonEncode({'id': estimateId}),
+    );
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> shareTransitEstimate(String estimateId) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/transit-calculator/share'),
+      headers: _buildHeaders(),
+      body: jsonEncode({'id': estimateId}),
+    );
+    return _handleResponse(res);
+  }
+
+  // ==========================================
+  // 19. SCHEDULE PICKUP (APK SCREENS)
+  // ==========================================
+  Future<Map<String, dynamic>> getSchedulePickupConfig() async {
+    final res = await http.get(Uri.parse('$baseUrl/schedule-pickup/config'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> createScheduledPickup(Map<String, dynamic> payload) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/schedule-pickup'),
+      headers: _buildHeaders(),
+      body: jsonEncode(payload),
+    );
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> getScheduledPickups() async {
+    final res = await http.get(Uri.parse('$baseUrl/schedule-pickup'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> getScheduledPickupById(String id) async {
+    final res = await http.get(Uri.parse('$baseUrl/schedule-pickup/$id'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
+
+  Future<Map<String, dynamic>> cancelScheduledPickup(String id) async {
+    final res = await http.post(Uri.parse('$baseUrl/schedule-pickup/$id/cancel'), headers: _buildHeaders());
+    return _handleResponse(res);
+  }
 }

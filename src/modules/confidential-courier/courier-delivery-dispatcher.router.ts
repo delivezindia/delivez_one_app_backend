@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { authenticate } from '../../middleware/auth.middleware.js';
 import { requireUser } from '../../middleware/user.middleware.js';
 import { personalCourierRouter } from '../personal-courier/personal-courier.routes.js';
+import { getOptions, getLottieIconHandler } from '../personal-courier/personal-courier.controller.js';
 import { CANONICAL_SERVICES } from './vault-courier.validation.js';
 import { prisma } from '../../lib/prisma.js';
 import {
@@ -30,6 +31,14 @@ import {
 
 export const courierDeliveryDispatcherRouter = Router();
 
+
+// ==========================================
+// 0. COURIER DELIVERY OPTIONS & LOTTIE (PUBLIC)
+// ==========================================
+courierDeliveryDispatcherRouter.get('/options', getOptions);
+courierDeliveryDispatcherRouter.get('/delivery-config', getOptions);
+courierDeliveryDispatcherRouter.get('/config', getOptions);
+courierDeliveryDispatcherRouter.get('/lottie/:iconName', getLottieIconHandler);
 
 // ==========================================
 // 0. CANONICAL TEMPLATE & SERVICES ENDPOINTS

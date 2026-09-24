@@ -1,3 +1,5 @@
+import { transitCalculatorRouter } from './modules/transit-calculator/transit-calculator.routes.js';
+import { schedulePickupRouter } from './modules/schedule-pickup/schedule-pickup.routes.js';
 import { rewardsRouter } from './modules/rewards/rewards.routes.js';
 import { paymentMethodsRouter, walletRouter } from './modules/payment-methods/payment-methods.routes.js';
 import { privacySecurityRouter } from './modules/privacy-security/privacy-security.routes.js';
@@ -41,6 +43,8 @@ apiRouter.use('/privacy-security', privacySecurityRouter);
 apiRouter.use('/legal', legalRouter);
 apiRouter.use('/company', companyRouter);
 apiRouter.use('/network', networkRouter);
+apiRouter.use('/transit-calculator', transitCalculatorRouter);
+apiRouter.use('/schedule-pickup', schedulePickupRouter);
 
 
 apiRouter.get('/', (_request, response) => {

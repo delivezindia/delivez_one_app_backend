@@ -14,6 +14,7 @@ import {
   updateBooking,
   getBookingTracking,
   getBookingPod,
+  getLottieIconHandler,
 } from './personal-courier.controller.js';
 
 export const personalCourierRouter = Router();
@@ -22,6 +23,7 @@ export const personalCourierRouter = Router();
 personalCourierRouter.get('/options', getOptions);
 personalCourierRouter.get('/delivery-config', getOptions);
 personalCourierRouter.get('/config', getOptions);
+personalCourierRouter.get('/lottie/:iconName', getLottieIconHandler);
 personalCourierRouter.post('/quote', courierMutationRateLimit, createQuote);
 personalCourierRouter.get('/bookings/:id/track', getBookingTracking);
 personalCourierRouter.get('/track/:id', getBookingTracking);

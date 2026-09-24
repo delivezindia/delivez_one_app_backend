@@ -1,6 +1,19 @@
 {
   "transactions": [
     {
+      "id": "wt-1790169210396-468",
+      "userId": "8d6804b0-44db-4f17-b032-c7ddaaeb3cf1",
+      "type": "CREDIT",
+      "amount": 500,
+      "currency": "INR",
+      "paymentMethod": "UPI",
+      "referenceId": "TXN_1790169210387_4535",
+      "status": "SUCCESS",
+      "description": "Wallet top up via UPI",
+      "balanceAfter": 1750,
+      "createdAt": "2026-09-23T13:13:30.396Z"
+    },
+    {
       "id": "wt-1790164941830-499",
       "userId": "06ec3e59-a50f-4427-a826-7982af2818a9",
       "type": "CREDIT",

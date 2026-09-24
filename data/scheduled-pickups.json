@@ -1,0 +1,69 @@
+[
+  {
+    "id": "PKP-197BF0E4",
+    "pickupNumber": "PKP-238644",
+    "status": "CANCELLED",
+    "pickupAddress": {
+      "type": "Home",
+      "addressLine": "12, Green Park Street, Anna Nagar",
+      "city": "Chennai",
+      "postalCode": "600040",
+      "fullAddress": "12, Green Park Street, Anna Nagar, Chennai - 600040"
+    },
+    "pickupDate": "Today 10 Sep",
+    "pickupTimeSlot": "9:00 AM - 12:00 PM",
+    "packageDetails": {
+      "noOfPackages": 1,
+      "approxWeightKg": 1.5,
+      "packageSize": "Small (Upto 5 kg)"
+    },
+    "specialInstructions": "Ring the bell twice, call before pickup",
+    "createdAt": "2026-09-24T06:20:02.737Z",
+    "updatedAt": "2026-09-24T06:20:02.748Z"
+  },
+  {
+    "id": "PKP-3EC447D5",
+    "pickupNumber": "PKP-451215",
+    "status": "CANCELLED",
+    "pickupAddress": {
+      "type": "Home",
+      "addressLine": "12, Green Park Street, Anna Nagar",
+      "city": "Chennai",
+      "postalCode": "600040",
+      "fullAddress": "12, Green Park Street, Anna Nagar, Chennai - 600040"
+    },
+    "pickupDate": "Today 10 Sep",
+    "pickupTimeSlot": "9:00 AM - 12:00 PM",
+    "packageDetails": {
+      "noOfPackages": 1,
+      "approxWeightKg": 1.5,
+      "packageSize": "Small (Upto 5 kg)"
+    },
+    "specialInstructions": "Ring the bell twice, call before pickup",
+    "createdAt": "2026-09-24T06:08:55.904Z",
+    "updatedAt": "2026-09-24T06:08:55.943Z"
+  },
+  {
+    "id": "PKP-101",
+    "pickupNumber": "PKP-CHENNAI-101",
+    "status": "SCHEDULED",
+    "pickupAddress": {
+      "id": "ADDR-HOME-01",
+      "type": "Home",
+      "addressLine": "12, Green Park Street, Anna Nagar",
+      "city": "Chennai",
+      "postalCode": "600040",
+      "fullAddress": "12, Green Park Street, Anna Nagar, Chennai - 600040"
+    },
+    "pickupDate": "Today 24 Sep",
+    "pickupTimeSlot": "9:00 AM - 12:00 PM",
+    "packageDetails": {
+      "noOfPackages": 1,
+      "approxWeightKg": 1.5,
+      "packageSize": "Small (Upto 5 kg)"
+    },
+    "specialInstructions": "Ring the bell twice, call before pickup",
+    "createdAt": "2026-09-24T06:08:55.903Z",
+    "updatedAt": "2026-09-24T06:08:55.903Z"
+  }
+]

@@ -1,3 +1,4 @@
+import { buildLottieMeta, getAllLottieIcons, type LottieIconMeta } from './courier-lottie.js';
 export const PRICING_VERSION = '2026-09-07.1';
 
 // 7 Service Options from Screens 01 & 02
@@ -926,94 +927,265 @@ export const courierInsuranceOptions = Object.freeze([
   },
 ]);
 
-export const getCourierDeliveryConfig = () => ({
-  categories: courierPackageCategories,
-  packageCategories: courierPackageCategories,
-  package_categories: courierPackageCategories,
-  boxTypes: courierBoxTypesByWeight,
-  box_types: courierBoxTypesByWeight,
-  parcelDimensions: courierParcelDimensions,
-  parcel_dimensions: courierParcelDimensions,
-  parcelTypes: courierParcelTypes,
-  parcel_types: courierParcelTypes,
-  localOptions: courierLocalOptions,
-  local_options: courierLocalOptions,
-  intercityOptions: courierIntercityOptions,
-  intercity_options: courierIntercityOptions,
-  serviceTypes: {
-    local: courierLocalOptions,
-    intercity: courierIntercityOptions,
-  },
-  deliveryServices: {
-    local: courierLocalOptions,
-    intercity: courierIntercityOptions,
-  },
-  delivery_services: {
-    local: courierLocalOptions,
-    intercity: courierIntercityOptions,
-  },
-  dropOptions: courierDropOptions,
-  drop_options: courierDropOptions,
-  selfServiceOptions: courierDropOptions,
-  self_service_options: courierDropOptions,
-  insuranceOptions: courierInsuranceOptions,
-  insurance_options: courierInsuranceOptions,
-});
 
+// Helper enrichment functions for Lottie animated icons
+export const getEnrichedPackageCategories = (req?: any) => {
+  return courierPackageCategories.map((cat) => {
+    let iconKey = 'order_box';
+    if (cat.id === 'DOCUMENTS') iconKey = 'documents';
+    else if (cat.id === 'ELECTRONICS') iconKey = 'electronics';
+    else if (cat.id === 'CLOTHING_APPAREL') iconKey = 'clothing';
+    else if (cat.id === 'HEALTH_MEDICINE') iconKey = 'medicine';
+    else if (cat.id === 'HOUSEHOLD_ITEMS') iconKey = 'household';
+    else if (cat.id === 'COMMERCIAL_GOODS') iconKey = 'commercial';
+    else if (cat.id === 'GIFTS_TOYS') iconKey = 'order_box';
+    else if (cat.id === 'OTHER') iconKey = 'order_box';
 
-export const getCourierOptions = () => ({
-  pricingVersion: PRICING_VERSION,
-  currency: 'INR',
-  // Flutter Mobile App Comprehensive Specifications
-  categories: courierPackageCategories,
-  packageCategories: courierPackageCategories,
-  package_categories: courierPackageCategories,
-  boxTypes: courierBoxTypesByWeight,
-  box_types: courierBoxTypesByWeight,
-  parcelDimensions: courierParcelDimensions,
-  parcel_dimensions: courierParcelDimensions,
-  parcelTypes: courierParcelTypes,
-  parcel_types: courierParcelTypes,
-  localOptions: courierLocalOptions,
-  local_options: courierLocalOptions,
-  intercityOptions: courierIntercityOptions,
-  intercity_options: courierIntercityOptions,
-  deliveryServices: {
-    local: courierLocalOptions,
-    intercity: courierIntercityOptions,
-  },
-  delivery_services: {
-    local: courierLocalOptions,
-    intercity: courierIntercityOptions,
-  },
-  dropOptions: courierDropOptions,
-  drop_options: courierDropOptions,
-  selfServiceOptions: courierDropOptions,
-  self_service_options: courierDropOptions,
-  insuranceOptions: courierInsuranceOptions,
-  insurance_options: courierInsuranceOptions,
-  services: Object.values(courierServices),
-  addons: courierAddons,
-  luggageProtectionAddons,
-  airportAssistanceAddons,
-  luggageTypes,
-  luggageSizes,
-  pickupTimeSlots,
-  deliveryDeadlines,
-  deliverySpeeds,
-  paymentMethods: courierPaymentMethods,
-  serviceTypes: Object.entries(serviceTypes).map(([id, val]) => ({ id, ...val })),
-  parcelSizes: Object.entries(parcelSizes).map(([id, val]) => ({ id, ...val })),
-  packagingTypes: Object.entries(packagingTypes).map(([id, val]) => ({ id, ...val })),
-  contentCategories: Object.entries(contentCategories).map(([id, val]) => ({ id, ...val })),
-  insuranceTypes: Object.entries(insuranceTypes).map(([id, val]) => ({ id, ...val })),
-  limits: {
-    maxWeightPerBagKg: 32,
-    maxDimensionSumCm: 158,
-    idealBookingBufferHours: 4,
-  },
-});
+    const lottie = buildLottieMeta(iconKey, cat.title, req);
+    return {
+      ...cat,
+      icon: lottie.lottieUrl,
+      iconUrl: lottie.lottieUrl,
+      icon_url: lottie.lottieUrl,
+      iconName: iconKey,
+      icon_name: iconKey,
+      lottieIcon: iconKey,
+      lottie_icon: iconKey,
+      lottieUrl: lottie.lottieUrl,
+      lottie_url: lottie.lottieUrl,
+      lottieAsset: lottie.lottieAsset,
+      lottie_asset: lottie.lottieAsset,
+      lottie,
+      animationData: lottie.animationData,
+      materialIcon: cat.icon,
+      material_icon: cat.icon,
+    };
+  });
+};
 
+export const getEnrichedLocalOptions = (req?: any) => {
+  return courierLocalOptions.map((opt) => {
+    let iconKey = 'bike_delivery';
+    if (opt.id === 'BIKE_PRIORITY') iconKey = 'bike_delivery';
+    else if (opt.id === 'SAME_DAY') iconKey = 'truck_delivery';
+    else if (opt.id === 'HYBRID_DRONE') iconKey = 'express_delivery';
+    else if (opt.id === 'NEXT_DAY_LOCAL') iconKey = 'standard_delivery';
+
+    const lottie = buildLottieMeta(iconKey, opt.title, req);
+    return {
+      ...opt,
+      icon: lottie.lottieUrl,
+      iconUrl: lottie.lottieUrl,
+      icon_url: lottie.lottieUrl,
+      iconName: iconKey,
+      icon_name: iconKey,
+      lottieIcon: iconKey,
+      lottie_icon: iconKey,
+      lottieUrl: lottie.lottieUrl,
+      lottie_url: lottie.lottieUrl,
+      lottieAsset: lottie.lottieAsset,
+      lottie_asset: lottie.lottieAsset,
+      lottie,
+      animationData: lottie.animationData,
+      materialIcon: opt.icon,
+      material_icon: opt.icon,
+    };
+  });
+};
+
+export const getEnrichedIntercityOptions = (req?: any) => {
+  return courierIntercityOptions.map((opt) => {
+    let iconKey = 'standard_delivery';
+    if (opt.id === 'STANDARD_DELIVERY') iconKey = 'standard_delivery';
+    else if (opt.id === 'EXPRESS_DELIVERY') iconKey = 'express_delivery';
+    else if (opt.id === 'PRECISE_TIME') iconKey = 'tracking_live';
+    else if (opt.id === 'SCHEDULE_DELIVERY') iconKey = 'order_box';
+    else if (opt.id === 'NEXT_DAY_INTERCITY') iconKey = 'standard_delivery';
+
+    const lottie = buildLottieMeta(iconKey, opt.title, req);
+    return {
+      ...opt,
+      icon: lottie.lottieUrl,
+      iconUrl: lottie.lottieUrl,
+      icon_url: lottie.lottieUrl,
+      iconName: iconKey,
+      icon_name: iconKey,
+      lottieIcon: iconKey,
+      lottie_icon: iconKey,
+      lottieUrl: lottie.lottieUrl,
+      lottie_url: lottie.lottieUrl,
+      lottieAsset: lottie.lottieAsset,
+      lottie_asset: lottie.lottieAsset,
+      lottie,
+      animationData: lottie.animationData,
+      materialIcon: opt.icon,
+      material_icon: opt.icon,
+    };
+  });
+};
+
+export const getEnrichedDeliverySpeeds = (req?: any) => {
+  return deliverySpeeds.map((spd) => {
+    let iconKey = 'standard_delivery';
+    if (spd.id === 'EXPRESS') iconKey = 'express_delivery';
+    else if (spd.id === 'SAME_DAY') iconKey = 'truck_delivery';
+
+    const lottie = buildLottieMeta(iconKey, spd.title, req);
+    return {
+      ...spd,
+      icon: lottie.lottieUrl,
+      iconUrl: lottie.lottieUrl,
+      icon_url: lottie.lottieUrl,
+      iconName: iconKey,
+      icon_name: iconKey,
+      lottieIcon: iconKey,
+      lottie_icon: iconKey,
+      lottieUrl: lottie.lottieUrl,
+      lottie_url: lottie.lottieUrl,
+      lottieAsset: lottie.lottieAsset,
+      lottie_asset: lottie.lottieAsset,
+      lottie,
+      animationData: lottie.animationData,
+    };
+  });
+};
+
+export const getEnrichedAddons = (req?: any) => {
+  return courierAddons.map((addon) => {
+    let iconKey = 'secure_shield';
+    if (addon.id.includes('TRACK')) iconKey = 'tracking_live';
+    else if (addon.id.includes('EXPRESS') || addon.id.includes('PRIORITY')) iconKey = 'express_delivery';
+
+    const lottie = buildLottieMeta(iconKey, addon.title, req);
+    return {
+      ...addon,
+      icon: lottie.lottieUrl,
+      iconUrl: lottie.lottieUrl,
+      icon_url: lottie.lottieUrl,
+      iconName: iconKey,
+      icon_name: iconKey,
+      lottieIcon: iconKey,
+      lottie_icon: iconKey,
+      lottieUrl: lottie.lottieUrl,
+      lottie_url: lottie.lottieUrl,
+      lottieAsset: lottie.lottieAsset,
+      lottie_asset: lottie.lottieAsset,
+      lottie,
+      animationData: lottie.animationData,
+    };
+  });
+};
+
+export const getCourierDeliveryConfig = (req?: any) => {
+  const categories = getEnrichedPackageCategories(req);
+  const local = getEnrichedLocalOptions(req);
+  const intercity = getEnrichedIntercityOptions(req);
+  const allLotties = getAllLottieIcons(req);
+
+  return {
+    categories,
+    packageCategories: categories,
+    package_categories: categories,
+    boxTypes: courierBoxTypesByWeight,
+    box_types: courierBoxTypesByWeight,
+    parcelDimensions: courierParcelDimensions,
+    parcel_dimensions: courierParcelDimensions,
+    parcelTypes: courierParcelTypes,
+    parcel_types: courierParcelTypes,
+    localOptions: local,
+    local_options: local,
+    intercityOptions: intercity,
+    intercity_options: intercity,
+    serviceTypes: {
+      local,
+      intercity,
+    },
+    deliveryServices: {
+      local,
+      intercity,
+    },
+    delivery_services: {
+      local,
+      intercity,
+    },
+    dropOptions: courierDropOptions,
+    drop_options: courierDropOptions,
+    selfServiceOptions: courierDropOptions,
+    self_service_options: courierDropOptions,
+    insuranceOptions: courierInsuranceOptions,
+    insurance_options: courierInsuranceOptions,
+    icon: allLotties,
+    icons: allLotties,
+    lottieIcons: allLotties,
+    lottie_icons: allLotties,
+  };
+};
+
+export const getCourierOptions = (req?: any) => {
+  const categories = getEnrichedPackageCategories(req);
+  const local = getEnrichedLocalOptions(req);
+  const intercity = getEnrichedIntercityOptions(req);
+  const speeds = getEnrichedDeliverySpeeds(req);
+  const enrichedAddons = getEnrichedAddons(req);
+  const allLotties = getAllLottieIcons(req);
+
+  return {
+    pricingVersion: PRICING_VERSION,
+    currency: 'INR',
+    // Flutter Mobile App Comprehensive Specifications
+    categories,
+    packageCategories: categories,
+    package_categories: categories,
+    boxTypes: courierBoxTypesByWeight,
+    box_types: courierBoxTypesByWeight,
+    parcelDimensions: courierParcelDimensions,
+    parcel_dimensions: courierParcelDimensions,
+    parcelTypes: courierParcelTypes,
+    parcel_types: courierParcelTypes,
+    localOptions: local,
+    local_options: local,
+    intercityOptions: intercity,
+    intercity_options: intercity,
+    deliveryServices: {
+      local,
+      intercity,
+    },
+    delivery_services: {
+      local,
+      intercity,
+    },
+    dropOptions: courierDropOptions,
+    drop_options: courierDropOptions,
+    selfServiceOptions: courierDropOptions,
+    self_service_options: courierDropOptions,
+    insuranceOptions: courierInsuranceOptions,
+    insurance_options: courierInsuranceOptions,
+    services: Object.values(courierServices),
+    addons: enrichedAddons,
+    luggageProtectionAddons,
+    airportAssistanceAddons,
+    luggageTypes,
+    luggageSizes,
+    pickupTimeSlots,
+    deliveryDeadlines,
+    deliverySpeeds: speeds,
+    paymentMethods: courierPaymentMethods,
+    serviceTypes: Object.entries(serviceTypes).map(([id, val]) => ({ id, ...val })),
+    parcelSizes: Object.entries(parcelSizes).map(([id, val]) => ({ id, ...val })),
+    packagingTypes: Object.entries(packagingTypes).map(([id, val]) => ({ id, ...val })),
+    contentCategories: Object.entries(contentCategories).map(([id, val]) => ({ id, ...val })),
+    insuranceTypes: Object.entries(insuranceTypes).map(([id, val]) => ({ id, ...val })),
+    icon: allLotties,
+    icons: allLotties,
+    lottieIcons: allLotties,
+    lottie_icons: allLotties,
+    limits: {
+      maxWeightPerBagKg: 32,
+      maxDimensionSumCm: 158,
+      idealBookingBufferHours: 4,
+    },
+  };
+};
 
 export const PROMO_CODES: Record<string, { discountPercent: number; maxDiscount: number }> = {
   DELIVEZ10: { discountPercent: 10, maxDiscount: 235 },

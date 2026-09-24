@@ -43,6 +43,8 @@ app.use(express.urlencoded({ extended: false, limit: env.JSON_BODY_LIMIT }));
 app.use(autoAuditLogger);
 
 app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
+app.use('/public', express.static(path.resolve(process.cwd(), 'public')));
+app.use('/assets/lottie', express.static(path.resolve(process.cwd(), 'public/lottie')));
 app.use('/health', systemRouter);
 app.use(
   '/api',

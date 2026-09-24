@@ -431,10 +431,10 @@ export const serializeBooking = (booking: any) => {
   };
 };
 
-export const getOptions: RequestHandler = (_req, res) => {
+export const getOptions: RequestHandler = (req, res) => {
   res.status(200).json({
     status: 'success',
-    data: getCourierOptions(),
+    data: getCourierOptions(req),
   });
 };
 
@@ -999,3 +999,5 @@ export const getBookingPod: RequestHandler = async (req, res) => {
     },
   });
 };
+
+export { getLottieIconHandler } from './courier-lottie.js';
