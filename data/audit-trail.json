@@ -1,5 +1,575 @@
 [
   {
+    "id": "aud-1790335258213-1092",
+    "timestamp": "2026-09-25T11:20:58.213Z",
+    "category": "SYSTEM",
+    "action": "POST_ADMIN_ONBOARDING_RESET",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/admin/onboarding/reset executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/onboarding/reset",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335258205-2147",
+    "timestamp": "2026-09-25T11:20:58.205Z",
+    "category": "SYSTEM",
+    "action": "PUT_ADMIN_ONBOARDING_SLIDES_SLIDE_1",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "PUT /api/v1/admin/onboarding/slides/slide-1 executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PUT",
+      "path": "/api/v1/admin/onboarding/slides/slide-1",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335258186-8931",
+    "timestamp": "2026-09-25T11:20:58.186Z",
+    "category": "SYSTEM",
+    "action": "POST_ONBOARDING_COMPLETE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/onboarding/complete executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/onboarding/complete",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335258175-572",
+    "timestamp": "2026-09-25T11:20:58.175Z",
+    "category": "SYSTEM",
+    "action": "POST_ONBOARDING_SKIP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/onboarding/skip executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/onboarding/skip",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335258164-6241",
+    "timestamp": "2026-09-25T11:20:58.164Z",
+    "category": "SYSTEM",
+    "action": "POST_ONBOARDING_TRACK_STEP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/onboarding/track-step executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/onboarding/track-step",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335245813-4185",
+    "timestamp": "2026-09-25T11:20:45.813Z",
+    "category": "SYSTEM",
+    "action": "POST_ADMIN_ONBOARDING_RESET",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/admin/onboarding/reset executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/onboarding/reset",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335245802-2569",
+    "timestamp": "2026-09-25T11:20:45.802Z",
+    "category": "SYSTEM",
+    "action": "PUT_ADMIN_ONBOARDING_SLIDES_SLIDE_1",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "PUT /api/v1/admin/onboarding/slides/slide-1 executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PUT",
+      "path": "/api/v1/admin/onboarding/slides/slide-1",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335245778-4465",
+    "timestamp": "2026-09-25T11:20:45.778Z",
+    "category": "SYSTEM",
+    "action": "POST_ONBOARDING_COMPLETE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/onboarding/complete executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/onboarding/complete",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335245762-7321",
+    "timestamp": "2026-09-25T11:20:45.762Z",
+    "category": "SYSTEM",
+    "action": "POST_ONBOARDING_SKIP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/onboarding/skip executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/onboarding/skip",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335245743-4026",
+    "timestamp": "2026-09-25T11:20:45.743Z",
+    "category": "SYSTEM",
+    "action": "POST_ONBOARDING_TRACK_STEP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/onboarding/track-step executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/onboarding/track-step",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335244983-9042",
+    "timestamp": "2026-09-25T11:20:44.983Z",
+    "category": "ORDERS",
+    "action": "POST_RETURN_PICKUP",
+    "severity": "SUCCESS",
+    "actorName": "Test Return User",
+    "actorEmail": "return_fbee8bf8@example.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/return-pickup executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/return-pickup",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1790335244760-4366",
+    "timestamp": "2026-09-25T11:20:44.760Z",
+    "category": "ORDERS",
+    "action": "POST_RETURN_PICKUP_UPLOAD",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/return-pickup/upload executed with status 201 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/return-pickup/upload",
+      "statusCode": 201
+    }
+  },
+  {
+    "id": "aud-1790335244666-7825",
+    "timestamp": "2026-09-25T11:20:44.666Z",
+    "category": "ORDERS",
+    "action": "POST_RETURN_PICKUP_QUOTE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/return-pickup/quote executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/return-pickup/quote",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335243559-6265",
+    "timestamp": "2026-09-25T11:20:43.559Z",
+    "category": "SYSTEM",
+    "action": "DELETE_ADMIN_SERVICES_6B5478DF_19BB_4C0C_A3B6",
+    "severity": "WARNING",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "DELETE /api/v1/admin/services/6b5478df-19bb-4c0c-a3b6-cc39e86b45fd/image executed with status 200 (WARNING)",
+    "metadata": {
+      "method": "DELETE",
+      "path": "/api/v1/admin/services/6b5478df-19bb-4c0c-a3b6-cc39e86b45fd/image",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335243531-7729",
+    "timestamp": "2026-09-25T11:20:43.531Z",
+    "category": "SYSTEM",
+    "action": "PATCH_ADMIN_SERVICES_6B5478DF_19BB_4C0C_A3B6_",
+    "severity": "SUCCESS",
+    "actorName": "System Admin",
+    "actorEmail": "admin@delevez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "PATCH /api/v1/admin/services/6b5478df-19bb-4c0c-a3b6-cc39e86b45fd executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/services/6b5478df-19bb-4c0c-a3b6-cc39e86b45fd",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335243481-9312",
+    "timestamp": "2026-09-25T11:20:43.481Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335241720-2293",
+    "timestamp": "2026-09-25T11:20:41.720Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_AUTH_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/auth/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335241197-5222",
+    "timestamp": "2026-09-25T11:20:41.197Z",
+    "category": "SECURITY",
+    "action": "POST_ADMIN_LOGIN",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SECURITY",
+    "description": "POST /api/v1/admin/login executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/login",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335240635-8374",
+    "timestamp": "2026-09-25T11:20:40.635Z",
+    "category": "ORDERS",
+    "action": "POST_LUGGAGE_DELIVERY_QUOTE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "ORDERS",
+    "description": "POST /api/v1/luggage-delivery/quote executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/luggage-delivery/quote",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790335240542-3508",
+    "timestamp": "2026-09-25T11:20:40.542Z",
+    "category": "PRICING",
+    "action": "POST_PERSONAL_COURIER_QUOTE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "PRICING",
+    "description": "POST /api/v1/personal-courier/quote executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/personal-courier/quote",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790333425919-9062",
+    "timestamp": "2026-09-25T10:50:25.919Z",
+    "category": "SYSTEM",
+    "action": "POST_ADMIN_ONBOARDING_RESET",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/admin/onboarding/reset executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/onboarding/reset",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790333425913-8263",
+    "timestamp": "2026-09-25T10:50:25.913Z",
+    "category": "SYSTEM",
+    "action": "PUT_ADMIN_ONBOARDING_SLIDES_SLIDE_1",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "PUT /api/v1/admin/onboarding/slides/slide-1 executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PUT",
+      "path": "/api/v1/admin/onboarding/slides/slide-1",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790333425897-7634",
+    "timestamp": "2026-09-25T10:50:25.897Z",
+    "category": "SYSTEM",
+    "action": "POST_ONBOARDING_COMPLETE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/onboarding/complete executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/onboarding/complete",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790333425889-6298",
+    "timestamp": "2026-09-25T10:50:25.889Z",
+    "category": "SYSTEM",
+    "action": "POST_ONBOARDING_SKIP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/onboarding/skip executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/onboarding/skip",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790333425882-7331",
+    "timestamp": "2026-09-25T10:50:25.882Z",
+    "category": "SYSTEM",
+    "action": "POST_ONBOARDING_TRACK_STEP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/onboarding/track-step executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/onboarding/track-step",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790333245255-7873",
+    "timestamp": "2026-09-25T10:47:25.255Z",
+    "category": "SYSTEM",
+    "action": "POST_ADMIN_ONBOARDING_RESET",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/admin/onboarding/reset executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/admin/onboarding/reset",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790333245249-6861",
+    "timestamp": "2026-09-25T10:47:25.249Z",
+    "category": "SYSTEM",
+    "action": "PUT_ADMIN_ONBOARDING_SLIDES_SLIDE_1",
+    "severity": "SUCCESS",
+    "actorName": "Admin Operator",
+    "actorEmail": "admin@delivez.com",
+    "actorRole": "ADMIN",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "PUT /api/v1/admin/onboarding/slides/slide-1 executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "PUT",
+      "path": "/api/v1/admin/onboarding/slides/slide-1",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790333245235-5107",
+    "timestamp": "2026-09-25T10:47:25.235Z",
+    "category": "SYSTEM",
+    "action": "POST_ONBOARDING_COMPLETE",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/onboarding/complete executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/onboarding/complete",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790333245229-6093",
+    "timestamp": "2026-09-25T10:47:25.229Z",
+    "category": "SYSTEM",
+    "action": "POST_ONBOARDING_SKIP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/onboarding/skip executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/onboarding/skip",
+      "statusCode": 200
+    }
+  },
+  {
+    "id": "aud-1790333245222-7941",
+    "timestamp": "2026-09-25T10:47:25.222Z",
+    "category": "SYSTEM",
+    "action": "POST_ONBOARDING_TRACK_STEP",
+    "severity": "SUCCESS",
+    "actorName": "Customer",
+    "actorEmail": "user@delivez.com",
+    "actorRole": "USER",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Browser",
+    "resourceType": "SYSTEM",
+    "description": "POST /api/v1/onboarding/track-step executed with status 200 (SUCCESS)",
+    "metadata": {
+      "method": "POST",
+      "path": "/api/v1/onboarding/track-step",
+      "statusCode": 200
+    }
+  },
+  {
     "id": "aud-1790250521809-2069",
     "timestamp": "2026-09-24T11:48:41.809Z",
     "category": "SYSTEM",

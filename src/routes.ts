@@ -1,3 +1,4 @@
+import { onboardingRouter, adminOnboardingRouter } from './modules/onboarding/onboarding.routes.js';
 import { transitCalculatorRouter } from './modules/transit-calculator/transit-calculator.routes.js';
 import { schedulePickupRouter } from './modules/schedule-pickup/schedule-pickup.routes.js';
 import { rewardsRouter } from './modules/rewards/rewards.routes.js';
@@ -45,6 +46,8 @@ apiRouter.use('/company', companyRouter);
 apiRouter.use('/network', networkRouter);
 apiRouter.use('/transit-calculator', transitCalculatorRouter);
 apiRouter.use('/schedule-pickup', schedulePickupRouter);
+apiRouter.use('/onboarding', onboardingRouter);
+apiRouter.use('/admin/onboarding', adminOnboardingRouter);
 
 
 apiRouter.get('/', (_request, response) => {

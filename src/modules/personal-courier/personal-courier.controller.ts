@@ -117,7 +117,7 @@ export const generateJourneyTimeline = (status: string, meta: any = {}) => {
       stage: 'BOOKING_CONFIRMED',
       title: 'Booking Confirmed',
       location: pickupCity,
-      description: `Your luggage delivery booking ${bNumber} has been confirmed.`,
+      description: `Your courier delivery booking ${bNumber} has been confirmed.`,
       timestamp: '10 May 2025, 09:30 AM',
     },
     {
@@ -126,7 +126,7 @@ export const generateJourneyTimeline = (status: string, meta: any = {}) => {
       stage: 'AGENT_ASSIGNED',
       title: 'Agent Assigned',
       location: pickupCity,
-      description: 'Ravi Kumar (DLZAGT45521) assigned for luggage pickup.',
+      description: 'Ravi Kumar (DLZAGT45521) assigned for courier pickup.',
       timestamp: '10 May 2025, 09:45 AM',
     },
     {
@@ -135,7 +135,7 @@ export const generateJourneyTimeline = (status: string, meta: any = {}) => {
       stage: 'AGENT_REACHED_PICKUP',
       title: 'Agent Reached Pickup Location',
       location: meta.pickupDetails?.terminal ? `Indira Gandhi Int Airport (${meta.pickupDetails.terminal})` : pickupCity,
-      description: 'Agent reached pickup point at Luggage Belt / Lobby.',
+      description: 'Agent reached pickup location for collection.',
       timestamp: '10 May 2025, 10:15 AM',
     },
     {
@@ -144,7 +144,7 @@ export const generateJourneyTimeline = (status: string, meta: any = {}) => {
       stage: 'COURIER_INSPECTED_WEIGHED',
       title: 'Courier Inspected & Weighed',
       location: pickupCity,
-      description: `Bags inspected and weighed. Total verified weight: ${meta.totalWeightKg || 28} Kg.`,
+      description: `Courier package inspected and weighed. Total verified weight: ${meta.totalWeightKg || 28} Kg.`,
       timestamp: '10 May 2025, 10:25 AM',
     },
     {

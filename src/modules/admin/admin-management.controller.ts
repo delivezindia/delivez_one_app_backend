@@ -619,7 +619,7 @@ export const universalTrackOrder: RequestHandler = async (req, res) => {
       status: 'success',
       data: {
         serviceKey: 'confidential-courier',
-        serviceName: 'Confidential Courier / Luggage',
+        serviceName: 'Confidential Courier / Secure Vault',
         bookingNumber: confidential.bookingNumber,
         status: confidential.status,
         customerName: confidential.user?.fullName || 'Customer',
@@ -1123,7 +1123,7 @@ const defaultAdminPod = {
   sealPhotoUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=600&q=80',
   sealNumber: 'DLV-SEAL-88492',
   deliveredAt: '12 May 2025, 05:45 PM',
-  notes: 'Luggage received intact with tamper-evident seal unbroken. Front desk verified guest name Rahul Sharma, Room 402.',
+  notes: 'Courier received intact with tamper-evident seal unbroken. Front desk verified guest name Rahul Sharma, Room 402.',
 };
 
 const generateAdminTimeline = (status: string, meta: any = {}) => {
@@ -1152,16 +1152,16 @@ const generateAdminTimeline = (status: string, meta: any = {}) => {
   const currentWeight = weights[status] ?? 7;
 
   const stages = [
-    { id: 1, weight: 1, stage: 'BOOKING_CONFIRMED', title: 'Booking Confirmed', location: pickupCity, description: `Your luggage delivery booking ${bNumber} has been confirmed.`, timestamp: '10 May 2025, 09:30 AM' },
-    { id: 2, weight: 2, stage: 'AGENT_ASSIGNED', title: 'Agent Assigned', location: pickupCity, description: 'Ravi Kumar (DLZAGT45521) assigned for luggage pickup.', timestamp: '10 May 2025, 09:45 AM' },
-    { id: 3, weight: 3, stage: 'AGENT_REACHED_PICKUP', title: 'Agent Reached Pickup Location', location: meta.pickupDetails?.terminal ? `Indira Gandhi Int Airport (${meta.pickupDetails.terminal})` : pickupCity, description: 'Agent reached pickup point at Luggage Belt / Lobby.', timestamp: '10 May 2025, 10:15 AM' },
-    { id: 4, weight: 4, stage: 'LUGGAGE_INSPECTED_WEIGHED', title: 'Luggage Inspected & Weighed', location: pickupCity, description: `Bags inspected and weighed. Total verified weight: ${meta.totalWeightKg || 28} Kg.`, timestamp: '10 May 2025, 10:25 AM' },
+    { id: 1, weight: 1, stage: 'BOOKING_CONFIRMED', title: 'Booking Confirmed', location: pickupCity, description: `Your courier delivery booking ${bNumber} has been confirmed.`, timestamp: '10 May 2025, 09:30 AM' },
+    { id: 2, weight: 2, stage: 'AGENT_ASSIGNED', title: 'Agent Assigned', location: pickupCity, description: 'Ravi Kumar (DLZAGT45521) assigned for courier pickup.', timestamp: '10 May 2025, 09:45 AM' },
+    { id: 3, weight: 3, stage: 'AGENT_REACHED_PICKUP', title: 'Agent Reached Pickup Location', location: meta.pickupDetails?.terminal ? `Indira Gandhi Int Airport (${meta.pickupDetails.terminal})` : pickupCity, description: 'Agent reached pickup location for collection.', timestamp: '10 May 2025, 10:15 AM' },
+    { id: 4, weight: 4, stage: 'COURIER_INSPECTED_WEIGHED', title: 'Courier Inspected & Weighed', location: pickupCity, description: `Courier consignment inspected and weighed. Total verified weight: ${meta.totalWeightKg || 28} Kg.`, timestamp: '10 May 2025, 10:25 AM' },
     { id: 5, weight: 5, stage: 'SECURITY_SEAL_APPLIED', title: 'Security Seal Applied', location: pickupCity, description: `High-security tamper-evident seal applied: ${seal}`, timestamp: '10 May 2025, 10:30 AM', sealNumber: seal },
-    { id: 6, weight: 6, stage: 'LUGGAGE_PICKED', title: 'Luggage Picked Up', location: pickupCity, description: 'Luggage safely handed over to courier agent with digital receipt.', timestamp: '10 May 2025, 10:35 AM' },
+    { id: 6, weight: 6, stage: 'COURIER_PICKED', title: 'Courier Picked Up', location: pickupCity, description: 'Courier safely handed over to courier agent with digital receipt.', timestamp: '10 May 2025, 10:35 AM' },
     { id: 7, weight: 7, stage: 'IN_TRANSIT', title: 'In Transit to Destination City', location: 'Near Kota, Rajasthan', description: 'Shipment is on the way in a secure, GPS-tracked sanitized vehicle.', timestamp: '10 May 2025, 11:30 AM' },
     { id: 8, weight: 8, stage: 'REACHED_DESTINATION_CITY', title: 'Reached Destination City Hub', location: `${dropoffCity} Hub`, description: 'Consignment arrived at destination sorting and dispatch facility.', timestamp: '11 May 2025, 08:00 PM' },
     { id: 9, weight: 9, stage: 'OUT_FOR_DELIVERY', title: 'Out for Delivery', location: dropoffCity, description: 'Agent out for delivery to destination hotel / home address.', timestamp: '12 May 2025, 02:00 PM' },
-    { id: 10, weight: 10, stage: 'DELIVERED', title: 'Luggage Delivered Safely', location: meta.deliveryDetails?.hotelName ? `${meta.deliveryDetails.hotelName} Front Desk` : dropoffCity, description: 'Luggage delivered safely with OTP verification and tamper seal intact.', timestamp: '12 May 2025, 05:45 PM' },
+    { id: 10, weight: 10, stage: 'DELIVERED', title: 'Courier Delivered Safely', location: meta.deliveryDetails?.hotelName ? `${meta.deliveryDetails.hotelName} Front Desk` : dropoffCity, description: 'Courier delivered safely with OTP verification and tamper seal intact.', timestamp: '12 May 2025, 05:45 PM' },
   ];
 
   return stages.map((s) => ({
